@@ -1,0 +1,733 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.9396,
+          -39.4203
+        ]
+      },
+      "properties": {
+        "name": "villarrica",
+        "altitude_m": 2847.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.73,
+          -38.6973
+        ]
+      },
+      "properties": {
+        "name": "llaima",
+        "altitude_m": 3030.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.1601,
+          -37.8564
+        ]
+      },
+      "properties": {
+        "name": "copahue",
+        "altitude_m": 2756.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.3789,
+          -36.8678
+        ]
+      },
+      "properties": {
+        "name": "nevados_de_chillan",
+        "altitude_m": 3170.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.5824,
+          -35.2859
+        ]
+      },
+      "properties": {
+        "name": "planchon_peteroa",
+        "altitude_m": 3642.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -67.7314,
+          -23.3631
+        ]
+      },
+      "properties": {
+        "name": "lascar",
+        "altitude_m": 5200.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          55.7138,
+          -21.2536
+        ]
+      },
+      "properties": {
+        "name": "piton_de_la_fournaise",
+        "altitude_m": 2400.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.8343,
+          -19.1585
+        ]
+      },
+      "properties": {
+        "name": "isluga",
+        "altitude_m": 5372.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.8972,
+          -16.3434
+        ]
+      },
+      "properties": {
+        "name": "ubinas",
+        "altitude_m": 5672.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.409,
+          -16.294
+        ]
+      },
+      "properties": {
+        "name": "misti",
+        "altitude_m": 5822.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.8559,
+          -15.788
+        ]
+      },
+      "properties": {
+        "name": "sabancaya",
+        "altitude_m": 5967.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.33,
+          -5.05
+        ]
+      },
+      "properties": {
+        "name": "ulawun",
+        "altitude_m": 2334.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          152.2091,
+          -4.2381
+        ]
+      },
+      "properties": {
+        "name": "rabaul",
+        "altitude_m": 223.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          145.039,
+          -4.078
+        ]
+      },
+      "properties": {
+        "name": "manam",
+        "altitude_m": 1807.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.3408,
+          -2.0056
+        ]
+      },
+      "properties": {
+        "name": "sangay",
+        "altitude_m": 5286.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.2495,
+          -1.5215
+        ]
+      },
+      "properties": {
+        "name": "nyiragongo",
+        "altitude_m": 3470.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.4473,
+          -1.4685
+        ]
+      },
+      "properties": {
+        "name": "tungurahua",
+        "altitude_m": 5023.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -91.1445,
+          -0.8302
+        ]
+      },
+      "properties": {
+        "name": "sierra_negra",
+        "altitude_m": 990.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.437,
+          -0.6845
+        ]
+      },
+      "properties": {
+        "name": "cotopaxi",
+        "altitude_m": 5800.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.6584,
+          -0.081
+        ]
+      },
+      "properties": {
+        "name": "el_reventador",
+        "altitude_m": 3510.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.9892,
+          0.025
+        ]
+      },
+      "properties": {
+        "name": "cayambe",
+        "altitude_m": 5790.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.3324,
+          0.81
+        ]
+      },
+      "properties": {
+        "name": "gamalama",
+        "altitude_m": 1680.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.3592,
+          1.2214
+        ]
+      },
+      "properties": {
+        "name": "galeras",
+        "altitude_m": 4080.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.4,
+          2.32
+        ]
+      },
+      "properties": {
+        "name": "purace",
+        "altitude_m": 4650.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          98.393,
+          3.1693
+        ]
+      },
+      "properties": {
+        "name": "sinabung",
+        "altitude_m": 2460.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.3188,
+          4.892
+        ]
+      },
+      "properties": {
+        "name": "nevado_del_ruiz",
+        "altitude_m": 5200.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.7655,
+          10.0167
+        ]
+      },
+      "properties": {
+        "name": "turrialba",
+        "altitude_m": 3340.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2299,
+          10.1963
+        ]
+      },
+      "properties": {
+        "name": "poas",
+        "altitude_m": 2708.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7024,
+          10.4627
+        ]
+      },
+      "properties": {
+        "name": "arenal",
+        "altitude_m": 1610.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.3239,
+          10.83
+        ]
+      },
+      "properties": {
+        "name": "rincon_de_la_vieja",
+        "altitude_m": 1895.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.6224,
+          11.5385
+        ]
+      },
+      "properties": {
+        "name": "concepcion",
+        "altitude_m": 1600.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.1684,
+          11.9841
+        ]
+      },
+      "properties": {
+        "name": "masaya",
+        "altitude_m": 460.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.5388,
+          12.4238
+        ]
+      },
+      "properties": {
+        "name": "momotombo",
+        "altitude_m": 1250.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.8421,
+          12.6051
+        ]
+      },
+      "properties": {
+        "name": "telica",
+        "altitude_m": 1061.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.0013,
+          12.7049
+        ]
+      },
+      "properties": {
+        "name": "san_cristobal",
+        "altitude_m": 1745.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.6862,
+          13.2542
+        ]
+      },
+      "properties": {
+        "name": "mayon",
+        "altitude_m": 2370.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.2719,
+          13.4319
+        ]
+      },
+      "properties": {
+        "name": "san_miguel",
+        "altitude_m": 2130.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.6309,
+          13.8486
+        ]
+      },
+      "properties": {
+        "name": "santa_ana",
+        "altitude_m": 2381.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.8806,
+          14.4742
+        ]
+      },
+      "properties": {
+        "name": "fuego_guatemala",
+        "altitude_m": 3763.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -91.5681,
+          14.7383
+        ]
+      },
+      "properties": {
+        "name": "santiaguito",
+        "altitude_m": 2500.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.1773,
+          16.7103
+        ]
+      },
+      "properties": {
+        "name": "soufriere_hills",
+        "altitude_m": 915.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.6224,
+          19.0233
+        ]
+      },
+      "properties": {
+        "name": "popocatepetl",
+        "altitude_m": 5070.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.6167,
+          19.5117
+        ]
+      },
+      "properties": {
+        "name": "fuego_de_colima",
+        "altitude_m": 3850.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.9934,
+          37.7506
+        ]
+      },
+      "properties": {
+        "name": "etna",
+        "altitude_m": 3330.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.9618,
+          38.4046
+        ]
+      },
+      "properties": {
+        "name": "vulcano",
+        "altitude_m": 250.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.2124,
+          38.792
+        ]
+      },
+      "properties": {
+        "name": "stromboli",
+        "altitude_m": 924.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.18,
+          46.2
+        ]
+      },
+      "properties": {
+        "name": "st_helens",
+        "altitude_m": 2549.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -19.633,
+          63.633
+        ]
+      },
+      "properties": {
+        "name": "eyjafjallajokull",
+        "altitude_m": 1651.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -19.1278,
+          63.6383
+        ]
+      },
+      "properties": {
+        "name": "katla",
+        "altitude_m": 1370.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -22.067,
+          63.917
+        ]
+      },
+      "properties": {
+        "name": "krysuvik",
+        "altitude_m": 360.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -19.6634,
+          63.9895
+        ]
+      },
+      "properties": {
+        "name": "hekla",
+        "altitude_m": 1490.0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.13,
+          10.4096
+        ]
+      },
+      "properties": {
+        "name": "canlaon",
+        "altitude_m": 2422.0
+      }
+    }
+  ]
+}

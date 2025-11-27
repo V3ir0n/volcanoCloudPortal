@@ -1,0 +1,160 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  color: #eee;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+.map-wrap {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  background: #262626;
+}
+
+/* --- Overlay / panel --- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 500;
+  outline: none;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(520px, 92vw);
+  background: #111;
+  color: #eee;
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.45);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #222;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #161616;
+  border-bottom: 1px solid #222;
+}
+
+.close-btn {
+  appearance: none;
+  border: 0;
+  background: #222;
+  color: #ddd;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background: #2a2a2a;
+}
+
+.panel-body {
+  padding: 16px;
+  overflow-y: auto;
+  font-size: 0.95rem;
+}
+
+.place-description {
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.place-raw dl {
+  margin: 0;
+}
+
+.place-raw dt {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-top: 0.5rem;
+}
+
+.place-raw dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.4);
+  color: #ccc;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* --- Year control styles --- */
+.year-control {
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffd700;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  width: 260px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  margin-bottom: 150px;
+  margin-left: 20px;
+}
+
+.year-control .yc-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.year-control .yc-btn {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffd700;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+}
+
+.year-control .yc-display {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+}
+
+.year-control .yc-slider {
+  width: 100%;
+  accent-color: #ffd700;
+}
+
+.year-control .yc-minmax {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-top: 0.25rem;
+}
