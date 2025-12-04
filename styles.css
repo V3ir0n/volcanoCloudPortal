@@ -74,12 +74,12 @@ body {
 }
 
 .panel-body {
-  padding: 16px;
   overflow-y: auto;
   font-size: 0.95rem;
 }
 
 .place-description {
+  padding: 16px;
   margin-bottom: 1rem;
   line-height: 1.4;
 }

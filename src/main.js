@@ -64,7 +64,7 @@ function getPlaceFromFeature(feature) {
   };
 }
 
-function renderPlaceOverlay(place) {
+function renderPlaceOverlay(place, latlng) {
   const mapWrap = document.querySelector(".map-wrap");
   if (!mapWrap) return;
 
@@ -107,11 +107,12 @@ function renderPlaceOverlay(place) {
 
   // Title
   const titleEl = overlayEl.querySelector("#panel-title");
-  if (titleEl) titleEl.textContent = place.title || "Unknown place";
+  const titleText = place.title.split("").map((c,i)=>i==0?c.toUpperCase():c).join("");
+  if (titleEl) titleEl.textContent = titleText || "Unknown place";
 
   // Body via placeview.js
   const bodyEl = overlayEl.querySelector(".panel-body");
-  renderPlaceView(bodyEl, place);
+  renderPlaceView(bodyEl, place, latlng);
 
   // Focus overlay for accessibility
   overlayEl.focus();
@@ -182,7 +183,7 @@ function initMap() {
   map.addControl(new YearControl({ position: "bottomleft" }));
 
   // Load GeoJSON
-  fetch("output.geojson")
+  fetch("resources/volcanoList.geojson")
     .then((r) => r.json())
     .then((data) => {
       const volcanoStyle = {
@@ -200,7 +201,7 @@ function initMap() {
           layer.on("click", () => {
             const place = getPlaceFromFeature(feature);
             selectedPlace = place;
-            renderPlaceOverlay(place);
+            renderPlaceOverlay(place, feature.geometry.coordinates);
           });
         }
       }).addTo(map);
