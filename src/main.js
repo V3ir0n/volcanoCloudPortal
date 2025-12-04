@@ -162,7 +162,7 @@ function initMap() {
       btn.addEventListener("click", () => {
         if (intervalId) {
           stopTick();
-          btn.textContent = "▶️";
+          btn.textContent = "▶";
         } else {
           startTick();
           btn.textContent = "⏸";
@@ -171,7 +171,7 @@ function initMap() {
 
       slider.addEventListener("input", (e) => {
         stopTick();
-        btn.textContent = "▶️";
+        btn.textContent = "▶";
         setYear(Number(e.target.value));
       });
 
