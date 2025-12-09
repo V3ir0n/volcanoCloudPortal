@@ -51,7 +51,7 @@ class VolcanoView {
 
     // Setup scene, camera, camera controls, and lights
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, this.canvas.width / this.canvas.height, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(75, this.canvas.width / this.canvas.height, 0.01, 100);
     this.camera.position.set(0.5, 0.5, 0.2);
 
     this.controls = new OrbitControls(this.camera, this.canvas);
