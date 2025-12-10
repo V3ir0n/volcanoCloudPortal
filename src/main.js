@@ -234,7 +234,6 @@ function initMap() {
         layer.on("click", () => {
           const place = getPlaceFromFeature(feature);
           selectedPlace = place;
-          // small note: GeoJSON coords are [lon, lat], but your placeview expects [lat, lng]
           const [lng, lat] = feature.geometry.coordinates;
           renderPlaceOverlay(place, [lat, lng]);
         });
