@@ -4,9 +4,9 @@ import { renderPlaceView } from "./placeview.js";
 // --- State & constants ---
 let selectedPlace = null;
 
-let year = 1970;
-const minYear = 1970;
-const maxYear = 2025;
+let year = 2005;
+const minYear = 2005;
+const maxYear = 2023;
 const tickMs = 900;
 let intervalId = null;
 
@@ -15,6 +15,22 @@ let geoLayer;
 let overlayEl = null;
 
 // --- Helpers ---
+function emissionRadius(props, year, options = {}) {
+  const {
+    minRadius = 4,   // minimum visible size
+    scale = 3        // how strongly radius increases
+  } = options;
+
+  // yearly value, e.g. props["2018"]
+  const raw = props[String(year)];
+  const value = Number(raw) || 0; // treat null/NaN as 0
+
+  // defined even when value = 0
+  const logValue = Math.log10(value + 1);
+
+  return minRadius + scale * logValue;
+}
+
 function closeOverlay() {
   selectedPlace = null;
   if (overlayEl && overlayEl.parentNode) {
@@ -34,7 +50,17 @@ function setYear(newYear) {
       slider.value = String(year);
     }
   }
-  // TODO: update layers based on year here
+
+  // update circle radius based on the new year
+  if (geoLayer) {
+    geoLayer.eachLayer((layer) => {
+      if (!layer.feature || typeof layer.setRadius !== "function") return;
+
+      const props = layer.feature.properties || {};
+      const r = emissionRadius(props, year);
+      layer.setRadius(r);
+    });
+  }
 }
 
 function startTick() {
@@ -150,7 +176,7 @@ function initMap() {
       const container = L.DomUtil.create("div", "leaflet-bar year-control");
       container.innerHTML = `
         <div class="yc-row">
-          <button class="yc-btn" aria-label="Play/Pause" title="Play/Pause">⏸</button>
+          <button class="yc-btn" aria-label="Play/Pause" title="Play/Pause">▶</button>
           <div class="yc-display">${year}</div>
         </div>
         <input class="yc-slider" type="range" min="${minYear}" max="${maxYear}" step="1" value="${year}" />
@@ -186,34 +212,40 @@ function initMap() {
 
   // Load GeoJSON
   fetch("resources/volcanoes.geojson")
-    .then((r) => r.json())
-    .then((data) => {
-      const volcanoStyle = {
-        radius: 6,
-        fillColor: "#FFD700",
-        color: "#000",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-      };
+  .then((r) => r.json())
+  .then((data) => {
+    const baseStyle = {
+      fillColor: "#FFD700",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
 
-      geoLayer = L.geoJSON(data, {
-        pointToLayer: (feature, latlng) => L.circleMarker(latlng, volcanoStyle),
-        onEachFeature: (feature, layer) => {
-          layer.on("click", () => {
-            const place = getPlaceFromFeature(feature);
-            selectedPlace = place;
-            renderPlaceOverlay(place, feature.geometry.coordinates);
-          });
-        }
-      }).addTo(map);
-    })
-    .catch((err) => {
-      console.error("Failed to load GeoJSON", err);
-    });
-
-  setYear(year);
-  startTick();
+    geoLayer = L.geoJSON(data, {
+      pointToLayer: (feature, latlng) => {
+        const radius = emissionRadius(feature.properties || {}, year);
+        return L.circleMarker(latlng, {
+          ...baseStyle,
+          radius
+        });
+      },
+      onEachFeature: (feature, layer) => {
+        layer.on("click", () => {
+          const place = getPlaceFromFeature(feature);
+          selectedPlace = place;
+          // small note: GeoJSON coords are [lon, lat], but your placeview expects [lat, lng]
+          const [lng, lat] = feature.geometry.coordinates;
+          renderPlaceOverlay(place, [lat, lng]);
+        });
+      }
+    }).addTo(map);
+    setYear(year);
+  })
+  .catch((err) => {
+    console.error("Failed to load GeoJSON", err);
+  });
+  //startTick();
 }
 
 // --- Init on DOM ready ---
