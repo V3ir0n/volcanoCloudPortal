@@ -52,13 +52,15 @@ function stopTick() {
 
 function getPlaceFromFeature(feature) {
   const props = feature.properties || {};
-  const { name, altitude_m, description } = props;
+  console.log(props);
+  const { volcano, country, observatory, alt_masl, description } = props;
   return {
-    title: name ?? "Unknown place",
+    title: volcano +', ' + country ?? "Unknown place",
+    observatory: observatory ?? "Unknown observatory",
     description:
       description ??
-      (altitude_m != null
-        ? `Altitude: ${altitude_m} m`
+      (alt_masl != null
+        ? `Altitude: ${alt_masl} m`
         : "No description available"),
     raw: props
   };
@@ -183,7 +185,7 @@ function initMap() {
   map.addControl(new YearControl({ position: "bottomleft" }));
 
   // Load GeoJSON
-  fetch("resources/volcanoList.geojson")
+  fetch("resources/volcanoes.geojson")
     .then((r) => r.json())
     .then((data) => {
       const volcanoStyle = {
