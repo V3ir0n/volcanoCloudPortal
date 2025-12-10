@@ -1,0 +1,2095 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.9396,
+          -39.4203
+        ]
+      },
+      "properties": {
+        "volcano": "villarrica",
+        "lat_deg": -39.4203,
+        "lon_deg": -71.9396,
+        "alt_masl": 2847,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "2005": 113,
+        "2006": 105,
+        "2007": 95,
+        "2008": 50,
+        "2009": 33,
+        "2010": 156,
+        "2011": 156,
+        "2012": 147,
+        "2013": 49,
+        "2014": 25,
+        "2015": 159,
+        "2016": 106,
+        "2017": 259,
+        "2018": 93,
+        "2019": 193,
+        "2020": 30,
+        "2021": 53,
+        "2022": 72,
+        "2023": 137
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          175.57,
+          -39.28
+        ]
+      },
+      "properties": {
+        "volcano": "ruapehu",
+        "lat_deg": -39.28,
+        "lon_deg": 175.57,
+        "alt_masl": 2797,
+        "observatory": "Earth Sciences New Zealand",
+        "obs_acronym": "ESNZ",
+        "country": "New Zealand",
+        "2005": 0,
+        "2006": null,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          175.632,
+          -39.157
+        ]
+      },
+      "properties": {
+        "volcano": "te_maari",
+        "lat_deg": -39.157,
+        "lon_deg": 175.632,
+        "alt_masl": 1978,
+        "observatory": "Earth Sciences New Zealand",
+        "obs_acronym": "ESNZ",
+        "country": "New Zealand",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.73,
+          -38.6973
+        ]
+      },
+      "properties": {
+        "volcano": "llaima",
+        "lat_deg": -38.6973,
+        "lon_deg": -71.73,
+        "alt_masl": 3030,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 53,
+        "2016": 0,
+        "2017": 32,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.1601,
+          -37.8564
+        ]
+      },
+      "properties": {
+        "volcano": "copahue",
+        "lat_deg": -37.8564,
+        "lon_deg": -71.1601,
+        "alt_masl": 2756,
+        "observatory": "Servicio Nacional de Geología y Minería/Servicio Geológico Minero Argentino",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile/Argentina",
+        "2005": 21,
+        "2006": 18,
+        "2007": 38,
+        "2008": 29,
+        "2009": 32,
+        "2010": 9,
+        "2011": 72,
+        "2012": 241,
+        "2013": 451,
+        "2014": 270,
+        "2015": 264,
+        "2016": 260,
+        "2017": 186,
+        "2018": 239,
+        "2019": 174,
+        "2020": 86,
+        "2021": 57,
+        "2022": 24,
+        "2023": 15
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.3789,
+          -36.8678
+        ]
+      },
+      "properties": {
+        "volcano": "nevados_de_chillan",
+        "lat_deg": -36.8678,
+        "lon_deg": -71.3789,
+        "alt_masl": 3170,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 106,
+        "2019": 120,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.5824,
+          -35.2859
+        ]
+      },
+      "properties": {
+        "volcano": "planchon_peteroa",
+        "lat_deg": -35.2859,
+        "lon_deg": -70.5824,
+        "alt_masl": 3642,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -67.7314,
+          -23.3631
+        ]
+      },
+      "properties": {
+        "volcano": "lascar",
+        "lat_deg": -23.3631,
+        "lon_deg": -67.7314,
+        "alt_masl": 5200,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "2005": 18,
+        "2006": 66,
+        "2007": 16,
+        "2008": 29,
+        "2009": 39,
+        "2010": 8,
+        "2011": 39,
+        "2012": 10,
+        "2013": 69,
+        "2014": 80,
+        "2015": 73,
+        "2016": 32,
+        "2017": 0,
+        "2018": 104,
+        "2019": 90,
+        "2020": 6,
+        "2021": 6,
+        "2022": 52,
+        "2023": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          55.7138,
+          -21.2536
+        ]
+      },
+      "properties": {
+        "volcano": "piton_de_la_fournaise",
+        "lat_deg": -21.2536,
+        "lon_deg": 55.7138,
+        "alt_masl": 2400,
+        "observatory": "Institut de Physique du Globe de Paris",
+        "obs_acronym": "IPGP",
+        "country": "France",
+        "2005": 60,
+        "2006": 143,
+        "2007": 34,
+        "2008": 30,
+        "2009": 8,
+        "2010": 38,
+        "2011": 11,
+        "2012": 5,
+        "2013": 4,
+        "2014": 1,
+        "2015": 204,
+        "2016": 24,
+        "2017": 77,
+        "2018": 121,
+        "2019": 101,
+        "2020": 49,
+        "2021": 40,
+        "2022": 55,
+        "2023": 38
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.8343,
+          -19.1585
+        ]
+      },
+      "properties": {
+        "volcano": "isluga",
+        "lat_deg": -19.1585,
+        "lon_deg": -68.8343,
+        "alt_masl": 5372,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "2005": 17,
+        "2006": 0,
+        "2007": 0,
+        "2008": 2,
+        "2009": 5,
+        "2010": 0,
+        "2011": 0,
+        "2012": 39,
+        "2013": 79,
+        "2014": 80,
+        "2015": 268,
+        "2016": 90,
+        "2017": 7,
+        "2018": 130,
+        "2019": 113,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 14
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.8972,
+          -16.3434
+        ]
+      },
+      "properties": {
+        "volcano": "ubinas",
+        "lat_deg": -16.3434,
+        "lon_deg": -70.8972,
+        "alt_masl": 5672,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "obs_acronym": "INGEMMET",
+        "country": "Peru",
+        "2005": 0,
+        "2006": 245,
+        "2007": 127,
+        "2008": 54,
+        "2009": 38,
+        "2010": 9,
+        "2011": 9,
+        "2012": 2,
+        "2013": 8,
+        "2014": 172,
+        "2015": 122,
+        "2016": 68,
+        "2017": 78,
+        "2018": 85,
+        "2019": 310,
+        "2020": 25,
+        "2021": 6,
+        "2022": 4,
+        "2023": 42
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.409,
+          -16.294
+        ]
+      },
+      "properties": {
+        "volcano": "misti",
+        "lat_deg": -16.294,
+        "lon_deg": -71.409,
+        "alt_masl": 5822,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "obs_acronym": "INGEMMET",
+        "country": "Peru",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -71.8559,
+          -15.788
+        ]
+      },
+      "properties": {
+        "volcano": "sabancaya",
+        "lat_deg": -15.788,
+        "lon_deg": -71.8559,
+        "alt_masl": 5967,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú\"",
+        "obs_acronym": "INGEMMET/IGP",
+        "country": "Peru",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 2,
+        "2009": 0,
+        "2010": 5,
+        "2011": 3,
+        "2012": 12,
+        "2013": 32,
+        "2014": 91,
+        "2015": 176,
+        "2016": 255,
+        "2017": 378,
+        "2018": 571,
+        "2019": 423,
+        "2020": 199,
+        "2021": 175,
+        "2022": 203,
+        "2023": 161
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.33,
+          -5.05
+        ]
+      },
+      "properties": {
+        "volcano": "ulawun",
+        "lat_deg": -5.05,
+        "lon_deg": 151.33,
+        "alt_masl": 2334,
+        "observatory": "Rabaul Volcano Observatory",
+        "obs_acronym": "RVO",
+        "country": "Papua New Guinea",
+        "2005": 150,
+        "2006": 260,
+        "2007": 86,
+        "2008": 65,
+        "2009": 156,
+        "2010": 702,
+        "2011": 369,
+        "2012": 143,
+        "2013": 267,
+        "2014": 151,
+        "2015": 167,
+        "2016": 244,
+        "2017": 307,
+        "2018": 164,
+        "2019": 74,
+        "2020": 24,
+        "2021": 171,
+        "2022": 249,
+        "2023": 154
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          152.2091,
+          -4.2381
+        ]
+      },
+      "properties": {
+        "volcano": "rabaul",
+        "lat_deg": -4.2381,
+        "lon_deg": 152.2091,
+        "alt_masl": 223,
+        "observatory": "Rabaul Volcano Observatory",
+        "obs_acronym": "RVO",
+        "country": "Papua New Guinea",
+        "2005": 212,
+        "2006": 348,
+        "2007": 1229,
+        "2008": 1938,
+        "2009": 1381,
+        "2010": 31,
+        "2011": 105,
+        "2012": 0,
+        "2013": 146,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 8,
+        "2020": 12,
+        "2021": 0,
+        "2022": 0,
+        "2023": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          145.039,
+          -4.078
+        ]
+      },
+      "properties": {
+        "volcano": "manam",
+        "lat_deg": -4.078,
+        "lon_deg": 145.039,
+        "alt_masl": 1807,
+        "observatory": "Rabaul Volcano Observatory",
+        "obs_acronym": "RVO",
+        "country": "Papua New Guinea",
+        "2005": 839,
+        "2006": 334,
+        "2007": 534,
+        "2008": 356,
+        "2009": 250,
+        "2010": 364,
+        "2011": 356,
+        "2012": 267,
+        "2013": 196,
+        "2014": 165,
+        "2015": 346,
+        "2016": 309,
+        "2017": 393,
+        "2018": 301,
+        "2019": 645,
+        "2020": 468,
+        "2021": 334,
+        "2022": 359,
+        "2023": 141
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.3408,
+          -2.0056
+        ]
+      },
+      "properties": {
+        "volcano": "sangay",
+        "lat_deg": -2.0056,
+        "lon_deg": -78.3408,
+        "alt_masl": 5286,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "2005": 64,
+        "2006": 81,
+        "2007": 59,
+        "2008": 53,
+        "2009": 0,
+        "2010": 1,
+        "2011": 0,
+        "2012": 27,
+        "2013": 22,
+        "2014": 53,
+        "2015": 114,
+        "2016": 13,
+        "2017": 32,
+        "2018": 7,
+        "2019": 98,
+        "2020": 231,
+        "2021": 400,
+        "2022": 375,
+        "2023": 201
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.2495,
+          -1.5215
+        ]
+      },
+      "properties": {
+        "volcano": "nyiragongo",
+        "lat_deg": -1.5215,
+        "lon_deg": 29.2495,
+        "alt_masl": 3470,
+        "observatory": "Observatoire Volcanologique de Goma",
+        "obs_acronym": "OVG",
+        "country": "Democratic Republic of Congo",
+        "2005": 266,
+        "2006": 160,
+        "2007": 478,
+        "2008": 109,
+        "2009": 190,
+        "2010": 279,
+        "2011": 402,
+        "2012": 583,
+        "2013": 536,
+        "2014": 286,
+        "2015": 437,
+        "2016": 12,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.4473,
+          -1.4685
+        ]
+      },
+      "properties": {
+        "volcano": "tungurahua",
+        "lat_deg": -1.4685,
+        "lon_deg": -78.4473,
+        "alt_masl": 5023,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "2005": 224,
+        "2006": 309,
+        "2007": 405,
+        "2008": 447,
+        "2009": 391,
+        "2010": 487,
+        "2011": 178,
+        "2012": 371,
+        "2013": 302,
+        "2014": 302,
+        "2015": 253,
+        "2016": 173,
+        "2017": 362,
+        "2018": 275,
+        "2019": 8,
+        "2020": 39,
+        "2021": 68,
+        "2022": 95,
+        "2023": 74
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -91.1445,
+          -0.8302
+        ]
+      },
+      "properties": {
+        "volcano": "sierra_negra",
+        "lat_deg": -0.8302,
+        "lon_deg": -91.1445,
+        "alt_masl": 990,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "2005": 7,
+        "2006": 6,
+        "2007": 17,
+        "2008": 18,
+        "2009": 14,
+        "2010": 9,
+        "2011": 18,
+        "2012": 3,
+        "2013": 20,
+        "2014": 14,
+        "2015": 3,
+        "2016": 22,
+        "2017": 20,
+        "2018": 129,
+        "2019": 24,
+        "2020": 14,
+        "2021": 6,
+        "2022": 35,
+        "2023": 18
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.437,
+          -0.6845
+        ]
+      },
+      "properties": {
+        "volcano": "cotopaxi",
+        "lat_deg": -0.6845,
+        "lon_deg": -78.437,
+        "alt_masl": 5800,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 391,
+        "2016": 99,
+        "2017": 89,
+        "2018": 68,
+        "2019": 72,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.6584,
+          -0.081
+        ]
+      },
+      "properties": {
+        "volcano": "el_reventador",
+        "lat_deg": -0.081,
+        "lon_deg": -77.6584,
+        "alt_masl": 3510,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "2005": 317,
+        "2006": 37,
+        "2007": 50,
+        "2008": 126,
+        "2009": 213,
+        "2010": 154,
+        "2011": 5,
+        "2012": 79,
+        "2013": 124,
+        "2014": 111,
+        "2015": 55,
+        "2016": 60,
+        "2017": 70,
+        "2018": 60,
+        "2019": 60,
+        "2020": 15,
+        "2021": 79,
+        "2022": 150,
+        "2023": 49
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.9892,
+          0.025
+        ]
+      },
+      "properties": {
+        "volcano": "cayambe",
+        "lat_deg": 0.025,
+        "lon_deg": -77.9892,
+        "alt_masl": 5790,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 30,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.3324,
+          0.81
+        ]
+      },
+      "properties": {
+        "volcano": "gamalama",
+        "lat_deg": 0.81,
+        "lon_deg": 127.3324,
+        "alt_masl": 1680,
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
+        "obs_acronym": "CVGHM",
+        "country": "Indonesia",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.3592,
+          1.2214
+        ]
+      },
+      "properties": {
+        "volcano": "galeras",
+        "lat_deg": 1.2214,
+        "lon_deg": -77.3592,
+        "alt_masl": 4080,
+        "observatory": "Servicio Geológico Colombiano",
+        "obs_acronym": "SGC",
+        "country": "Colombia",
+        "2005": 112,
+        "2006": 70,
+        "2007": 89,
+        "2008": 444,
+        "2009": 184,
+        "2010": 115,
+        "2011": 130,
+        "2012": 157,
+        "2013": 119,
+        "2014": 20,
+        "2015": 38,
+        "2016": 15,
+        "2017": 16,
+        "2018": 0,
+        "2019": 1,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.4,
+          2.32
+        ]
+      },
+      "properties": {
+        "volcano": "purace",
+        "lat_deg": 2.32,
+        "lon_deg": -76.4,
+        "alt_masl": 4650,
+        "observatory": "Servicio Geológico Colombiano",
+        "obs_acronym": "SCG",
+        "country": "Colombia",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          98.393,
+          3.1693
+        ]
+      },
+      "properties": {
+        "volcano": "sinabung",
+        "lat_deg": 3.1693,
+        "lon_deg": 98.393,
+        "alt_masl": 2460,
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
+        "obs_acronym": "CVGHM",
+        "country": "Indonesia",
+        "2005": 8,
+        "2006": 0,
+        "2007": 8,
+        "2008": 7,
+        "2009": 0,
+        "2010": 55,
+        "2011": 85,
+        "2012": 60,
+        "2013": 145,
+        "2014": 841,
+        "2015": 119,
+        "2016": 85,
+        "2017": 67,
+        "2018": 117,
+        "2019": 71,
+        "2020": 106,
+        "2021": 71,
+        "2022": 64,
+        "2023": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.3188,
+          4.892
+        ]
+      },
+      "properties": {
+        "volcano": "nevado_del_ruiz",
+        "lat_deg": 4.892,
+        "lon_deg": -75.3188,
+        "alt_masl": 5200,
+        "observatory": "Servicio Geológico Colombiano",
+        "obs_acronym": "SGC",
+        "country": "Colombia",
+        "2005": 91,
+        "2006": 44,
+        "2007": 18,
+        "2008": 0,
+        "2009": 18,
+        "2010": 29,
+        "2011": 78,
+        "2012": 338,
+        "2013": 469,
+        "2014": 165,
+        "2015": 239,
+        "2016": 269,
+        "2017": 363,
+        "2018": 296,
+        "2019": 378,
+        "2020": 414,
+        "2021": 389,
+        "2022": 404,
+        "2023": 412
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.7655,
+          10.0167
+        ]
+      },
+      "properties": {
+        "volcano": "turrialba",
+        "lat_deg": 10.0167,
+        "lon_deg": -83.7655,
+        "alt_masl": 3340,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "2005": 11,
+        "2006": 17,
+        "2007": 90,
+        "2008": 135,
+        "2009": 139,
+        "2010": 741,
+        "2011": 697,
+        "2012": 380,
+        "2013": 326,
+        "2014": 337,
+        "2015": 420,
+        "2016": 388,
+        "2017": 342,
+        "2018": 303,
+        "2019": 119,
+        "2020": 68,
+        "2021": 71,
+        "2022": 54,
+        "2023": 54
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2299,
+          10.1963
+        ]
+      },
+      "properties": {
+        "volcano": "poas",
+        "lat_deg": 10.1963,
+        "lon_deg": -84.2299,
+        "alt_masl": 2708,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 121,
+        "2018": 72,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.13,
+          10.4096
+        ]
+      },
+      "properties": {
+        "volcano": "canlaon",
+        "lat_deg": 10.4096,
+        "lon_deg": 123.13,
+        "alt_masl": 2422,
+        "observatory": "Philippine Institute of Volcanology and Seismology",
+        "obs_acronym": "PHIVOLCS",
+        "country": "Philippines",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7024,
+          10.4627
+        ]
+      },
+      "properties": {
+        "volcano": "arenal",
+        "lat_deg": 10.4627,
+        "lon_deg": -84.7024,
+        "alt_masl": 1610,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "2005": 102,
+        "2006": 69,
+        "2007": 64,
+        "2008": 94,
+        "2009": 170,
+        "2010": 207,
+        "2011": 248,
+        "2012": 109,
+        "2013": 152,
+        "2014": 137,
+        "2015": 122,
+        "2016": 103,
+        "2017": 390,
+        "2018": 139,
+        "2019": 110,
+        "2020": 72,
+        "2021": 63,
+        "2022": 38,
+        "2023": 83
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.3239,
+          10.83
+        ]
+      },
+      "properties": {
+        "volcano": "rincon_de_la_vieja",
+        "lat_deg": 10.83,
+        "lon_deg": -85.3239,
+        "alt_masl": 1895,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 375,
+        "2019": 105,
+        "2020": 63,
+        "2021": 71,
+        "2022": 53,
+        "2023": 54
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -85.6224,
+          11.5385
+        ]
+      },
+      "properties": {
+        "volcano": "concepcion",
+        "lat_deg": 11.5385,
+        "lon_deg": -85.6224,
+        "alt_masl": 1600,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 66,
+        "2011": 141,
+        "2012": 98,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.1684,
+          11.9841
+        ]
+      },
+      "properties": {
+        "volcano": "masaya",
+        "lat_deg": 11.9841,
+        "lon_deg": -86.1684,
+        "alt_masl": 460,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "2005": 243,
+        "2006": 332,
+        "2007": 338,
+        "2008": 357,
+        "2009": 139,
+        "2010": 138,
+        "2011": 68,
+        "2012": 158,
+        "2013": 176,
+        "2014": 145,
+        "2015": 201,
+        "2016": 438,
+        "2017": 393,
+        "2018": 278,
+        "2019": 236,
+        "2020": 265,
+        "2021": 312,
+        "2022": 291,
+        "2023": 341
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.5388,
+          12.4238
+        ]
+      },
+      "properties": {
+        "volcano": "momotombo",
+        "lat_deg": 12.4238,
+        "lon_deg": -86.5388,
+        "alt_masl": 1250,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "2005": 57,
+        "2006": 81,
+        "2007": 104,
+        "2008": 109,
+        "2009": 111,
+        "2010": 78,
+        "2011": 81,
+        "2012": 113,
+        "2013": 84,
+        "2014": 65,
+        "2015": 90,
+        "2016": 83,
+        "2017": 103,
+        "2018": 83,
+        "2019": 57,
+        "2020": 85,
+        "2021": 103,
+        "2022": 113,
+        "2023": 100
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.8421,
+          12.6051
+        ]
+      },
+      "properties": {
+        "volcano": "telica",
+        "lat_deg": 12.6051,
+        "lon_deg": -86.8421,
+        "alt_masl": 1061,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 3,
+        "2010": 2,
+        "2011": 4,
+        "2012": 0,
+        "2013": 8,
+        "2014": 0,
+        "2015": 2,
+        "2016": 24,
+        "2017": 143,
+        "2018": 27,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.0013,
+          12.7049
+        ]
+      },
+      "properties": {
+        "volcano": "san_cristobal",
+        "lat_deg": 12.7049,
+        "lon_deg": -87.0013,
+        "alt_masl": 1745,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "2005": 81,
+        "2006": 279,
+        "2007": 210,
+        "2008": 103,
+        "2009": 347,
+        "2010": 233,
+        "2011": 312,
+        "2012": 330,
+        "2013": 221,
+        "2014": 326,
+        "2015": 318,
+        "2016": 157,
+        "2017": 110,
+        "2018": 115,
+        "2019": 133,
+        "2020": 111,
+        "2021": 137,
+        "2022": 159,
+        "2023": 168
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          123.6862,
+          13.2542
+        ]
+      },
+      "properties": {
+        "volcano": "mayon",
+        "lat_deg": 13.2542,
+        "lon_deg": 123.6862,
+        "alt_masl": 2370,
+        "observatory": "Philippine Institute of Volcanology and Seismology",
+        "obs_acronym": "PHIVOLCS",
+        "country": "Philippines",
+        "2005": 53,
+        "2006": 364,
+        "2007": 215,
+        "2008": 135,
+        "2009": 291,
+        "2010": 252,
+        "2011": 160,
+        "2012": 157,
+        "2013": 103,
+        "2014": 109,
+        "2015": 108,
+        "2016": 163,
+        "2017": 123,
+        "2018": 422,
+        "2019": 221,
+        "2020": 96,
+        "2021": 109,
+        "2022": 129,
+        "2023": 276
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.2719,
+          13.4319
+        ]
+      },
+      "properties": {
+        "volcano": "san_miguel",
+        "lat_deg": 13.4319,
+        "lon_deg": -88.2719,
+        "alt_masl": 2130,
+        "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
+        "obs_acronym": "MARN",
+        "country": "El Salvador",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 84,
+        "2014": 35,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 1,
+        "2019": 4,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.6309,
+          13.8486
+        ]
+      },
+      "properties": {
+        "volcano": "santa_ana",
+        "lat_deg": 13.8486,
+        "lon_deg": -89.6309,
+        "alt_masl": 2381,
+        "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
+        "obs_acronym": "MARN",
+        "country": "El Salvador",
+        "2005": 209,
+        "2006": 47,
+        "2007": 8,
+        "2008": 18,
+        "2009": 44,
+        "2010": 0,
+        "2011": 0,
+        "2012": 14,
+        "2013": 14,
+        "2014": 0,
+        "2015": 19,
+        "2016": 35,
+        "2017": 49,
+        "2018": 41,
+        "2019": 65,
+        "2020": 27,
+        "2021": 35,
+        "2022": 52,
+        "2023": 24
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.8806,
+          14.4742
+        ]
+      },
+      "properties": {
+        "volcano": "fuego_guatemala",
+        "lat_deg": 14.4742,
+        "lon_deg": -90.8806,
+        "alt_masl": 3763,
+        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
+        "obs_acronym": "INSIVUMEH",
+        "country": "Guatemala",
+        "2005": 103,
+        "2006": 97,
+        "2007": 96,
+        "2008": 61,
+        "2009": 85,
+        "2010": 84,
+        "2011": 66,
+        "2012": 87,
+        "2013": 98,
+        "2014": 104,
+        "2015": 112,
+        "2016": 167,
+        "2017": 177,
+        "2018": 175,
+        "2019": 119,
+        "2020": 128,
+        "2021": 177,
+        "2022": 159,
+        "2023": 132
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -91.5681,
+          14.7383
+        ]
+      },
+      "properties": {
+        "volcano": "santiaguito",
+        "lat_deg": 14.7383,
+        "lon_deg": -91.5681,
+        "alt_masl": 2500,
+        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
+        "obs_acronym": "INSIVUMEH",
+        "country": "Guatemala",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -62.1773,
+          16.7103
+        ]
+      },
+      "properties": {
+        "volcano": "soufriere_hills",
+        "lat_deg": 16.7103,
+        "lon_deg": -62.1773,
+        "alt_masl": 915,
+        "observatory": "Montserrat Volcano Observatory",
+        "obs_acronym": "MVO",
+        "country": "Montserrat",
+        "2005": 562,
+        "2006": 987,
+        "2007": 524,
+        "2008": 581,
+        "2009": 737,
+        "2010": 495,
+        "2011": 310,
+        "2012": 214,
+        "2013": 147,
+        "2014": 108,
+        "2015": 122,
+        "2016": 76,
+        "2017": 60,
+        "2018": 67,
+        "2019": 66,
+        "2020": 72,
+        "2021": 52,
+        "2022": 61,
+        "2023": 60
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.6224,
+          19.0233
+        ]
+      },
+      "properties": {
+        "volcano": "popocatepetl",
+        "lat_deg": 19.0233,
+        "lon_deg": -98.6224,
+        "alt_masl": 5070,
+        "observatory": "Universidad Nacional Autónoma de México",
+        "obs_acronym": "UNAM",
+        "country": "Mexico",
+        "2005": 266,
+        "2006": 279,
+        "2007": 566,
+        "2008": 529,
+        "2009": 579,
+        "2010": 927,
+        "2011": 813,
+        "2012": 787,
+        "2013": 846,
+        "2014": 898,
+        "2015": 1000,
+        "2016": 1125,
+        "2017": 450,
+        "2018": 442,
+        "2019": 362,
+        "2020": 276,
+        "2021": 306,
+        "2022": 353,
+        "2023": 633
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -103.6167,
+          19.5117
+        ]
+      },
+      "properties": {
+        "volcano": "fuego_de_colima",
+        "lat_deg": 19.5117,
+        "lon_deg": -103.6167,
+        "alt_masl": 3850,
+        "observatory": "Universidad Nacional Autónoma de México",
+        "obs_acronym": "UNAM",
+        "country": "Mexico",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 6,
+        "2013": 76,
+        "2014": 73,
+        "2015": 81,
+        "2016": 33,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.9934,
+          37.7506
+        ]
+      },
+      "properties": {
+        "volcano": "etna",
+        "lat_deg": 37.7506,
+        "lon_deg": 14.9934,
+        "alt_masl": 3330,
+        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
+        "obs_acronym": "INGV",
+        "country": "Italy",
+        "2005": 575,
+        "2006": 1043,
+        "2007": 579,
+        "2008": 754,
+        "2009": 639,
+        "2010": 439,
+        "2011": 739,
+        "2012": 515,
+        "2013": 498,
+        "2014": 831,
+        "2015": 574,
+        "2016": 791,
+        "2017": 801,
+        "2018": 815,
+        "2019": 1071,
+        "2020": 709,
+        "2021": 624,
+        "2022": 852,
+        "2023": 520
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.9618,
+          38.4046
+        ]
+      },
+      "properties": {
+        "volcano": "vulcano",
+        "lat_deg": 38.4046,
+        "lon_deg": 14.9618,
+        "alt_masl": 250,
+        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
+        "obs_acronym": "INGV",
+        "country": "Italy",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 2,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 1,
+        "2017": 1,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.2124,
+          38.792
+        ]
+      },
+      "properties": {
+        "volcano": "stromboli",
+        "lat_deg": 38.792,
+        "lon_deg": 15.2124,
+        "alt_masl": 924,
+        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
+        "obs_acronym": "INGV",
+        "country": "Italy",
+        "2005": 19,
+        "2006": 43,
+        "2007": 81,
+        "2008": 49,
+        "2009": 46,
+        "2010": 24,
+        "2011": 75,
+        "2012": 49,
+        "2013": 59,
+        "2014": 31,
+        "2015": 45,
+        "2016": 2,
+        "2017": 39,
+        "2018": 34,
+        "2019": 64,
+        "2020": 39,
+        "2021": 27,
+        "2022": 22,
+        "2023": 30
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.18,
+          46.2
+        ]
+      },
+      "properties": {
+        "volcano": "st_helens",
+        "lat_deg": 46.2,
+        "lon_deg": -122.18,
+        "alt_masl": 2549,
+        "observatory": "United States Geological Survey",
+        "obs_acronym": "USGS",
+        "country": "United States",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -169.944,
+          52.825
+        ]
+      },
+      "properties": {
+        "volcano": "cleveland",
+        "lat_deg": 52.825,
+        "lon_deg": -169.944,
+        "alt_masl": 1730,
+        "observatory": "United States Geological Survey",
+        "obs_acronym": "USGS",
+        "country": "United States",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -19.633,
+          63.633
+        ]
+      },
+      "properties": {
+        "volcano": "eyjafjallajokull",
+        "lat_deg": 63.633,
+        "lon_deg": -19.633,
+        "alt_masl": 1651,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -19.1278,
+          63.6383
+        ]
+      },
+      "properties": {
+        "volcano": "katla",
+        "lat_deg": 63.6383,
+        "lon_deg": -19.1278,
+        "alt_masl": 1370,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -22.067,
+          63.917
+        ]
+      },
+      "properties": {
+        "volcano": "krysuvik",
+        "lat_deg": 63.917,
+        "lon_deg": -22.067,
+        "alt_masl": 360,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -19.6634,
+          63.9895
+        ]
+      },
+      "properties": {
+        "volcano": "hekla",
+        "lat_deg": 63.9895,
+        "lon_deg": -19.6634,
+        "alt_masl": 1490,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0
+      }
+    }
+  ]
+}
