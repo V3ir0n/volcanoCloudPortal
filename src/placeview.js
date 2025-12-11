@@ -103,6 +103,9 @@ class VolcanoView {
 
       // On error (file not found)
       const tokenMapbox = prompt(`The terrain for the volcano ${this.place.title} is not saved. Input a mapbox token to download. To avoid this in the future, save the downloaded file to ./resources/terrainMeshes/`);
+      if (!tokenMapbox) {
+        return;
+      }
       const tgeo = new ThreeGeo({
         tokenMapbox: tokenMapbox,
       });
