@@ -79,16 +79,12 @@ function stopTick() {
 function getPlaceFromFeature(feature) {
   const props = feature.properties || {};
   console.log(props);
-  const { volcano, country, observatory, alt_masl, description } = props;
+  const { volcano, country, observatory, alt_masl,} = props;
   return {
     title: volcano +', ' + country ?? "Unknown place",
     name: volcano,
     observatory: observatory ?? "Unknown observatory",
-    description:
-      description ??
-      (alt_masl != null
-        ? `Altitude: ${alt_masl} m`
-        : "No description available"),
+    altitude: alt_masl ? `${alt_masl} m` : "Unknown altitude",
     raw: props
   };
 }

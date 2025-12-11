@@ -10,18 +10,21 @@ from 'three/addons/exporters/GLTFExporter.js';
 /**
  * Render a place view into the given container.
  * @param {HTMLElement} container - The .panel-body element.
- * @param {{ title: string, description: string, raw: object }} place
+ * @param {{ title: string, observatory: string, altitude: string, raw: object }} place
  */
 export function renderPlaceView(container, place, latLng) {
   if (!container) return;
 
   container.innerHTML = "";
 
-  // Description
-  const descP = document.createElement("p");
-  descP.className = "place-description";
-  descP.textContent = place.description || "";
-  container.appendChild(descP);
+  // Volcano info
+  const infoEl = document.createElement("div");
+  infoEl.className = "volcano-info";
+  infoEl.innerHTML = `
+    <p><strong>Altitude:</strong> ${place.altitude || "Unknown altitude"}</p>
+    <p><strong>Observatory:</strong> ${place.observatory || "Unknown observatory"}</p>
+  `;
+  container.appendChild(infoEl);
 
   // THREE canvas
   const canvas = document.createElement("canvas");
