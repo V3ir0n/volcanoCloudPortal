@@ -82,6 +82,7 @@ function getPlaceFromFeature(feature) {
   const { volcano, country, observatory, alt_masl, description } = props;
   return {
     title: volcano +', ' + country ?? "Unknown place",
+    name: volcano,
     observatory: observatory ?? "Unknown observatory",
     description:
       description ??
