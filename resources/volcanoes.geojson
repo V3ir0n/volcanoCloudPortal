@@ -11,7 +11,8 @@
         ]
       },
       "properties": {
-        "volcano": "Villarrica",
+        "name": "villarrica",
+        "display_name": "Villarrica",
         "lat_deg": -39.4203,
         "lon_deg": -71.9396,
         "alt_masl": 2847,
@@ -49,7 +50,8 @@
         ]
       },
       "properties": {
-        "volcano": "Ruapehu",
+        "name": "ruapehu",
+        "display_name": "Ruapehu",
         "lat_deg": -39.28,
         "lon_deg": 175.57,
         "alt_masl": 2797,
@@ -87,7 +89,8 @@
         ]
       },
       "properties": {
-        "volcano": "Te Maari",
+        "name": "te_maari",
+        "display_name": "Te Maari",
         "lat_deg": -39.157,
         "lon_deg": 175.632,
         "alt_masl": 1978,
@@ -125,7 +128,8 @@
         ]
       },
       "properties": {
-        "volcano": "Llaima",
+        "name": "llaima",
+        "display_name": "Llaima",
         "lat_deg": -38.6973,
         "lon_deg": -71.73,
         "alt_masl": 3030,
@@ -163,7 +167,8 @@
         ]
       },
       "properties": {
-        "volcano": "Copahue",
+        "name": "copahue",
+        "display_name": "Copahue",
         "lat_deg": -37.8564,
         "lon_deg": -71.1601,
         "alt_masl": 2756,
@@ -201,7 +206,8 @@
         ]
       },
       "properties": {
-        "volcano": "Nevados de Chillan",
+        "name": "nevados_de_chillan",
+        "display_name": "Nevados de Chillan",
         "lat_deg": -36.8678,
         "lon_deg": -71.3789,
         "alt_masl": 3170,
@@ -239,7 +245,8 @@
         ]
       },
       "properties": {
-        "volcano": "Planchon Peteroa",
+        "name": "planchon_peteroa",
+        "display_name": "Planchon Peteroa",
         "lat_deg": -35.2859,
         "lon_deg": -70.5824,
         "alt_masl": 3642,
@@ -277,7 +284,8 @@
         ]
       },
       "properties": {
-        "volcano": "Lascar",
+        "name": "lascar",
+        "display_name": "Lascar",
         "lat_deg": -23.3631,
         "lon_deg": -67.7314,
         "alt_masl": 5200,
@@ -315,7 +323,8 @@
         ]
       },
       "properties": {
-        "volcano": "Piton de la Fournaise",
+        "name": "piton_de_la_fournaise",
+        "display_name": "Piton de la Fournaise",
         "lat_deg": -21.2536,
         "lon_deg": 55.7138,
         "alt_masl": 2400,
@@ -353,7 +362,8 @@
         ]
       },
       "properties": {
-        "volcano": "Isluga",
+        "name": "isluga",
+        "display_name": "Isluga",
         "lat_deg": -19.1585,
         "lon_deg": -68.8343,
         "alt_masl": 5372,
@@ -391,7 +401,8 @@
         ]
       },
       "properties": {
-        "volcano": "Ubinas",
+        "name": "ubinas",
+        "display_name": "Ubinas",
         "lat_deg": -16.3434,
         "lon_deg": -70.8972,
         "alt_masl": 5672,
@@ -429,7 +440,8 @@
         ]
       },
       "properties": {
-        "volcano": "Misti",
+        "name": "misti",
+        "display_name": "Misti",
         "lat_deg": -16.294,
         "lon_deg": -71.409,
         "alt_masl": 5822,
@@ -467,7 +479,8 @@
         ]
       },
       "properties": {
-        "volcano": "Sabancaya",
+        "name": "sabancaya",
+        "display_name": "Sabancaya",
         "lat_deg": -15.788,
         "lon_deg": -71.8559,
         "alt_masl": 5967,
@@ -505,7 +518,8 @@
         ]
       },
       "properties": {
-        "volcano": "Ulawun",
+        "name": "ulawun",
+        "display_name": "Ulawun",
         "lat_deg": -5.05,
         "lon_deg": 151.33,
         "alt_masl": 2334,
@@ -543,7 +557,8 @@
         ]
       },
       "properties": {
-        "volcano": "Rabaul",
+        "name": "rabaul",
+        "display_name": "Rabaul",
         "lat_deg": -4.2381,
         "lon_deg": 152.2091,
         "alt_masl": 223,
@@ -581,7 +596,8 @@
         ]
       },
       "properties": {
-        "volcano": "Manam",
+        "name": "manam",
+        "display_name": "Manam",
         "lat_deg": -4.078,
         "lon_deg": 145.039,
         "alt_masl": 1807,
@@ -619,7 +635,8 @@
         ]
       },
       "properties": {
-        "volcano": "Sangay",
+        "name": "sangay",
+        "display_name": "Sangay",
         "lat_deg": -2.0056,
         "lon_deg": -78.3408,
         "alt_masl": 5286,
@@ -657,7 +674,8 @@
         ]
       },
       "properties": {
-        "volcano": "Nyiragongo",
+        "name": "nyiragongo",
+        "display_name": "Nyiragongo",
         "lat_deg": -1.5215,
         "lon_deg": 29.2495,
         "alt_masl": 3470,
@@ -695,7 +713,8 @@
         ]
       },
       "properties": {
-        "volcano": "Tungurahua",
+        "name": "tungurahua",
+        "display_name": "Tungurahua",
         "lat_deg": -1.4685,
         "lon_deg": -78.4473,
         "alt_masl": 5023,
@@ -733,7 +752,8 @@
         ]
       },
       "properties": {
-        "volcano": "Sierra Negra",
+        "name": "sierra_negra",
+        "display_name": "Sierra Negra",
         "lat_deg": -0.8302,
         "lon_deg": -91.1445,
         "alt_masl": 990,
@@ -771,7 +791,8 @@
         ]
       },
       "properties": {
-        "volcano": "Cotopaxi",
+        "name": "cotopaxi",
+        "display_name": "Cotopaxi",
         "lat_deg": -0.6845,
         "lon_deg": -78.437,
         "alt_masl": 5800,
@@ -809,7 +830,8 @@
         ]
       },
       "properties": {
-        "volcano": "El Reventador",
+        "name": "el_reventador",
+        "display_name": "El Reventador",
         "lat_deg": -0.081,
         "lon_deg": -77.6584,
         "alt_masl": 3510,
@@ -847,7 +869,8 @@
         ]
       },
       "properties": {
-        "volcano": "Cayambe",
+        "name": "cayambe",
+        "display_name": "Cayambe",
         "lat_deg": 0.025,
         "lon_deg": -77.9892,
         "alt_masl": 5790,
@@ -885,7 +908,8 @@
         ]
       },
       "properties": {
-        "volcano": "Gamalama",
+        "name": "gamalama",
+        "display_name": "Gamalama",
         "lat_deg": 0.81,
         "lon_deg": 127.3324,
         "alt_masl": 1680,
@@ -923,7 +947,8 @@
         ]
       },
       "properties": {
-        "volcano": "Galeras",
+        "name": "galeras",
+        "display_name": "Galeras",
         "lat_deg": 1.2214,
         "lon_deg": -77.3592,
         "alt_masl": 4080,
@@ -961,7 +986,8 @@
         ]
       },
       "properties": {
-        "volcano": "Purace",
+        "name": "purace",
+        "display_name": "Purace",
         "lat_deg": 2.32,
         "lon_deg": -76.4,
         "alt_masl": 4650,
@@ -999,7 +1025,8 @@
         ]
       },
       "properties": {
-        "volcano": "Sinabung",
+        "name": "sinabung",
+        "display_name": "Sinabung",
         "lat_deg": 3.1693,
         "lon_deg": 98.393,
         "alt_masl": 2460,
@@ -1037,7 +1064,8 @@
         ]
       },
       "properties": {
-        "volcano": "Nevado del Ruiz",
+        "name": "nevado_del_ruiz",
+        "display_name": "Nevado del Ruiz",
         "lat_deg": 4.892,
         "lon_deg": -75.3188,
         "alt_masl": 5200,
@@ -1075,7 +1103,8 @@
         ]
       },
       "properties": {
-        "volcano": "Turrialba",
+        "name": "turrialba",
+        "display_name": "Turrialba",
         "lat_deg": 10.0167,
         "lon_deg": -83.7655,
         "alt_masl": 3340,
@@ -1113,7 +1142,8 @@
         ]
       },
       "properties": {
-        "volcano": "Poas",
+        "name": "poas",
+        "display_name": "Poas",
         "lat_deg": 10.1963,
         "lon_deg": -84.2299,
         "alt_masl": 2708,
@@ -1151,7 +1181,8 @@
         ]
       },
       "properties": {
-        "volcano": "Canlaon",
+        "name": "canlaon",
+        "display_name": "Canlaon",
         "lat_deg": 10.4096,
         "lon_deg": 123.13,
         "alt_masl": 2422,
@@ -1189,7 +1220,8 @@
         ]
       },
       "properties": {
-        "volcano": "Arenal",
+        "name": "arenal",
+        "display_name": "Arenal",
         "lat_deg": 10.4627,
         "lon_deg": -84.7024,
         "alt_masl": 1610,
@@ -1227,7 +1259,8 @@
         ]
       },
       "properties": {
-        "volcano": "Rincon de la Vieja",
+        "name": "rincon_de_la_vieja",
+        "display_name": "Rincon de la Vieja",
         "lat_deg": 10.83,
         "lon_deg": -85.3239,
         "alt_masl": 1895,
@@ -1265,7 +1298,8 @@
         ]
       },
       "properties": {
-        "volcano": "Concepcion",
+        "name": "concepcion",
+        "display_name": "Concepcion",
         "lat_deg": 11.5385,
         "lon_deg": -85.6224,
         "alt_masl": 1600,
@@ -1303,7 +1337,8 @@
         ]
       },
       "properties": {
-        "volcano": "Masaya",
+        "name": "masaya",
+        "display_name": "Masaya",
         "lat_deg": 11.9841,
         "lon_deg": -86.1684,
         "alt_masl": 460,
@@ -1341,7 +1376,8 @@
         ]
       },
       "properties": {
-        "volcano": "Momotombo",
+        "name": "momotombo",
+        "display_name": "Momotombo",
         "lat_deg": 12.4238,
         "lon_deg": -86.5388,
         "alt_masl": 1250,
@@ -1379,7 +1415,8 @@
         ]
       },
       "properties": {
-        "volcano": "Telica",
+        "name": "telica",
+        "display_name": "Telica",
         "lat_deg": 12.6051,
         "lon_deg": -86.8421,
         "alt_masl": 1061,
@@ -1417,7 +1454,8 @@
         ]
       },
       "properties": {
-        "volcano": "San Cristobal",
+        "name": "san_cristobal",
+        "display_name": "San Cristobal",
         "lat_deg": 12.7049,
         "lon_deg": -87.0013,
         "alt_masl": 1745,
@@ -1455,7 +1493,8 @@
         ]
       },
       "properties": {
-        "volcano": "Mayon",
+        "name": "mayon",
+        "display_name": "Mayon",
         "lat_deg": 13.2542,
         "lon_deg": 123.6862,
         "alt_masl": 2370,
@@ -1493,7 +1532,8 @@
         ]
       },
       "properties": {
-        "volcano": "San Miguel",
+        "name": "san_miguel",
+        "display_name": "San Miguel",
         "lat_deg": 13.4319,
         "lon_deg": -88.2719,
         "alt_masl": 2130,
@@ -1531,7 +1571,8 @@
         ]
       },
       "properties": {
-        "volcano": "Santa Ana",
+        "name": "santa_ana",
+        "display_name": "Santa Ana",
         "lat_deg": 13.8486,
         "lon_deg": -89.6309,
         "alt_masl": 2381,
@@ -1569,7 +1610,8 @@
         ]
       },
       "properties": {
-        "volcano": "Fuego Guatemala",
+        "name": "fuego_guatemala",
+        "display_name": "Fuego Guatemala",
         "lat_deg": 14.4742,
         "lon_deg": -90.8806,
         "alt_masl": 3763,
@@ -1607,7 +1649,8 @@
         ]
       },
       "properties": {
-        "volcano": "Santiaguito",
+        "name": "santiaguito",
+        "display_name": "Santiaguito",
         "lat_deg": 14.7383,
         "lon_deg": -91.5681,
         "alt_masl": 2500,
@@ -1645,7 +1688,8 @@
         ]
       },
       "properties": {
-        "volcano": "Soufriere Hills",
+        "name": "soufriere_hills",
+        "display_name": "Soufriere Hills",
         "lat_deg": 16.7103,
         "lon_deg": -62.1773,
         "alt_masl": 915,
@@ -1683,7 +1727,8 @@
         ]
       },
       "properties": {
-        "volcano": "Popocatepetl",
+        "name": "popocatepetl",
+        "display_name": "Popocatepetl",
         "lat_deg": 19.0233,
         "lon_deg": -98.6224,
         "alt_masl": 5070,
@@ -1721,7 +1766,8 @@
         ]
       },
       "properties": {
-        "volcano": "Fuego de Colima",
+        "name": "fuego_de_colima",
+        "display_name": "Fuego de Colima",
         "lat_deg": 19.5117,
         "lon_deg": -103.6167,
         "alt_masl": 3850,
@@ -1759,7 +1805,8 @@
         ]
       },
       "properties": {
-        "volcano": "Etna",
+        "name": "etna",
+        "display_name": "Etna",
         "lat_deg": 37.7506,
         "lon_deg": 14.9934,
         "alt_masl": 3330,
@@ -1797,7 +1844,8 @@
         ]
       },
       "properties": {
-        "volcano": "Vulcano",
+        "name": "vulcano",
+        "display_name": "Vulcano",
         "lat_deg": 38.4046,
         "lon_deg": 14.9618,
         "alt_masl": 250,
@@ -1835,7 +1883,8 @@
         ]
       },
       "properties": {
-        "volcano": "Stromboli",
+        "name": "stromboli",
+        "display_name": "Stromboli",
         "lat_deg": 38.792,
         "lon_deg": 15.2124,
         "alt_masl": 924,
@@ -1873,7 +1922,8 @@
         ]
       },
       "properties": {
-        "volcano": "St Helens",
+        "name": "st_helens",
+        "display_name": "St Helens",
         "lat_deg": 46.2,
         "lon_deg": -122.18,
         "alt_masl": 2549,
@@ -1911,7 +1961,8 @@
         ]
       },
       "properties": {
-        "volcano": "Cleveland",
+        "name": "cleveland",
+        "display_name": "Cleveland",
         "lat_deg": 52.825,
         "lon_deg": -169.944,
         "alt_masl": 1730,
@@ -1949,7 +2000,8 @@
         ]
       },
       "properties": {
-        "volcano": "Eyjafjallajokull",
+        "name": "eyjafjallajokull",
+        "display_name": "Eyjafjallajokull",
         "lat_deg": 63.633,
         "lon_deg": -19.633,
         "alt_masl": 1651,
@@ -1987,7 +2039,8 @@
         ]
       },
       "properties": {
-        "volcano": "Katla",
+        "name": "katla",
+        "display_name": "Katla",
         "lat_deg": 63.6383,
         "lon_deg": -19.1278,
         "alt_masl": 1370,
@@ -2025,7 +2078,8 @@
         ]
       },
       "properties": {
-        "volcano": "Krysuvik",
+        "name": "krysuvik",
+        "display_name": "Krysuvik",
         "lat_deg": 63.917,
         "lon_deg": -22.067,
         "alt_masl": 360,
@@ -2063,7 +2117,8 @@
         ]
       },
       "properties": {
-        "volcano": "Hekla",
+        "name": "hekla",
+        "display_name": "Hekla",
         "lat_deg": 63.9895,
         "lon_deg": -19.6634,
         "alt_masl": 1490,
