@@ -14,6 +14,8 @@ let map;
 let geoLayer;
 let overlayEl = null;
 
+const volcanoIndex = new Map();
+
 // --- Helpers ---
 function emissionRadius(props, year, options = {}) {
   const {
@@ -227,6 +229,12 @@ function initMap() {
         });
       },
       onEachFeature: (feature, layer) => {
+        // index by volcano name
+        const name = feature.properties?.volcano;
+        if (name) {
+          volcanoIndex.set(name, { layer, feature });
+        }
+
         layer.on("click", () => {
           const place = getPlaceFromFeature(feature);
           selectedPlace = place;
@@ -234,16 +242,57 @@ function initMap() {
           renderPlaceOverlay(place, [lat, lng]);
         });
       }
-    }).addTo(map);
+}).addTo(map);
     setYear(year);
+    //dropdown control
+    const VolcanoControl = L.Control.extend({
+  onAdd() {
+    const container = L.DomUtil.create("div", "leaflet-bar volcano-control");
+
+    // Build <select> with all volcano names
+    const select = L.DomUtil.create("select", "volcano-select", container);
+    select.innerHTML = `
+      <option value="">Select volcano…</option>
+      ${Array.from(volcanoIndex.keys())
+        .sort()
+        .map(name => `<option value="${name}">${name}</option>`)
+        .join("")}
+    `;
+
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
+
+    select.addEventListener("change", (e) => {
+      const name = e.target.value;
+      if (!name) return;
+
+      const entry = volcanoIndex.get(name);
+      if (!entry) return;
+
+      const { feature, layer } = entry;
+      const place = getPlaceFromFeature(feature);
+      selectedPlace = place;
+
+      // center map on this volcano
+      if (layer.getLatLng) {
+        map.setView(layer.getLatLng(), 10, { animate: true });
+      }
+
+      const [lng, lat] = feature.geometry.coordinates;
+      renderPlaceOverlay(place, [lat, lng]);
+    });
+
+    return container;
+  }
+});
+
+map.addControl(new VolcanoControl({ position: "topright" }));
   })
   .catch((err) => {
     console.error("Failed to load GeoJSON", err);
   });
-  //startTick();
 }
 
-// --- Init on DOM ready ---
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
 });
