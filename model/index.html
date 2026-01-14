@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volcano 3D Models</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <audio id="background-music" src="resources/music_idle.mp3" volume="0.5" playbackRate="0.5" loop></audio>
+    <audio id="strong_eruption_sfx" src="resources/strong_eruption_sfx.mp3" volume="0.5" loop></audio>
+    <div id="button-container">
+        <button id="enter-button">Play Audio</button>
+        <button id="toggle-visibility-btn">Look inside Volcano</button>
+        <button id="refresh-btn">Refresh</button>
+        <button id="toggle-camera-btn">Camera Control Off</button>
+        <button id="trigger-eruption-btn">Trigger Eruption</button>
+    </div>
+    <button id="parameters-btn">Parameters</button>
+    <div id="container"></div>
+    <div id="coordinates"></div>
+    <div id="parameters-popup" style="display: none;">
+
+        <div>
+            <label for="gas-density-slider">Gas Density</label>
+            <input type="range" id="gas-density-slider" min="10" max="50" value="30" step="1">
+        </div>
+        <div>
+            <label for="volcano-stretch-slider">Volcano Stretch</label>
+            <input type="range" id="volcano-stretch-slider" min="1.0" max="3.0" value="2.0" step="0.1">
+        </div>
+        <div>
+            <label for="temperature-slider">Temperature</label>
+            <input type="range" id="temperature-slider" min="0" max="20" value="10" step="1">
+        </div>
+    </div>
+    <div id="infobox"></div>
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
