@@ -173,7 +173,7 @@ class Smoke extends THREE.Object3D{
         const normalizedStretch = Math.max(0, Math.min(1, (stretch - 1.0) / 2.0));
         const depthDampening = 1.0 - normalizedStretch * 0.8;
 
-        const temperature = (this.temperature ?? 10) * 5;
+        const temperature = (this.parameters.temperature ?? 10) * 5;
         const gasDensity = this.parameters.gasDensity || 25;
         const gasAmountNormalized = gasDensity / 100;
 
