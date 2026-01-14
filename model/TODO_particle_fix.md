@@ -1,0 +1,4 @@
+- [ ] Modify updateSmoke() to calculate desired particle count as Math.floor(window.gasDensity)
+- [ ] Add logic in updateSmoke() to add new particles if current count < desired
+- [ ] Add logic in updateSmoke() to remove excess particles if current count > desired (remove oldest)
+- [ ] Set fixed lifetime = 2.5 seconds in updateSmoke()
