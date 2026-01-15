@@ -4,6 +4,10 @@ body {
     overflow: hidden;
 }
 
+.transparentBg {
+    background-color: rgb(from var(--pico-background-color) r g b / 0.5);
+}
+
 #container {
     width: 100vw;
     height: 100vh;
@@ -29,6 +33,7 @@ body {
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: baseline;
 }
 
 
