@@ -694,16 +694,6 @@ class View {
 
         // Render the scene
         this.renderer.render(this.scene, this.camera);
-
-        // Only update the camera coordinates display if the camera has moved
-        const coordsDiv = document.getElementById('coordinates');
-        if (coordsDiv) {
-            const prevCoordsText = coordsDiv.textContent;
-            const coordsText = `Camera: X: ${this.camera.position.x.toFixed(2)}, Y: ${this.camera.position.y.toFixed(2)}, Z: ${this.camera.position.z.toFixed(2)}`;
-            if (coordsText !== prevCoordsText) {
-                coordsDiv.textContent = coordsText;
-            }
-        }
     }
 }
 
