@@ -361,10 +361,6 @@ class EruptionHandler {
         const infoboxDiv = document.getElementById('infobox');
         if (infoboxDiv) {
             infoboxDiv.style.opacity = '0';
-            setTimeout(() => {
-                infoboxDiv.textContent = 'Infobox';
-                infoboxDiv.style.opacity = '1';
-            }, 250);
         }
         // Update button text back to trigger mode
         const btn = document.getElementById('trigger-eruption-btn');
