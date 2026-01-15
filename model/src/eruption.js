@@ -117,32 +117,15 @@ class EruptionHandler {
                     const offsetY = (Math.random() - 0.5) * shakeIntensity * fadeFactor * 0.5;
                     const offsetZ = (Math.random() - 0.5) * shakeIntensity * fadeFactor * 0.5;
 
-                    if (!hasMovedToTarget) {
-                        // First shake: interpolate position from original to target
-                        const originalPosition = this.view.camera.position.clone();
-                        const lerpedPosition = new THREE.Vector3();
-                        lerpedPosition.lerpVectors(originalPosition, targetPosition, progress);
-
-                        this.view.camera.position.set(
-                            lerpedPosition.x + offsetX,
-                            lerpedPosition.y + offsetY,
-                            lerpedPosition.z + offsetZ
-                        );
-                    } else {
-                        // Subsequent shakes: shake around target position
-                        this.view.camera.position.set(
-                            targetPosition.x + offsetX,
-                            targetPosition.y + offsetY,
-                            targetPosition.z + offsetZ
-                        );
-                    }
+                    this.view.camera.position.add(new THREE.Vector3(
+                        offsetX, offsetY, offsetZ
+                    ));
 
                     this.shakeAnimationId = requestAnimationFrame(animateShake);
                 } else {
                     // End of shake
                     isShaking = false;
-                    // Always reset to target position after shake
-                    this.view.camera.position.copy(targetPosition);
+
                     if (!hasMovedToTarget) {
                         hasMovedToTarget = true;
                         hasTextureFadedIn = true;
