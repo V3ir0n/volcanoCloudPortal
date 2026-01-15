@@ -1,38 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title></title>
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
-  <link rel="stylesheet" href="styles.css" />
-
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"
-      }
-    }
-  </script>
-
-</head>
-<body>
-  <div class="map-wrap">
-    <div id="map"></div>
-  </div>
-
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
-
-  <script type="module" src="src/main.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+    <title>Volcanic clouds</title>
+  </head>
+  <body>
+    <main class="container">
+        <hgroup>
+            <h1>Volcanic clouds portal</h1>
+            <p>A visualisation tool for NOCAC, made by InfraVis</p>
+        </hgroup>
+        <div class="grid">
+            <article>
+                <hgroup>
+                    <a href="./model/index.html">
+                        <h2 role="button">Why measure volcanoes?</h2>
+                    </a>
+                    <p>A visualisation of the reason to measure gases emitted by volcanoes</p>
+                </hgroup>
+            </article>
+            <article>
+                <hgroup>
+                    <a href="./map/index.html">
+                        <h2 role="button">Where and what?</h2>
+                    </a>
+                    <p>A map of the location of the volcanoes and real data</p>
+                </hgroup>
+            </article>
+        </div>
+    </main>
+  </body>
 </html>
