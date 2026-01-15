@@ -37,22 +37,55 @@ class VolcanoParameters {
             slider.value = value;
         }
     }
+
+    // Define ranges based on slider min/max divided into three equidistant values
+    getRanges(param) {
+        const slider = document.getElementById(param+"Slider");
+        const min = parseFloat(slider.min);
+        const max = parseFloat(slider.max);
+        const range = max - min;
+        const delta = range / 6;
+        return {
+            low: min + delta,
+            medium: min + delta*3,
+            high: min + delta*5,
+            delta: delta
+        }
+    }
     // Function to get eruption type based on parameters
     getEruptionType() {
-        const temp = this.temperature;
-        const gas = this.gasDensity;
-        const depth = this.volcanoStretch;
 
-        // Define ranges based on slider min/max divided into fifths
-        const tempLow = 2, tempMedLow = 5, tempMedium = 11, tempMedHigh = 15, tempHigh = 18;
-        const gasLow = 15, gasMedLow = 20, gasMedium = 31, gasMedHigh = 40, gasHigh = 45;
-        const depthLow = 1.3, depthMedLow = 1.5, depthMedium = 2.1, depthMedHigh = 2.5, depthHigh = 2.8;
+        const check = (param, comparison, target) => {
+            const val = this[param];
+            const range = this.getRanges(param);
+            switch (comparison) {
+                case "<": return val <= range[target];
+                case ">": return val >= range[target];
+                case "=":
+                    return Math.abs(val - range[target]) <= range.delta * 1.1;
+                default:
+                    console.error(`Unknown comparison: ${comparison}`);
+                    break;
+            }
+        }
 
-        if (temp >= tempHigh && gas <= gasLow && depth <= depthLow) {
+        if (
+            check("temperature", "=", "high") &&
+            check("gasDensity", "=", "low") &&
+            check("volcanoStretch", "=", "low")
+        ) {
             return 'passive degassing';
-        } else if (temp >= tempMedium && gas >= gasMedium && gas <= gasMedHigh && depth >= depthMedium && depth <= depthMedHigh) {
+        } else if (
+            check("temperature", ">", "medium") &&
+            check("gasDensity", "=", "high") &&
+            check("volcanoStretch", "=", "high")
+        ) {
             return 'strombolian eruption';
-        } else if (temp <= tempMedium && gas >= gasHigh && depth >= depthHigh) {
+        } else if (
+            check("temperature", "=", "medium") &&
+            check("gasDensity", "=", "high") &&
+            check("volcanoStretch", "=", "medium")
+        ) {
             return 'vulcanian eruption';
         } else {
             return 'No Eruption';

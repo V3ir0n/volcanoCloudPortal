@@ -42,5 +42,7 @@ body {
     top: 10px;
     right: 10px;
     width: 300px;
+    max-height: 98%;
+    overflow-y: scroll;
     z-index: 101;
 }
