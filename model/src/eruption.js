@@ -252,10 +252,7 @@ class EruptionHandler {
         const backgroundMusic = document.getElementById('background-music');
 
         // Switch back to default music if sound is enabled
-        if (
-            (mildSfx && !mildSfx.paused) ||
-            (strongSfx && !strongSfx.paused)
-        ) {
+        if (document.getElementById('audioToggle').checked) {
             if (backgroundMusic && backgroundMusic.paused) {
                 backgroundMusic.play();
             }
