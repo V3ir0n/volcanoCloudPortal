@@ -49,11 +49,11 @@ class VolcanoParameters {
         const depthLow = 1.3, depthMedLow = 1.5, depthMedium = 2.1, depthMedHigh = 2.5, depthHigh = 2.8;
 
         if (temp >= tempHigh && gas <= gasLow && depth <= depthLow) {
-            return 'Type 1';
+            return 'passive degassing';
         } else if (temp >= tempMedium && gas >= gasMedium && gas <= gasMedHigh && depth >= depthMedium && depth <= depthMedHigh) {
-            return 'Type 2';
+            return 'strombolian eruption';
         } else if (temp <= tempMedium && gas >= gasHigh && depth >= depthHigh) {
-            return 'Type 3';
+            return 'vulcanian eruption';
         } else {
             return 'No Eruption';
         }
@@ -64,12 +64,13 @@ class VolcanoParameters {
         const type = this.getEruptionType();
         const btn = document.getElementById('trigger-eruption-btn');
         if (btn) {
-            btn.textContent = `Trigger Eruption ${type}`;
             if (type === 'No Eruption') {
+                btn.textContent = "No eruption possible for current parameters";
                 btn.disabled = true;
                 btn.style.opacity = '0.5';
                 btn.style.cursor = 'not-allowed';
             } else {
+                btn.textContent = `Trigger ${type}`;
                 btn.disabled = false;
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
