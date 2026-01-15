@@ -247,18 +247,23 @@ class EruptionHandler {
         this.stopShake();
         console.log('Resetting to before eruption');
 
-        // Stop sounds
         const mildSfx = document.getElementById('mild_eruption_sfx');
         const strongSfx = document.getElementById('strong_eruption_sfx');
+        const backgroundMusic = document.getElementById('background-music');
+
+        // Switch back to default music if sound is enabled
+        if (
+            (mildSfx && !mildSfx.paused) ||
+            (strongSfx && !strongSfx.paused)
+        ) {
+            if (backgroundMusic && backgroundMusic.paused) {
+                backgroundMusic.play();
+            }
+        }
+
+        // Stop sound effects
         if (mildSfx) mildSfx.pause();
         if (strongSfx) strongSfx.pause();
-
-        // Switch back to default music if it was playing before eruption
-        const backgroundMusic = document.getElementById('background-music');
-        if (strongSfx) strongSfx.pause();
-        if (backgroundMusic && backgroundMusic.paused) {
-            backgroundMusic.play();
-        }
 
         // Reset smoke particles
         if (this.view.smoke.smokeParticles) {
