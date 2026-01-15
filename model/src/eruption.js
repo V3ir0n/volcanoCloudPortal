@@ -11,12 +11,10 @@ class EruptionHandler {
             const triggerEruptionBtn = document.getElementById('trigger-eruption-btn');
             if (triggerEruptionBtn) {
                 triggerEruptionBtn.addEventListener('click', () => {
-                    if (this.eruptionTriggered) {
+                    if (this.eruptionOngoing()) {
                         this.resetToBeforeEruption();
-                        this.eruptionTriggered = false;
                     } else {
                         this.determineEruptionType();
-                        this.eruptionTriggered = true;
                     }
                 });
             }
@@ -163,6 +161,10 @@ class EruptionHandler {
         animateShake();
     };
 
+    eruptionOngoing() {
+        return this.isType1Eruption || this.isType2Eruption || this.isType3Eruption;
+    }
+
     // Placeholder functions for different eruption types
     type1_eruption() {
         console.log('Type 1 Eruption: High temperature, low gas, shallow depth');
@@ -183,10 +185,6 @@ class EruptionHandler {
                 infoboxDiv.style.opacity = '1';
             }, 250);
         }
-        // Adjust smoke parameters for type1 eruption: temperature mid-high, gas density medium, volcano depth high
-        this.parameters.temperature = 15; // mid-high temperature
-        this.parameters.gasDensity = 31; // medium gas density
-        this.parameters.volcanoStretch = 2.8; // high depth
         this.shakeCamera();
     }
 
@@ -209,10 +207,6 @@ class EruptionHandler {
                 infoboxDiv.style.opacity = '1';
             }, 250);
         }
-        // Adjust smoke parameters for type2 eruption: temperature medium-high, gas density high, volcano depth high
-        this.parameters.temperature = 17; // medium-high temperature
-        this.parameters.gasDensity = 45; // high gas density
-        this.parameters.volcanoStretch = 2.8; // high depth
         this.shakeCamera();
     }
 
@@ -237,10 +231,6 @@ class EruptionHandler {
         }
         // Switch back to default smoke textures
         this.view.smoke.currentSmokeTextures = this.view.smoke.loadedTextures;
-        // Adjust smoke parameters for type3 eruption: temperature medium, gas density high, volcano depth low-medium
-        this.parameters.temperature = 11; // medium temperature
-        this.parameters.gasDensity = 45; // high gas density
-        this.parameters.volcanoStretch = 1.8; // low-medium depth
         this.shakeCamera();
     }
 
@@ -293,9 +283,9 @@ class EruptionHandler {
         this.isType2Eruption = false;
         this.isType3Eruption = false;
         // Reset parameters to defaults
-        this.parameters.temperature = 10;
-        this.parameters.gasDensity = 30;
-        this.parameters.volcanoStretch = 2.0;
+        //this.parameters.temperature = 10;
+        //this.parameters.gasDensity = 30;
+        //this.parameters.volcanoStretch = 2.0;
         // Reset smoke textures
         this.view.smoke.currentSmokeTextures = this.view.smoke.loadedTextures;
         // Reset camera position

@@ -1,65 +1,40 @@
 class VolcanoParameters {
     constructor(view) {
 
-        this.gasDensity = 30; // Default gas density (50% of 10-50)
-        this.volcanoStretch = 2.0; // Default volcano stretch (50% of 1.0-3.0)
-        this.temperature = 10; // Default temperature (50% of 0-20)
-        this.smokeSpeed = 0.01; // Default smoke speed
-        this.smokeHeight = 1.0; // Default smoke height
-        this.smokeLifetime = 2.5; // Default smoke lifetime
-        this.windSpeed = 0;
+        const setupParameter = (param, defaultValue, callback=()=>{}) => {
+            const slider = document.getElementById(param+"Slider");
+            if (slider) {
+                this[param] = parseFloat(slider.value);
+                slider.addEventListener('input', () => {
+                    this[param] = parseFloat(slider.value);
+                    callback();
 
-        const smokeSpeedSlider = document.getElementById('smoke-speed-slider');
-        if (smokeSpeedSlider) {
-            smokeSpeedSlider.addEventListener('input', (event) => {
-                this.smokeSpeed = parseFloat(event.target.value);
-            });
-        }
+                    if (view.eruptionHandler.eruptionOngoing()) {
+                        view.eruptionHandler.resetToBeforeEruption();
+                    }
+                });
+            } else {
+                this[param] = defaultValue
+            }
+        };
 
-        const smokeHeightSlider = document.getElementById('smoke-height-slider');
-        if (smokeHeightSlider) {
-            smokeHeightSlider.addEventListener('input', (event) => {
-                this.smokeHeight = parseFloat(event.target.value);
-            });
-        }
+        setupParameter("smokeSpeed", 0.01);
+        setupParameter("smokeHeight", 1.0);
+        setupParameter("smokeLifetime", 2.5);
+        setupParameter("gasDensity", 30, ()=>this.updateTriggerButtonText());
+        setupParameter("volcanoStretch", 2.0, ()=>{
+            this.updateTriggerButtonText();
+            view.stretchVolcano();
+        });
+        setupParameter("temperature", 10, ()=>this.updateTriggerButtonText());
+        setupParameter("windSpeed", 0);
+    }
 
-        const smokeLifetimeSlider = document.getElementById('smoke-lifetime-slider');
-        if (smokeLifetimeSlider) {
-            smokeLifetimeSlider.addEventListener('input', (event) => {
-                this.smokeLifetime = parseFloat(event.target.value);
-            });
-        }
-
-        const gasDensitySlider = document.getElementById('gas-density-slider');
-        if (gasDensitySlider) {
-            gasDensitySlider.addEventListener('input', (event) => {
-                this.gasDensity = parseInt(event.target.value);
-                this.updateTriggerButtonText();
-            });
-        }
-
-        const volcanoStretchSlider = document.getElementById('volcano-stretch-slider');
-        if (volcanoStretchSlider) {
-            volcanoStretchSlider.addEventListener('input', (event) => {
-                this.volcanoStretch = parseFloat(event.target.value);
-                view.stretchVolcano();
-                this.updateTriggerButtonText();
-            });
-        }
-
-        const temperatureSlider = document.getElementById('temperature-slider');
-        if (temperatureSlider) {
-            temperatureSlider.addEventListener('input', (event) => {
-                this.temperature = parseFloat(event.target.value);
-                this.updateTriggerButtonText();
-            });
-        }
-
-        const windSpeedSlider = document.getElementById('wind-speed-slider');
-        if (windSpeedSlider) {
-            windSpeedSlider.addEventListener('input', (event) => {
-                this.windSpeed = parseFloat(event.target.value);
-            });
+    set(param, value) {
+        this[param] = value;
+        const slider = document.getElementById(param+"Slider");
+        if (slider) {
+            slider.value = value;
         }
     }
     // Function to get eruption type based on parameters
