@@ -266,6 +266,8 @@ class Smoke extends THREE.Object3D{
                 velZ = effectiveHorizontalDriftZ;
             }
 
+            velX += this.parameters.windSpeed;
+
             let totalUpwardForce = (Math.random() * effectiveVerticalForce + effectiveVerticalForce / 2) + (temperature * 0.001 * effectiveBuoyancyMultiplier);
             if (this.isType1Eruption) {
                 totalUpwardForce *= 1.5; // Increase upward force for gentler drift
