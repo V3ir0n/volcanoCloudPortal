@@ -21,13 +21,13 @@
 <body>
     <audio id="background-music" src="resources/music_idle.mp3" volume="0.5" playbackRate="0.5" loop></audio>
     <audio id="strong_eruption_sfx" src="resources/strong_eruption_sfx.mp3" volume="0.5" loop></audio>
-    <div id="button-container">
-        <button id="enter-button">Play Audio</button>
+    <article id="button-container" class="transparentBg">
+        <label><input id="audioToggle" type="checkbox" role="switch"/>Audio</label>
+        <label><input id="cameraControlsToggle" type="checkbox" role="switch"/>Camera control</label>
         <button id="toggle-visibility-btn">Look inside Volcano</button>
         <button id="refresh-btn">Refresh</button>
-        <button id="toggle-camera-btn">Camera Control Off</button>
         <button id="trigger-eruption-btn">Trigger Eruption</button>
-    </div>
+    </article>
     <div id="container"></div>
     <article class="parameters">
         <details open>

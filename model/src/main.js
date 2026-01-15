@@ -9,17 +9,20 @@ import {EruptionHandler} from './eruption.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const backgroundMusic = document.getElementById('background-music');
-    const enterButton = document.getElementById('enter-button');
+    const audioToggle = document.getElementById('audioToggle');
     const refreshBtn = document.getElementById('refresh-btn');
-    const toggleCameraBtn = document.getElementById('toggle-camera-btn');
+    const cameraControlsToggle = document.getElementById('cameraControlsToggle');
 
     if (backgroundMusic) {
         backgroundMusic.pause();
     }
 
-    if (enterButton) {
-        enterButton.addEventListener('click', () => {
-            toggleAudio();
+    if (audioToggle) {
+        // Hardcode audio to be turned off by default, need to be started by user action
+        audioToggle.checked = false
+        toggleAudio(audioToggle.checked);
+        audioToggle.addEventListener('change', () => {
+            toggleAudio(audioToggle.checked);
         });
     }
 
@@ -29,9 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (toggleCameraBtn) {
-        toggleCameraBtn.addEventListener('click', () => {
-            toggleCameraControls();
+    if (cameraControlsToggle) {
+        toggleCameraControls(cameraControlsToggle.checked);
+        cameraControlsToggle.addEventListener('change', () => {
+            toggleCameraControls(cameraControlsToggle.checked);
         });
     }
 });
@@ -40,9 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function toggleAudio() {
+function toggleAudio(enable) {
     const backgroundMusic = document.getElementById('background-music');
-    const enterButton = document.getElementById('enter-button');
     if (!backgroundMusic) {
         console.error("Audio element with id 'background-music' not found.");
         return;
@@ -51,19 +54,17 @@ function toggleAudio() {
     backgroundMusic.volume = 0.05;
     backgroundMusic.playbackRate = 0.75;
 
-    if (backgroundMusic.paused) {
+    if (enable) {
         backgroundMusic.play();
-        if(enterButton) enterButton.textContent = 'Stop Audio';
     } else {
         backgroundMusic.pause();
-        if(enterButton) enterButton.textContent = 'Play Audio';
     }
 }
 
 // Function to toggle camera controls (re-introduced)
-function toggleCameraControls() {
+function toggleCameraControls(enable) {
     if (view.controls) {
-        view.controls.enabled = !view.controls.enabled;
+        view.controls.enabled = enable;
         const button = document.getElementById('toggle-camera-btn');
         if (view.controls.enabled) {
             // Apply specified limits when controls are enabled
@@ -72,7 +73,6 @@ function toggleCameraControls() {
             view.controls.minAzimuthAngle = -Math.PI/3; // 60 degrees (from front)
             view.controls.maxAzimuthAngle = Math.PI/3; // 60 degrees (from front)
             view.controls.enablePan = true; // Enable pan when controls are on
-            button.textContent = 'Camera Control On';
         } else {
             // Reset limits and disable pan when controls are off
             view.controls.minPolarAngle = 0; // Full range
@@ -80,7 +80,6 @@ function toggleCameraControls() {
             view.controls.minAzimuthAngle = -Infinity; // Full range
             view.controls.maxAzimuthAngle = Infinity; // Full range
             view.controls.enablePan = false; // Disable pan when controls are off
-            button.textContent = 'Camera Control Off';
         }
         console.log('Camera controls ' + (view.controls.enabled ? 'enabled' : 'disabled'));
     }
