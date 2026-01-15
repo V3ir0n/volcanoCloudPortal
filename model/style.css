@@ -9,17 +9,6 @@ body {
     height: 100vh;
 }
 
-#coordinates {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-}
-
 #smoke-texture-preview {
     position: absolute;
     top: 10px;
