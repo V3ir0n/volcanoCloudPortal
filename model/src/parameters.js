@@ -7,30 +7,7 @@ class VolcanoParameters {
         this.smokeSpeed = 0.01; // Default smoke speed
         this.smokeHeight = 1.0; // Default smoke height
         this.smokeLifetime = 2.5; // Default smoke lifetime
-
-        const parametersButton = document.getElementById('parameters-btn');
-        const popup = document.getElementById('parameters-popup');
-
-        console.log('Parameters button:', parametersButton);
-        console.log('Popup:', popup);
-
-        if (parametersButton && popup) {
-            console.log('Adding event listener');
-            parametersButton.addEventListener('click', () => {
-                console.log('Button clicked, popup display:', popup.style.display);
-                if (popup.style.display === 'none') {
-                    popup.style.display = 'block';
-                    parametersButton.textContent = 'Close Parameters';
-                    console.log('Opened popup, text set to Close Parameters');
-                } else {
-                    popup.style.display = 'none';
-                    parametersButton.textContent = 'Parameters';
-                    console.log('Closed popup, text set to Parameters');
-                }
-            });
-        } else {
-            console.log('Button or popup not found');
-        }
+        this.windSpeed = 0;
 
         const smokeSpeedSlider = document.getElementById('smoke-speed-slider');
         if (smokeSpeedSlider) {
@@ -75,6 +52,13 @@ class VolcanoParameters {
             temperatureSlider.addEventListener('input', (event) => {
                 this.temperature = parseFloat(event.target.value);
                 this.updateTriggerButtonText();
+            });
+        }
+
+        const windSpeedSlider = document.getElementById('wind-speed-slider');
+        if (windSpeedSlider) {
+            windSpeedSlider.addEventListener('input', (event) => {
+                this.windSpeed = parseFloat(event.target.value);
             });
         }
     }
