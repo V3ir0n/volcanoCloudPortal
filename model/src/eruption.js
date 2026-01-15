@@ -181,7 +181,7 @@ class EruptionHandler {
         if (infoboxDiv) {
             infoboxDiv.style.opacity = '0';
             setTimeout(() => {
-                infoboxDiv.textContent = 'Passive Degassing\n\nPassive degassing is characterized by the continuous release of volcanic gases such as water vapor (H₂O), carbon dioxide (CO₂), and sulfur dioxide (SO₂) from magma at shallow depth. The magma remains low in viscosity and gas escapes without significant fragmentation, producing a visible steam plume with little or no ash. This activity often reflects an open conduit system and relatively low internal pressure.';
+                infoboxDiv.innerHTML = '<h2>Passive Degassing</h2>Passive degassing is characterized by the continuous release of volcanic gases such as water vapor (H₂O), carbon dioxide (CO₂), and sulfur dioxide (SO₂) from magma at shallow depth. The magma remains low in viscosity and gas escapes without significant fragmentation, producing a visible steam plume with little or no ash. This activity often reflects an open conduit system and relatively low internal pressure.';
                 infoboxDiv.style.opacity = '1';
             }, 250);
         }
@@ -203,7 +203,7 @@ class EruptionHandler {
         if (infoboxDiv) {
             infoboxDiv.style.opacity = '0';
             setTimeout(() => {
-                infoboxDiv.textContent = 'Strombolian Eruption\n\nStrombolian eruptions result from the periodic ascent and bursting of large gas bubbles (gas slugs) within basaltic to andesitic magma. When these bubbles reach the surface, they fragment the magma, ejecting incandescent lava clasts and moderate amounts of ash. The eruption style is intermittent and moderately energetic, producing discrete explosions and a sustained but relatively low eruption column.';
+                infoboxDiv.innerHTML = '<h2>Strombolian Eruption</h2>Strombolian eruptions result from the periodic ascent and bursting of large gas bubbles (gas slugs) within basaltic to andesitic magma. When these bubbles reach the surface, they fragment the magma, ejecting incandescent lava clasts and moderate amounts of ash. The eruption style is intermittent and moderately energetic, producing discrete explosions and a sustained but relatively low eruption column.';
                 infoboxDiv.style.opacity = '1';
             }, 250);
         }
@@ -225,7 +225,7 @@ class EruptionHandler {
         if (infoboxDiv) {
             infoboxDiv.style.opacity = '0';
             setTimeout(() => {
-                infoboxDiv.textContent = 'Vulcanian Eruption\n\nVulcanian eruptions are short-lived but highly explosive events driven by the sudden release of overpressurized gas beneath a temporarily sealed volcanic conduit. The magma is more viscous, inhibiting gas escape until pressure exceeds the strength of the overlying material. This leads to violent fragmentation, generating dense ash clouds, high eruption columns, and ballistic ejecta, posing significant hazards near the volcano.';
+                infoboxDiv.innerHTML = '<h2>Vulcanian Eruption</h2>Vulcanian eruptions are short-lived but highly explosive events driven by the sudden release of overpressurized gas beneath a temporarily sealed volcanic conduit. The magma is more viscous, inhibiting gas escape until pressure exceeds the strength of the overlying material. This leads to violent fragmentation, generating dense ash clouds, high eruption columns, and ballistic ejecta, posing significant hazards near the volcano.';
                 infoboxDiv.style.opacity = '1';
             }, 250);
         }
@@ -282,10 +282,7 @@ class EruptionHandler {
         this.isType1Eruption = false;
         this.isType2Eruption = false;
         this.isType3Eruption = false;
-        // Reset parameters to defaults
-        //this.parameters.temperature = 10;
-        //this.parameters.gasDensity = 30;
-        //this.parameters.volcanoStretch = 2.0;
+
         // Reset smoke textures
         this.view.smoke.currentSmokeTextures = this.view.smoke.loadedTextures;
         // Reset camera position
@@ -389,21 +386,21 @@ class EruptionHandler {
             if (strongSfx) strongSfx.play();
         }
 
-        if (type === 'Type 1') {
+        if (type === 'passive degassing') {
             this.type1_eruption();
             // After eruption, change button to reset mode
             const btn = document.getElementById('trigger-eruption-btn');
             if (btn) {
                 btn.textContent = 'Reset to Before';
             }
-        } else if (type === 'Type 2') {
+        } else if (type === 'strombolian eruption') {
             this.type2_eruption();
             // After eruption, change button to reset mode
             const btn = document.getElementById('trigger-eruption-btn');
             if (btn) {
                 btn.textContent = 'Reset to Before';
             }
-        } else if (type === 'Type 3') {
+        } else if (type === 'vulcanian eruption') {
             this.type3_eruption();
             // After eruption, change button to reset mode
             const btn = document.getElementById('trigger-eruption-btn');
