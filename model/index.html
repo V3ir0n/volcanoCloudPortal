@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volcano 3D Models</title>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
     <link rel="stylesheet" href="style.css">
     <script type="importmap">
         {
@@ -24,25 +28,25 @@
         <button id="toggle-camera-btn">Camera Control Off</button>
         <button id="trigger-eruption-btn">Trigger Eruption</button>
     </div>
-    <button id="parameters-btn">Parameters</button>
     <div id="container"></div>
-    <div id="coordinates"></div>
-    <div id="parameters-popup" style="display: none;">
-
-        <div>
-            <label for="gas-density-slider">Gas Density</label>
-            <input type="range" id="gas-density-slider" min="10" max="50" value="30" step="1">
-        </div>
-        <div>
-            <label for="volcano-stretch-slider">Volcano Stretch</label>
-            <input type="range" id="volcano-stretch-slider" min="1.0" max="3.0" value="2.0" step="0.1">
-        </div>
-        <div>
-            <label for="temperature-slider">Temperature</label>
-            <input type="range" id="temperature-slider" min="0" max="20" value="10" step="1">
-        </div>
-    </div>
-    <div id="infobox"></div>
+    <article class="parameters">
+        <details open>
+            <summary>Parameters</summary>
+                <div>
+                    <label for="gas-density-slider">Gas Density</label>
+                    <input type="range" id="gas-density-slider" min="10" max="50" value="30" step="1">
+                </div>
+                <div>
+                    <label for="volcano-stretch-slider">Volcano Stretch</label>
+                    <input type="range" id="volcano-stretch-slider" min="1.0" max="3.0" value="2.0" step="0.1">
+                </div>
+                <div>
+                    <label for="temperature-slider">Temperature</label>
+                    <input type="range" id="temperature-slider" min="0" max="20" value="10" step="1">
+                </div>
+        </details>
+    </article>
+    <article id="infobox"></article>
     <script type="module" src="./src/main.js"></script>
 </body>
 </html>
