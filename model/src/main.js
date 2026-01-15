@@ -67,10 +67,10 @@ function toggleCameraControls() {
         const button = document.getElementById('toggle-camera-btn');
         if (view.controls.enabled) {
             // Apply specified limits when controls are enabled
-            view.controls.minPolarAngle = Math.PI / 3; // 60 degrees (from top)
-            view.controls.maxPolarAngle = 2 * Math.PI / 3; // 120 degrees (from top)
-            view.controls.minAzimuthAngle = -Infinity; // Keep full horizontal rotation
-            view.controls.maxAzimuthAngle = Infinity; // Keep full horizontal rotation
+            view.controls.minPolarAngle = Math.PI/3; // 60 degrees (from top)
+            view.controls.maxPolarAngle = 2 * Math.PI/3; // 120 degrees (from top)
+            view.controls.minAzimuthAngle = -Math.PI/3; // 60 degrees (from front)
+            view.controls.maxAzimuthAngle = Math.PI/3; // 60 degrees (from front)
             view.controls.enablePan = true; // Enable pan when controls are on
             button.textContent = 'Camera Control On';
         } else {
