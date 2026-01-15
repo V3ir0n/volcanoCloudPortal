@@ -28,7 +28,7 @@ class EruptionHandler {
         // Override texture of mayon_FULL3.glb with volcano_erupted_tex.png
         const textureLoader = new THREE.TextureLoader();
         textureLoader.setPath("resources/");
-        textureLoader.load('volcano_erupted_tex.png', (texture) => {
+        textureLoader.load('volcano_lava.png', (texture) => {
             texture.encoding = THREE.sRGBEncoding; // Ensure correct color space
             if (this.view.terrain) {
                 this.view.terrain.traverse((child) => {

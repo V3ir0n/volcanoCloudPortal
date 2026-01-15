@@ -93,6 +93,7 @@ class Ash extends THREE.Object3D {
                     (Math.random() - 0.5) * 1.5
                 );
                 inactiveAsh.position.add(new THREE.Vector3(0.29, 7.26, 0.78));
+                inactiveAsh.scale.set(0.2, 0.2, 0.2);
 
                 // Strong initial velocity for "burst"
                 const burstSpeed = 0.01 + Math.random() * 0.01;
@@ -125,16 +126,17 @@ class Ash extends THREE.Object3D {
                 inactiveAsh.material.visible = true;
                 inactiveAsh.userData.isActive = true;
                 inactiveAsh.userData.birthTime = now;
-                inactiveAsh.userData.lifetime = 1.0 + Math.random() * 0.5; // Longer lifetime (1.0-1.5 seconds)
+                inactiveAsh.userData.lifetime = 2.0 + Math.random() * 0.5; // Longer lifetime (2.0-2.5 seconds)
                 inactiveAsh.position.set(
                     (Math.random() - 0.5) * 1.5,
                     0,
                     (Math.random() - 0.5) * 1.5
                 );
                 inactiveAsh.position.add(new THREE.Vector3(0.29, 7.26, 0.78));
+                inactiveAsh.scale.set(0.2, 0.2, 0.2);
 
                 // Moderate initial velocity for sustained ash fall
-                const burstSpeed = 0.005 + Math.random() * 0.005;
+                const burstSpeed = 0.05 + Math.random() * 0.05;
                 // Random launch angle between 30° and 90° (in radians)
                 const launchAngle = (Math.PI / 6) + Math.random() * (Math.PI / 2 - Math.PI / 6);
                 // Random horizontal direction
@@ -170,6 +172,8 @@ class Ash extends THREE.Object3D {
 
                     // Update position
                     particle.position.add(particle.userData.velocity);
+
+                    particle.scale.multiplyScalar(1.01);
 
                     // Fade out
                     const life = Math.min(age / particle.userData.lifetime, 1.0);
