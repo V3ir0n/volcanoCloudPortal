@@ -39,6 +39,8 @@ function closeOverlay() {
     overlayEl.parentNode.removeChild(overlayEl);
   }
   overlayEl = null;
+  // Show the volcano control again
+  hideVolcanoControl(false);
 }
 
 function setYear(newYear) {
@@ -130,19 +132,32 @@ function renderPlaceOverlay(place, latlng) {
     });
 
     mapWrap.appendChild(overlayEl);
+  } else {
+    // overlay exists — ensure it's visible (in case you removed it rather than recreating)
+    overlayEl.style.display = "";
   }
+
+  // Hide volcano select while overlay is open
+  hideVolcanoControl(true);
 
   // Title
   const titleEl = overlayEl.querySelector("#panel-title");
-  const titleText = place.title.split("").map((c,i)=>i==0?c.toUpperCase():c).join("");
+  const titleText = (place.title || "").split("").map((c,i)=>i==0?c.toUpperCase():c).join("");
   if (titleEl) titleEl.textContent = titleText || "Unknown place";
 
   // Body via placeview.js
   const bodyEl = overlayEl.querySelector(".panel-body");
   renderPlaceView(bodyEl, place, latlng);
 
-  // Focus overlay for accessibility
   overlayEl.focus();
+}
+
+function hideVolcanoControl(hide = true) {
+  const select = document.querySelector(".volcano-select");
+  const container = select ? select.closest(".volcano-control") : null;
+  if (container) {
+    container.style.display = hide ? "none" : "";
+  }
 }
 
 function initMap() {
