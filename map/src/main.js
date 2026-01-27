@@ -13,6 +13,7 @@ let intervalId = null;
 let map;
 let geoLayer;
 let overlayEl = null;
+let prevView = null;
 
 const volcanoIndex = new Map();
 
@@ -33,14 +34,45 @@ function emissionRadius(props, year, options = {}) {
   return minRadius + scale * logValue;
 }
 
+function rememberViewIfNeeded() {
+  if (!map || prevView) return;
+  prevView = { center: map.getCenter(), zoom: map.getZoom() };
+}
+
+function restorePrevView() {
+  if (!map || !prevView) return;
+  map.setView(prevView.center, prevView.zoom, { animate: true });
+  prevView = null;
+}
+
+function openVolcano(feature, layer) {
+  const place = getPlaceFromFeature(feature);
+  selectedPlace = place;
+
+  rememberViewIfNeeded();
+
+  // zoom in to selected volcano
+  if (layer?.getLatLng) {
+    map.setView(layer.getLatLng(), 10, { animate: true });
+  }
+
+  const [lng, lat] = feature.geometry.coordinates;
+  renderPlaceOverlay(place, [lat, lng]);
+}
+
 function closeOverlay() {
   selectedPlace = null;
+
   if (overlayEl && overlayEl.parentNode) {
     overlayEl.parentNode.removeChild(overlayEl);
   }
   overlayEl = null;
-  // Show the volcano control again
-  hideVolcanoControl(false);
+
+  // reset dropdown selection
+  const select = document.querySelector(".volcano-select");
+  if (select) select.value = "";
+  // zoom back out to where the user was
+  restorePrevView();
 }
 
 function setYear(newYear) {
@@ -91,6 +123,11 @@ function getPlaceFromFeature(feature) {
     altitude: alt_masl ? `${alt_masl} m` : "Unknown altitude",
     raw: props
   };
+}
+
+function getVolcanoName(feature) {
+  const p = feature?.properties || {};
+  return (p.display_name || "").toString().trim();
 }
 
 function renderPlaceOverlay(place, latlng) {
@@ -245,36 +282,34 @@ function initMap() {
         });
       },
       onEachFeature: (feature, layer) => {
-        // index by volcano name
-        const name = feature.properties?.volcano;
+        const name = getVolcanoName(feature);
         if (name) {
           volcanoIndex.set(name, { layer, feature });
         }
 
         layer.on("click", () => {
-          const place = getPlaceFromFeature(feature);
-          selectedPlace = place;
-          const [lng, lat] = feature.geometry.coordinates;
-          renderPlaceOverlay(place, [lat, lng]);
+          openVolcano(feature, layer);
         });
       }
 }).addTo(map);
     setYear(year);
     //dropdown control
     const VolcanoControl = L.Control.extend({
-  onAdd() {
+    onAdd() {
     const container = L.DomUtil.create("div", "leaflet-bar volcano-control");
 
     // Build <select> with all volcano names
     const select = L.DomUtil.create("select", "volcano-select", container);
+    const names = (data.features || [])
+      .map(getVolcanoName)
+      .filter(Boolean)
+      .filter((v, i, arr) => arr.indexOf(v) === i)
+      .sort((a, b) => a.localeCompare(b));
+
     select.innerHTML = `
       <option value="">Select volcano…</option>
-      ${Array.from(volcanoIndex.keys())
-        .sort()
-        .map(name => `<option value="${name}">${name}</option>`)
-        .join("")}
+      ${names.map(n => `<option value="${n}">${n}</option>`).join("")}
     `;
-
     L.DomEvent.disableClickPropagation(container);
     L.DomEvent.disableScrollPropagation(container);
 
@@ -284,18 +319,8 @@ function initMap() {
 
       const entry = volcanoIndex.get(name);
       if (!entry) return;
-
-      const { feature, layer } = entry;
-      const place = getPlaceFromFeature(feature);
-      selectedPlace = place;
-
-      // center map on this volcano
-      if (layer.getLatLng) {
-        map.setView(layer.getLatLng(), 10, { animate: true });
-      }
-
-      const [lng, lat] = feature.geometry.coordinates;
-      renderPlaceOverlay(place, [lat, lng]);
+      
+      openVolcano(entry.feature, entry.layer);
     });
 
     return container;
