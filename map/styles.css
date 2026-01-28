@@ -232,3 +232,35 @@ volcano-control {
 .leaflet-bar.volcano-control {
   transition: opacity 150ms ease;
 }
+
+.emission-legend {
+  background: rgba(0,0,0,0.66);
+  color: #eee;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+  min-width: 140px;
+  z-index: 1200;
+  width: 100% !important;
+}
+
+.emission-legend .legend-title {
+  color: #ffd700;
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.emission-legend .legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.emission-legend .legend-label {
+  font-size: 0.85rem;
+  color: #eee;
+  white-space: nowrap;
+}

@@ -13,6 +13,15 @@ let geoLayer;
 let overlayEl = null;
 let prevView = null;
 
+const LEGEND_VALUES = [10, 100, 1000, 10000]; // fixed reference emission values
+
+function formatEmission(v) {
+  if (v === 0) return "0";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  return String(Math.round(v));
+}
+
 const volcanoIndex = new Map();
 
 // --- Helpers ---
@@ -189,7 +198,8 @@ function renderPlaceOverlay(place, latlng) {
   svg.setAttribute("width", width);
   svg.setAttribute("height", height);
 
-  // ---- data ----
+  const LEGEND_VALUES = [10, 100, 1000, 10000];
+
   const years = [];
   const emissions = [];
 
@@ -389,6 +399,46 @@ function initMap() {
 
   map.addControl(new YearControl({ position: "bottomleft" }));
 
+  //add legend
+  function createStaticLegend() {
+  if (!map) return;
+
+  const Legend = L.Control.extend({
+    onAdd() {
+      const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
+
+      div.innerHTML = `
+        <div class="legend-title">Emission</div>
+        <div class="legend-items">
+          ${LEGEND_VALUES.map(v => {
+            const r = emissionRadius({ [String(minYear)]: v }, minYear);
+            const size = Math.ceil(r * 2) + 6;
+            const c = Math.ceil(size / 2);
+
+            return `
+              <div class="legend-row">
+                <svg width="${size}" height="${size}" aria-hidden="true">
+                  <circle cx="${c}" cy="${c}" r="${r}"
+                    fill="#FFD700" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
+                </svg>
+                <span class="legend-label">${formatEmission(v)}</span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+
+      // avoid map panning when interacting with legend
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div);
+
+      return div;
+    }
+  });
+
+  map.addControl(new Legend({ position: "bottomright" }));
+}
+
   // Load GeoJSON
   fetch("resources/volcanoes.geojson")
   .then((r) => r.json())
@@ -420,6 +470,9 @@ function initMap() {
         });
       }
 }).addTo(map);
+
+createStaticLegend();
+
     setYear(year);
     //dropdown control
     const VolcanoControl = L.Control.extend({
@@ -465,3 +518,4 @@ map.addControl(new VolcanoControl({ position: "topright" }));
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
 });
+
