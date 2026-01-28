@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volcano 3D Models</title>
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
     <link rel="stylesheet" href="style.css">
     <script type="importmap">
         {
@@ -17,32 +21,46 @@
 <body>
     <audio id="background-music" src="resources/music_idle.mp3" volume="0.5" playbackRate="0.5" loop></audio>
     <audio id="strong_eruption_sfx" src="resources/strong_eruption_sfx.mp3" volume="0.5" loop></audio>
-    <div id="button-container">
-        <button id="enter-button">Play Audio</button>
+    <article id="button-container" class="transparentBg">
+        <label><input id="audioToggle" type="checkbox" role="switch"/>Audio</label>
+        <label><input id="cameraControlsToggle" type="checkbox" role="switch"/>Camera control</label>
         <button id="toggle-visibility-btn">Look inside Volcano</button>
         <button id="refresh-btn">Refresh</button>
-        <button id="toggle-camera-btn">Camera Control Off</button>
         <button id="trigger-eruption-btn">Trigger Eruption</button>
-    </div>
-    <button id="parameters-btn">Parameters</button>
+    </article>
     <div id="container"></div>
-    <div id="coordinates"></div>
-    <div id="parameters-popup" style="display: none;">
-
-        <div>
-            <label for="gas-density-slider">Gas Density</label>
-            <input type="range" id="gas-density-slider" min="10" max="50" value="30" step="1">
-        </div>
-        <div>
-            <label for="volcano-stretch-slider">Volcano Stretch</label>
-            <input type="range" id="volcano-stretch-slider" min="1.0" max="3.0" value="2.0" step="0.1">
-        </div>
-        <div>
-            <label for="temperature-slider">Temperature</label>
-            <input type="range" id="temperature-slider" min="0" max="20" value="10" step="1">
-        </div>
-    </div>
-    <div id="infobox"></div>
+    <article class="parameters">
+        <details open>
+            <summary>Parameters</summary>
+            <label>
+                Temperature
+                <input type="range" id="temperatureSlider" min="0" max="20" value="10" step="1">
+            </label>
+            <label>
+                Gas Density
+                <input type="range" id="gasDensitySlider" min="10" max="50" value="30" step="1">
+            </label>
+            <label>
+                Volcano Stretch
+                <input type="range" id="volcanoStretchSlider" min="1.0" max="3.0" value="2.0" step="0.1">
+            </label>
+            <label>
+                Wind speed
+                <input type="range" id="windSpeedSlider" min="0" max="0.15" value="0" step="0.01">
+            </label>
+            <details>
+                <summary>Hint</summary>
+                <ul>
+                    <li>Passive degassing happens at high temperature, low gas density, and shallow depth.</li>
+                    <li>Strombolian eruptions happen at medium to high temperature, high gas density, and high depth.</li>
+                    <li>Vulcanian eruptions happen at medium temperature, high gas density and medium depth.</li>
+                </ul>
+            </details>
+        </details>
+    </article>
+    <article id="infobox">
+        Change parameters to a valid configuration, then trigger an eruption.
+    </article>
     <script type="module" src="./src/main.js"></script>
 </body>
 </html>
