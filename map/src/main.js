@@ -1,7 +1,5 @@
-// app.js
 import { renderPlaceView } from "./placeview.js";
 
-// --- State & constants ---
 let selectedPlace = null;
 
 let year = 2005;
@@ -148,6 +146,7 @@ function renderPlaceOverlay(place, latlng) {
         </header>
         <div class="panel-body"></div>
       </div>
+      <div class="diagram-container"></div>
       <div class="backdrop"></div>
     `;
 
@@ -174,6 +173,125 @@ function renderPlaceOverlay(place, latlng) {
     overlayEl.style.display = "";
   }
 
+  const renderEmissionDiagram = (container, data) => {
+  container.innerHTML = "";
+
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  const width = 320;
+  const height = 220;
+
+  const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
+
+  // ---- data ----
+  const years = [];
+  const emissions = [];
+
+  for (let y = minYear; y <= maxYear; y++) {
+    years.push(y);
+    emissions.push(Number(data[String(y)]) || 0);
+  }
+
+  const maxEmission = Math.max(...emissions, 1);
+
+  // ---- scales ----
+  const xScale = i => margin.left + (i / (years.length - 1)) * innerWidth;
+  const yScale = v =>
+    margin.top + innerHeight - (v / maxEmission) * innerHeight;
+
+  // ---- axes ----
+  const axisGroup = document.createElementNS(svgNS, "g");
+
+  // X axis
+  const xAxis = document.createElementNS(svgNS, "line");
+  xAxis.setAttribute("x1", margin.left);
+  xAxis.setAttribute("y1", margin.top + innerHeight);
+  xAxis.setAttribute("x2", margin.left + innerWidth);
+  xAxis.setAttribute("y2", margin.top + innerHeight);
+  xAxis.setAttribute("stroke", "#888");
+  axisGroup.appendChild(xAxis);
+
+  // Y axis
+  const yAxis = document.createElementNS(svgNS, "line");
+  yAxis.setAttribute("x1", margin.left);
+  yAxis.setAttribute("y1", margin.top);
+  yAxis.setAttribute("x2", margin.left);
+  yAxis.setAttribute("y2", margin.top + innerHeight);
+  yAxis.setAttribute("stroke", "#888");
+  axisGroup.appendChild(yAxis);
+
+  // Y
+  const yTicks = 5;
+  for (let i = 0; i <= yTicks; i++) {
+    const value = (maxEmission / yTicks) * i;
+    const y = yScale(value);
+
+    const tick = document.createElementNS(svgNS, "line");
+    tick.setAttribute("x1", margin.left - 4);
+    tick.setAttribute("x2", margin.left);
+    tick.setAttribute("y1", y);
+    tick.setAttribute("y2", y);
+    tick.setAttribute("stroke", "#888");
+    axisGroup.appendChild(tick);
+
+    const label = document.createElementNS(svgNS, "text");
+    label.setAttribute("x", margin.left - 8);
+    label.setAttribute("y", y + 4);
+    label.setAttribute("text-anchor", "end");
+    label.setAttribute("font-size", "10");
+    label.setAttribute("fill", "#ccc");
+    label.textContent = Math.round(value);
+    axisGroup.appendChild(label);
+  }
+
+  // ---- X ticks + labels (every ~4 years) ----
+  const step = Math.ceil(years.length / 6);
+  years.forEach((year, i) => {
+    if (i % step !== 0) return;
+
+    const x = xScale(i);
+
+    const tick = document.createElementNS(svgNS, "line");
+    tick.setAttribute("x1", x);
+    tick.setAttribute("x2", x);
+    tick.setAttribute("y1", margin.top + innerHeight);
+    tick.setAttribute("y2", margin.top + innerHeight + 4);
+    tick.setAttribute("stroke", "#888");
+    axisGroup.appendChild(tick);
+
+    const label = document.createElementNS(svgNS, "text");
+    label.setAttribute("x", x);
+    label.setAttribute("y", margin.top + innerHeight + 16);
+    label.setAttribute("text-anchor", "middle");
+    label.setAttribute("font-size", "10");
+    label.setAttribute("fill", "#ccc");
+    label.textContent = year;
+    axisGroup.appendChild(label);
+  });
+
+  svg.appendChild(axisGroup);
+
+  // ---- polyline ----
+  const points = emissions
+    .map((v, i) => `${xScale(i)},${yScale(v)}`)
+    .join(" ");
+
+  const polyline = document.createElementNS(svgNS, "polyline");
+  polyline.setAttribute("points", points);
+  polyline.setAttribute("fill", "none");
+  polyline.setAttribute("stroke", "orange");
+  polyline.setAttribute("stroke-width", "2");
+
+  svg.appendChild(polyline);
+  container.appendChild(svg);
+};
+
   // Hide volcano select while overlay is open
   hideVolcanoControl(true);
 
@@ -185,6 +303,16 @@ function renderPlaceOverlay(place, latlng) {
   // Body via placeview.js
   const bodyEl = overlayEl.querySelector(".panel-body");
   renderPlaceView(bodyEl, place, latlng);
+  //diagram div
+  const diagramContainer = overlayEl.querySelector(".diagram-container");
+    if (bodyEl && diagramContainer) bodyEl.appendChild(diagramContainer);
+
+    // render diagram
+    const data = place.raw;
+    if (diagramContainer) {
+      diagramContainer.innerHTML = "";
+      renderEmissionDiagram(diagramContainer, data);
+    }
 
   overlayEl.focus();
 }
