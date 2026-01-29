@@ -162,7 +162,7 @@ body {
 .volcano-control {
   pointer-events: auto; 
   background: rgba(30, 30, 30, 0.85);
-  padding: 8px 12px;
+
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
@@ -267,13 +267,44 @@ body {
   white-space: nowrap;
 }
 
-.topbar  {
-  padding: 0 14px;   
+.topbar {
+  height: 48px;
   display: flex;
-  background: #161616;
-  font-size: 1.2rem;
-  height: 50px;
   align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: #161616;
+  color: #ffd700;
+  font-size: 1.1rem;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05);
+  z-index: 1500;
+}
+
+.topbar-title {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+.back-btn:active {
+  transform: translateY(1px);
 }
 
 .leaflet-top,
