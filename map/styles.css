@@ -10,7 +10,7 @@ body {
 }
 
 .map-wrap {
-  height: 100vh;
+  height: calc(100vh - 50px);
   width: 100%;
   position: relative;
 }
@@ -227,8 +227,6 @@ volcano-control {
   padding-left: 16px;
 }
 
-
-/* hide select control when container is display:none; keeps DOM intact */
 .leaflet-bar.volcano-control {
   transition: opacity 150ms ease;
 }
@@ -240,9 +238,13 @@ volcano-control {
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.06);
   box-shadow: 0 2px 8px rgba(0,0,0,0.35);
-  min-width: 140px;
+  min-width: 120px;
   z-index: 1200;
-  width: 100% !important;
+}
+
+.leaflet-bottom .emission-legend{
+  margin-bottom: 20px;
+  margin-right: 20px;
 }
 
 .emission-legend .legend-title {
@@ -263,4 +265,13 @@ volcano-control {
   font-size: 0.85rem;
   color: #eee;
   white-space: nowrap;
+}
+
+.topbar  {
+  padding: 0 14px;   
+  display: flex;
+  background: #161616;
+  font-size: 1.2rem;
+  height: 50px;
+  align-items: center;
 }
