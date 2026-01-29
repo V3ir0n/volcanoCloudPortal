@@ -82,6 +82,7 @@ function openVolcano(feature, layer) {
 }
 
 function closeOverlay() {
+  hideVolcanoControl(false);
   document.querySelector(".emission-legend")?.style.removeProperty("display");
   selectedPlace = null;
 
@@ -93,6 +94,7 @@ function closeOverlay() {
   // reset dropdown selection
   const select = document.querySelector(".volcano-select");
   if (select) select.value = "";
+
   // zoom back out to where the user was
   restorePrevView();
 }
@@ -414,7 +416,8 @@ function initMap() {
 
 
   // Load GeoJSON
-  fetch("resources/volcanoes.geojson")
+  // Load GeoJSON
+fetch("resources/volcanoes.geojson")
   .then((r) => r.json())
   .then((data) => {
     const baseStyle = {
@@ -425,6 +428,7 @@ function initMap() {
       fillOpacity: 0.8
     };
 
+    // Add features
     geoLayer = L.geoJSON(data, {
       pointToLayer: (feature, latlng) => {
         const radius = emissionRadius(feature.properties || {}, year);
@@ -435,17 +439,54 @@ function initMap() {
       },
       onEachFeature: (feature, layer) => {
         const name = getVolcanoName(feature);
-        if (name) {
-          volcanoIndex.set(name, { layer, feature });
-        }
+        if (name) volcanoIndex.set(name, { layer, feature });
 
-        layer.on("click", () => {
-          openVolcano(feature, layer);
-        });
-        
+        layer.on("click", () => openVolcano(feature, layer));
       }
-      
-}).addTo(map);
+    }).addTo(map);
+
+    // Build legend values from data and add static legend
+    const legendValues = computeLegendValuesFromData(data);
+    createStaticLegend(legendValues);
+
+    // Define the VolcanoControl here (in the same scope)
+    const VolcanoControl = L.Control.extend({
+      onAdd() {
+        const container = L.DomUtil.create("div", "leaflet-bar volcano-control");
+
+        const select = L.DomUtil.create("select", "volcano-select", container);
+        const names = (data.features || [])
+          .map(getVolcanoName)
+          .filter(Boolean)
+          .filter((v, i, arr) => arr.indexOf(v) === i)
+          .sort((a, b) => a.localeCompare(b));
+
+        select.innerHTML = `
+          <option value="">Select volcano…</option>
+          ${names.map(n => `<option value="${n}">${n}</option>`).join("")}
+        `;
+
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+
+        select.addEventListener("change", (e) => {
+          const name = e.target.value;
+          if (!name) return;
+          const entry = volcanoIndex.get(name);
+          if (!entry) return;
+          openVolcano(entry.feature, entry.layer);
+        });
+
+        return container;
+      }
+    });
+
+    // Add the volcano select control now that it's defined
+    map.addControl(new VolcanoControl({ position: "topright" }));
+  })
+  .catch((err) => {
+    console.error("Failed to load GeoJSON", err);
+  });
 const legendValues = computeLegendValuesFromData(data);
         createStaticLegend(legendValues);
 
@@ -485,13 +526,7 @@ function createStaticLegend(legendValues) {
   map.addControl(new Legend({ position: "bottomright" }));
 }
 
-map.addControl(new VolcanoControl({ position: "topright" }));
-  })
-  .catch((err) => {
-    console.error("Failed to load GeoJSON", err);
-  });
 }
-
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
 });
