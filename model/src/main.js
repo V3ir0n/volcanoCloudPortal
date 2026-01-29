@@ -46,10 +46,13 @@ class View {
 
         this.scene.fog = new THREE.Fog(0x000000, 100, 400); // Enhanced fog for smooth fadeout
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.renderer = new THREE.WebGLRenderer();
+        this.canvas = document.getElementById("threeCanvas");
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            canvas: this.canvas
+        });
         this.renderer.setClearColor(0xffffff); // White background
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('container').appendChild(this.renderer.domElement);
 
         this.scene.add(skyMesh);
 
@@ -166,9 +169,11 @@ class View {
 
         // Handle window resize
         window.addEventListener('resize', () => {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            this.camera.aspect = this.canvas.width / this.canvas.height;
             this.camera.updateProjectionMatrix();
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setSize(this.canvas.width, this.canvas.height);
         });
 
         // Start animation loop
