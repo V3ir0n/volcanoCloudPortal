@@ -13,12 +13,10 @@ let geoLayer;
 let overlayEl = null;
 let prevView = null;
 
-const LEGEND_VALUES = [10, 100, 1000, 10000]; // fixed reference emission values
-
 function formatEmission(v) {
   if (v === 0) return "0";
   if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-  if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
+  if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, "") + "000";
   return String(Math.round(v));
 }
 
@@ -31,14 +29,30 @@ function emissionRadius(props, year, options = {}) {
     scale = 3        // how strongly radius increases
   } = options;
 
-  // yearly value, e.g. props["2018"]
+  // yearly value
   const raw = props[String(year)];
-  const value = Number(raw) || 0; // treat null/NaN as 0
-
+  const value = Number(raw) || 0; 
   // defined even when value = 0
   const logValue = Math.log10(value + 1);
 
   return minRadius + scale * logValue;
+}
+
+//for legend
+function computeLegendValuesFromData(data) {
+  const years = Array.from({ length: maxYear - minYear + 1 }, (_, i) => String(minYear + i));
+
+  let maxVal = 0;
+  for (const f of data.features || []) {
+    const p = f.properties || {};
+    for (const y of years) {
+      const v = Number(p[y]) || 0;
+      if (v > maxVal) maxVal = v;
+    }
+  }
+  // round up
+  const niceMax = maxVal <= 0 ? 0 : Math.ceil(maxVal / 500) * 500; 
+  return [0, 10, 100, 500, 1000, niceMax].filter((v, i, arr) => v >= 0 && arr.indexOf(v) === i);
 }
 
 function rememberViewIfNeeded() {
@@ -68,6 +82,7 @@ function openVolcano(feature, layer) {
 }
 
 function closeOverlay() {
+  document.querySelector(".emission-legend")?.style.removeProperty("display");
   selectedPlace = null;
 
   if (overlayEl && overlayEl.parentNode) {
@@ -141,6 +156,8 @@ function renderPlaceOverlay(place, latlng) {
   const mapWrap = document.querySelector(".map-wrap");
   if (!mapWrap) return;
 
+  document.querySelector(".emission-legend")?.style.setProperty("display", "none");
+
   // Create overlay if it doesn't exist
   if (!overlayEl) {
     overlayEl = document.createElement("div");
@@ -165,20 +182,16 @@ function renderPlaceOverlay(place, latlng) {
         closeOverlay();
       }
     });
-
     // Close button
     overlayEl.querySelector(".close-btn").addEventListener("click", () => {
       closeOverlay();
     });
-
     // Backdrop click
     overlayEl.querySelector(".backdrop").addEventListener("click", () => {
       closeOverlay();
     });
-
     mapWrap.appendChild(overlayEl);
   } else {
-    // overlay exists — ensure it's visible (in case you removed it rather than recreating)
     overlayEl.style.display = "";
   }
 
@@ -399,45 +412,6 @@ function initMap() {
 
   map.addControl(new YearControl({ position: "bottomleft" }));
 
-  //add legend
-  function createStaticLegend() {
-  if (!map) return;
-
-  const Legend = L.Control.extend({
-    onAdd() {
-      const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
-
-      div.innerHTML = `
-        <div class="legend-title">Emission</div>
-        <div class="legend-items">
-          ${LEGEND_VALUES.map(v => {
-            const r = emissionRadius({ [String(minYear)]: v }, minYear);
-            const size = Math.ceil(r * 2) + 6;
-            const c = Math.ceil(size / 2);
-
-            return `
-              <div class="legend-row">
-                <svg width="${size}" height="${size}" aria-hidden="true">
-                  <circle cx="${c}" cy="${c}" r="${r}"
-                    fill="#FFD700" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
-                </svg>
-                <span class="legend-label">${formatEmission(v)}</span>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
-
-      // avoid map panning when interacting with legend
-      L.DomEvent.disableClickPropagation(div);
-      L.DomEvent.disableScrollPropagation(div);
-
-      return div;
-    }
-  });
-
-  map.addControl(new Legend({ position: "bottomright" }));
-}
 
   // Load GeoJSON
   fetch("resources/volcanoes.geojson")
@@ -468,45 +442,48 @@ function initMap() {
         layer.on("click", () => {
           openVolcano(feature, layer);
         });
+        
       }
-}).addTo(map);
-
-createStaticLegend();
-
-    setYear(year);
-    //dropdown control
-    const VolcanoControl = L.Control.extend({
-    onAdd() {
-    const container = L.DomUtil.create("div", "leaflet-bar volcano-control");
-
-    // Build <select> with all volcano names
-    const select = L.DomUtil.create("select", "volcano-select", container);
-    const names = (data.features || [])
-      .map(getVolcanoName)
-      .filter(Boolean)
-      .filter((v, i, arr) => arr.indexOf(v) === i)
-      .sort((a, b) => a.localeCompare(b));
-
-    select.innerHTML = `
-      <option value="">Select volcano…</option>
-      ${names.map(n => `<option value="${n}">${n}</option>`).join("")}
-    `;
-    L.DomEvent.disableClickPropagation(container);
-    L.DomEvent.disableScrollPropagation(container);
-
-    select.addEventListener("change", (e) => {
-      const name = e.target.value;
-      if (!name) return;
-
-      const entry = volcanoIndex.get(name);
-      if (!entry) return;
       
-      openVolcano(entry.feature, entry.layer);
-    });
+}).addTo(map);
+const legendValues = computeLegendValuesFromData(data);
+        createStaticLegend(legendValues);
 
-    return container;
-  }
-});
+function createStaticLegend(legendValues) {
+  if (!map) return;
+
+  const Legend = L.Control.extend({
+    onAdd() {
+      const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
+      div.innerHTML = `
+        <div class="legend-title">Emission</div>
+        <div class="legend-items">
+          ${legendValues.map(v => {
+            const r = emissionRadius({ [String(minYear)]: v }, minYear);
+            const size = Math.ceil(r * 2) + 6;
+            const c = Math.ceil(size / 2);
+
+            return `
+              <div class="legend-row">
+                <svg width="${size}" height="${size}" aria-hidden="true">
+                  <circle cx="${c}" cy="${c}" r="${r}"
+                    fill="#FFD700" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
+                </svg>
+                <span class="legend-label">${formatEmission(v)}</span>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div);
+      return div;
+    }
+  });
+
+  map.addControl(new Legend({ position: "bottomright" }));
+}
 
 map.addControl(new VolcanoControl({ position: "topright" }));
   })
