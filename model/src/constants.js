@@ -74,5 +74,16 @@ export const eruptionFeatures = {
     }
 };
 
+export const annotations = [
+    {
+        name: "POI?",
+        position: [-4, -3, 3],
+        infoBoxText: `
+            <h2>A point of interest!</h2>
+            Let us pretend that this is a point of interest, but to be fair, there is nothing particularly interesting with this point...
+        `
+    }
+];
+
 export const skyTopColor = 0x0172ad;
 export const skyBottomColor = 0xffffff;

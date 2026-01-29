@@ -6,6 +6,7 @@ import {Smoke} from './smoke.js';
 import {Ash} from './ash.js';
 import {VolcanoParameters} from './parameters.js';
 import {EruptionHandler} from './eruption.js';
+import {AnnotationHandler} from './annotationHandler.js';
 import {skyMesh} from './sky.js';
 import {setupLights} from './lights.js';
 
@@ -21,10 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-// Raycaster for click detection
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
 
 function toggleAudio(enable) {
     if (view && view.eruptionHandler) {
@@ -151,21 +148,19 @@ class View {
             console.error('An error happened loading volcano:', error);
         });
 
-        this.isInsideView = false;
-        this.isAnimatingCamera = false;
-
-        const redCubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const redCubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const redCube = new THREE.Mesh(redCubeGeometry, redCubeMaterial);
-        redCube.userData.isRedCube = true;
-        redCube.userData.isGlowing = false;
-
-        // Position the red cube in front of the slice model
-        redCube.position.set(-4, -3, 5);
-
-        this.scene.add(redCube);
-
-        window.addEventListener('click', event=>this.onMouseClick(event));
+        const infoboxDiv = document.getElementById('infobox');
+        let infoBoxTextBackup;
+        this.annotationHandler = new AnnotationHandler(
+            this.canvas, this.camera, this.scene, annotation=>{
+                // On annotation selected
+                infoBoxTextBackup = infoboxDiv.innerHTML
+                infoboxDiv.innerHTML = annotation.infoBoxText;
+            }, ()=>{
+                // On annotation closed
+                // Reset infobox
+                this.eruptionHandler.updateEruption();
+            }
+        );
 
         // Handle window resize
         window.addEventListener('resize', () => {
@@ -204,31 +199,6 @@ class View {
                     animateOpacity();
                 }
             });
-        }
-    }
-
-    onMouseClick(event) {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        raycaster.setFromCamera(mouse, this.camera);
-        const intersects = raycaster.intersectObjects(this.scene.children, true);
-
-        const redCubeIntersect = intersects.find(intersect => intersect.object.userData.isRedCube);
-
-        if (redCubeIntersect) {
-            const redCube = redCubeIntersect.object;
-            const infoboxDiv = document.getElementById('infobox');
-            if (redCube.userData.isGlowing) {
-                redCube.material.color.setHex(0xff0000); // Back to normal red
-                redCube.userData.isGlowing = false;
-                infoboxDiv.textContent = 'Infobox CLOSED';
-                console.log('Infobox updated to: CLOSED');
-            } else {
-                redCube.material.color.setHex(0xffb3b3); // Brighter red
-                redCube.userData.isGlowing = true;
-                infoboxDiv.textContent = 'Infobox OPEN';
-                console.log('Infobox updated to: empty');
-            }
         }
     }
 
@@ -303,7 +273,7 @@ class View {
                         geometry.attributes.position.needsUpdate = true;
 
                         if (Math.abs(newStretch - targetFactor) > 0.01) {
-                            requestAnimationFrame(()=>stretch(targetFactor))
+                            requestAnimationFrame(()=>stretch(targetFactor));
                         } else {
                             geometry.userData.currentStretch = targetFactor;
                         }
@@ -311,7 +281,6 @@ class View {
 
                     geometry.userData.targetFactor = stretchFactor;
                     stretch();
-
                 }
             }
         });
