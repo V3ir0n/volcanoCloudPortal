@@ -23,18 +23,75 @@
 </head>
 <body>
   <div class="topbar">
-  <a href="/" class="back-btn" aria-label="Back to home">← Back</a>
-  <span class="topbar-title">Volcano Cloud Portal or other title?</span>
-</div>
+    <a href="/" class="back-btn" aria-label="Back to home">← Back</a>
+    <span class="topbar-title">Volcano Cloud Portal or other title?</span>
+    <button class="info-btn" type="button" aria-label="Info" aria-haspopup="dialog" aria-controls="info-overlay">
+      ℹ️
+    </button>
+  </div>
   <div class="map-wrap">
     <div id="map"></div>
   </div>
+  <div id="info-overlay" class="info-overlay" hidden>
+  <div class="info-backdrop" data-close></div>
+
+  <div class="info-panel" role="dialog" aria-modal="true" aria-labelledby="info-title" tabindex="-1">
+    <header class="info-header">
+      <h2 id="info-title">About this map</h2>
+      <button class="info-close" type="button" aria-label="Close" data-close>&times;</button>
+    </header>
+
+    <div class="info-body">
+      <p>
+        This map shows volcanic emissions over time. Marker size represents emission magnitude for the selected year.
+      </p>
+      <ul>
+        <li>Use the year slider to scrub time.</li>
+        <li>Press play to animate.</li>
+        <li>Click a volcano for details and the time series chart.</li>
+      </ul>
+    </div>
+  </div>
+</div>
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  const overlay = document.getElementById("info-overlay");
+  const panel = overlay?.querySelector(".info-panel");
+  const openBtn = document.querySelector(".info-btn");
+
+  function openInfo() {
+    if (!overlay) return;
+    overlay.hidden = false;
+    // focus for accessibility
+    panel?.focus();
+  }
+
+  function closeInfo() {
+    if (!overlay) return;
+    overlay.hidden = true;
+    openBtn?.focus();
+  }
+
+  openBtn?.addEventListener("click", openInfo);
+
+  overlay?.addEventListener("click", (e) => {
+    // any element with data-close closes, incl backdrop + X button
+    if (e.target && e.target.matches("[data-close]")) closeInfo();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!overlay || overlay.hidden) return;
+    if (e.key === "Escape") closeInfo();
+  });
+});
+  </script>
 
   <script type="module" src="src/main.js"></script>
 </body>
