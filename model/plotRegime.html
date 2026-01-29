@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@7"></script>
+</head>
+<body>
+    <main>
+        <div id="vis"></div>
+    </main>
+    <script type="module">
+        import {eruptiveRegimes} from "./src/constants.js"
+        const spec = {
+            $schema: "https://vega.github.io/schema/vega-lite/v6.json",
+            data: {values: eruptiveRegimes},
+            mark: {
+                type: "point",
+                size: 200,
+                filled: true
+            },
+            encoding: {
+                x: {
+                    field: "gas",
+                    type: "quantitative",
+                    title: "Gas (%)"
+                },
+                y: {
+                    field: "depth",
+                    type: "quantitative",
+                    title: "Depth (km)",
+                    scale: {reverse: true}
+                },
+                color: {
+                    field: "regime",
+                    type: "nominal",
+                    title: "Regime"
+                },
+                shape: {field: "regime", type: "nominal"}
+            }
+        };
+
+        vegaEmbed("#vis", spec, {renderer: "canvas", actions: false});
+    </script>
+</body>
+</html>

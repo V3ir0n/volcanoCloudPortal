@@ -10,6 +10,8 @@ class Ash extends THREE.Object3D {
         this.camera = camera;
         this.parameters = parameters
         this.eruptionHandler = eruptionHandler;
+
+        this.ashAmount = "none";
     }
     createAshParticles() {
         console.log('createAsh called');
@@ -78,7 +80,7 @@ class Ash extends THREE.Object3D {
         const gasDensity = this.parameters.gasDensity || 25;
 
         // Condition for ash in type 2 eruption (small amount of ash)
-        if (this.eruptionHandler.isType2Eruption && Math.random() < 0.05) {
+        if (this.ashAmount === "small" && Math.random() < 0.05) {
             // Find an inactive ash particle to launch
             const inactiveAsh = this.ashParticles.find(p => !p.userData.isActive);
             if (inactiveAsh) {
@@ -118,7 +120,7 @@ class Ash extends THREE.Object3D {
         // Removed parameter-based ash conditions to rely only on eruption types
 
         // Condition for ash in type 3 eruption: abundant long-living ash particles (a lot of ash)
-        if (this.eruptionHandler.isType3Eruption && Math.random() < 0.2) {
+        if (this.ashAmount === "large" && Math.random() < 0.2) {
             // Find an inactive ash particle to launch
             const inactiveAsh = this.ashParticles.find(p => !p.userData.isActive);
             if (inactiveAsh) {
