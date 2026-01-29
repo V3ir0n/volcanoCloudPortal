@@ -22,11 +22,6 @@
     <audio id="silence" src="resources/silence.mp3" volume="0" loop></audio>
     <audio id="strong_eruption_sfx" src="resources/strong_eruption_sfx.mp3" volume="0.5" loop></audio>
     <audio id="mild_eruption_sfx" src="resources/mild_eruption_sfx.mp3" volume="0.5" loop></audio>
-    <article id="button-container" class="transparentBg">
-        <label><input id="audioToggle" type="checkbox" role="switch"/>Audio</label>
-        <label><input id="cameraControlsToggle" type="checkbox" role="switch" checked/>Camera control</label>
-        <button id="toggle-visibility-btn">Look inside Volcano</button>
-    </article>
     <div id="container"></div>
     <article class="parameters">
         <details open>
@@ -43,6 +38,11 @@
                 Wind speed (<span id="windSpeedIndicator"></span> m/s)
                 <input type="range" id="windSpeedSlider" min="0" max="20" value="10" step="10">
             </label>
+        </details>
+        <hr/>
+        <details open>
+            <summary>Settings</summary>
+            <label><input id="audioToggle" type="checkbox" role="switch"/>Audio</label>
         </details>
     </article>
     <article id="infobox">

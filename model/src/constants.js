@@ -73,3 +73,6 @@ export const eruptionFeatures = {
         `
     }
 };
+
+export const skyTopColor = 0x0172ad;
+export const skyBottomColor = 0xffffff;
