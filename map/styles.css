@@ -159,10 +159,10 @@ body {
   margin-top: 0.25rem;
 }
 
-volcano-control {
-  pointer-events: auto; /* allow interaction */
+.volcano-control {
+  pointer-events: auto; 
   background: rgba(30, 30, 30, 0.85);
-  padding: 8px 12px;
+
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
@@ -267,11 +267,131 @@ volcano-control {
   white-space: nowrap;
 }
 
-.topbar  {
-  padding: 0 14px;   
+.topbar {
+  height: 48px;
   display: flex;
-  background: #161616;
-  font-size: 1.2rem;
-  height: 50px;
   align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: #161616;
+  color: #ffd700;
+  font-size: 1.1rem;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05);
+  z-index: 1500;
+}
+
+.topbar-title {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+.back-btn:active {
+  transform: translateY(1px);
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  pointer-events: none;
+}
+
+.leaflet-top .leaflet-control,
+.leaflet-bottom .leaflet-control {
+  pointer-events: auto;
+}
+
+/* topbar: push title center-ish and info to far right */
+.topbar { display: flex; align-items: center; gap: 12px; }
+.topbar-title { flex: 1; text-align: center; }
+
+/* info button */
+.info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  cursor: pointer;
+}
+
+.info-btn:hover { background: rgba(255,255,255,0.16); }
+.info-btn:active { transform: translateY(1px); }
+
+/* info overlay modal */
+.info-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000; 
+}
+
+.info-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+.info-panel {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 92vw);
+  max-height: calc(100vh - 110px);
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: #161616;
+  border-bottom: 1px solid #222;
+  color: #ffd700;
+}
+
+.info-close {
+  background: transparent;
+  border: none;
+  color: #ffd700;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+}
+.info-close:hover { background: #2a2a2a; }
+
+.info-body {
+  padding: 16px;
+  overflow: auto;
+  color: #eee;
+  line-height: 1.45;
 }
