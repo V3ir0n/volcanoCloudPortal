@@ -1,3 +1,0 @@
-- [x] Reset fade flags in resetToBeforeEruption
-- [x] Ensure terrain and terrainFresnel are added back to scene with proper visibility and opacity
-- [x] Set window.isInsideView = false in reset

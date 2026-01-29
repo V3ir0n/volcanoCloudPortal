@@ -45,19 +45,12 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 function toggleAudio(enable) {
-    const backgroundMusic = document.getElementById('background-music');
-    if (!backgroundMusic) {
-        console.error("Audio element with id 'background-music' not found.");
-        return;
-    }
-    // Set properties each time to ensure they are applied
-    backgroundMusic.volume = 0.05;
-    backgroundMusic.playbackRate = 0.75;
-
-    if (enable) {
-        backgroundMusic.play();
-    } else {
-        backgroundMusic.pause();
+    if (view && view.eruptionHandler) {
+        if (enable) {
+            view.eruptionHandler.soundHandler.resume();
+        } else {
+            view.eruptionHandler.soundHandler.pause();
+        }
     }
 }
 
@@ -104,7 +97,7 @@ class View {
         const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
         const skyMaterial = new THREE.ShaderMaterial({
             uniforms: {
-                topColor: { value: new THREE.Color(0x808080) },
+                topColor: { value: new THREE.Color(0x0172ad) },
                 bottomColor: { value: new THREE.Color(0xffffff) }
             },
             vertexShader: `
@@ -137,12 +130,14 @@ class View {
         this.eruptionHandler = new EruptionHandler(this, this.parameters);
 
         this.smoke = new Smoke(this.camera, this.parameters);
-        this.scene.add(this.smoke, this.parameters);
+        this.scene.add(this.smoke);
         this.smoke.createSmokeParticles();
 
         this.ash = new Ash(this.camera, this.parameters, this.eruptionHandler);
         this.scene.add(this.ash);
         this.ash.createAshParticles();
+
+        this.eruptionHandler.updateEruption();
 
         // Add controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -250,32 +245,14 @@ class View {
                 }
             });
 
-            // Clone the terrain model for Fresnel effect
-            const terrainFresnel = terrainModel.clone();
-            terrainFresnel.name = 'TerrainFresnel';
-            terrainFresnel.scale.multiplyScalar(1.01); // Make it slightly larger
-            terrainFresnel.position.y += 0.02; // Raise it slightly to avoid intersection
-
-            // Apply Fresnel effect to the clone
-            terrainFresnel.traverse((child) => {
-                if (child.isMesh) {
-                    const fresnelMaterial = createFresnelMaterial(
-                        new THREE.Color(0x00ffff), // Cyan color for volcano
-                        2, // Fresnel power
-                        0.75 // Fresnel intensity
-                    );
-
-                    child.material = fresnelMaterial;
-                    child.userData.fresnelOutline = true; // Mark as processed
-                }
-            });
-
             this.scene.add(terrainModel);
-            this.scene.add(terrainFresnel);
+            //this.scene.add(terrainFresnel);
             console.log(terrainModel);
             terrainModel.name = 'Terrain';
             this.terrain = terrainModel;
-            this.terrainFresnel = terrainFresnel;
+
+            this.setTerrainOpacity(0.8);
+
         }, undefined, function (error) {
             console.error('An error happened loading terrain:', error);
         });
@@ -301,6 +278,7 @@ class View {
                     const geometry = child.geometry;
                     if (geometry.isBufferGeometry && geometry.attributes.position) {
                         geometry.userData.originalVertices = geometry.attributes.position.array.slice();
+                        geometry.userData.currentStretch = 1;
                     }
                 }
             });
@@ -310,6 +288,9 @@ class View {
             this.scene.add(this.volcano);
             this.volcano.visible = true; // Always visible
             console.log(this.volcano);
+
+
+            view.stretchVolcano();
         }, undefined, function (error) {
             console.error('An error happened loading volcano:', error);
         });
@@ -335,12 +316,12 @@ class View {
             if (this.volcano && this.terrain) {
                 if (this.isInsideView) {
                     // Go outside: fade in terrain and animate camera to default
-                    this.fadeTerrain(false);
+                    //this.fadeTerrain(false);
                     this.animateCameraToDefault();
                 } else {
                     // Go inside: fade in slice and fade out terrain
                     this.fadeVolcano(false);
-                    this.fadeTerrain(true);
+                    //this.fadeTerrain(true);
                 }
             }
         });
@@ -354,6 +335,33 @@ class View {
 
         // Start animation loop
         this.renderer.setAnimationLoop(()=>this.animate());
+    }
+
+    setTerrainOpacity(opacity) {
+        console.log(`Setting terrain opacity to ${opacity}.`)
+        if (this.terrain) {
+            this.terrain.traverse(child => {
+                if(child.isMesh) {
+                    // Ensure material is transparent to allow fading
+                    child.material.transparent = true;
+
+                    child.material.userData.targetOpacity = opacity;
+
+                    const animateOpacity = () => {
+                        const diff = child.material.userData.targetOpacity - child.material.opacity;
+
+                        if (Math.abs(diff) < 0.01) {
+                            child.material.opacity = child.material.userData.targetOpacity;
+                            console.log("done");
+                        } else {
+                            child.material.opacity += diff * 0.01;
+                            requestAnimationFrame(animateOpacity);
+                        }
+                    }
+                    animateOpacity();
+                }
+            });
+        }
     }
 
     onMouseClick(event) {
@@ -381,12 +389,22 @@ class View {
         }
     }
 
+    // Function to update the trigger button text based on current parameters
+    checkEruption() {
+        const regime = this.eruptionHandler.getRegime();
+        if (this.eruptionHandler.previousRegime != regime) {
+            this.eruptionHandler.updateEruption(regime);
+            this.eruptionHandler.previousRegime = regime;
+        }
+    };
+
     stretchVolcano() {
         if (!this.volcano) {
             return;
         }
 
-        const stretchSliderValue = this.parameters.volcanoStretch || 1.0;
+        const {min, max} = this.parameters.getLim("depth");
+        const stretchFactor = (this.parameters.depth - min) / (max-min);
 
         // Set smoke depth factor based on volcano stretch.
         // Deeper volcano (higher stretch value) means smaller factor, hence less vertical force for smoke.
@@ -396,42 +414,61 @@ class View {
             if (child.isMesh) {
                 const geometry = child.geometry;
                 if (geometry.isBufferGeometry && geometry.userData.originalVertices) {
-                    const positions = geometry.attributes.position.array;
-                    const originalPositions = geometry.userData.originalVertices;
-                    const stretchAmount = stretchSliderValue - 1.0;
-                    const maxDisplacement = 30;
 
-                    const stretchMin = 90;
-                    const stretchMax = 35;
+                    const stretch = () => {
 
-                    for (let i = 0; i < originalPositions.length; i += 3) {
-                        const originalX = originalPositions[i];
-                        const originalY = originalPositions[i + 1];
-                        const originalZ = originalPositions[i + 2];
+                        const targetFactor = geometry.userData.targetFactor;
+                        const currentStretch = geometry.userData.currentStretch;
+                        const newStretch = currentStretch + 0.05*(targetFactor-currentStretch);
+                        console.log(newStretch);
+                        geometry.userData.currentStretch = newStretch;
+                        const positions = geometry.attributes.position.array;
+                        const originalPositions = geometry.userData.originalVertices;
+                        const stretchAmount = newStretch - 1.0;
+                        const maxDisplacement = 30;
 
-                        // Reset positions to original state before applying transformation
-                        positions[i] = originalX;
-                        positions[i + 1] = originalY;
-                        positions[i + 2] = originalZ;
+                        const stretchMin = 90;
+                        const stretchMax = 35;
 
-                        let t = 0;
-                        if (originalZ >= stretchMax) {
-                            // Vertices above the stretch max are fully displaced.
-                            t = 1;
-                        } else if (originalZ >= stretchMin) {
+                        for (let i = 0; i < originalPositions.length; i += 3) {
+                            const originalX = originalPositions[i];
+                            const originalY = originalPositions[i + 1];
+                            const originalZ = originalPositions[i + 2];
 
-                        // if (originalZ > stretchMin && originalZ <= stretchMax) {
-                            // Vertices inside the stretch range are displaced proportionally.
-                            t = (originalZ - stretchMin) / (stretchMax - stretchMin);
+                            // Reset positions to original state before applying transformation
+                            positions[i] = originalX;
+                            positions[i + 1] = originalY;
+                            positions[i + 2] = originalZ;
+
+                            let t = 0;
+                            if (originalZ >= stretchMax) {
+                                // Vertices above the stretch max are fully displaced.
+                                t = 1;
+                            } else if (originalZ >= stretchMin) {
+
+                            // if (originalZ > stretchMin && originalZ <= stretchMax) {
+                                // Vertices inside the stretch range are displaced proportionally.
+                                t = (originalZ - stretchMin) / (stretchMax - stretchMin);
+                            }
+
+                            // Apply displacement to stretch the model along the Z-axis
+                            if (t > 0) {
+                                const displacement = t * stretchAmount * maxDisplacement;
+                                positions[i + 2] += displacement;
+                            }
                         }
+                        geometry.attributes.position.needsUpdate = true;
 
-                        // Apply displacement to stretch the model along the Z-axis
-                        if (t > 0) {
-                            const displacement = t * stretchAmount * maxDisplacement;
-                            positions[i + 2] += displacement;
+                        if (Math.abs(newStretch - targetFactor) > 0.01) {
+                            requestAnimationFrame(()=>stretch(targetFactor))
+                        } else {
+                            geometry.userData.currentStretch = targetFactor;
                         }
                     }
-                    geometry.attributes.position.needsUpdate = true;
+
+                    geometry.userData.targetFactor = stretchFactor;
+                    stretch();
+
                 }
             }
         });

@@ -1,33 +1,50 @@
 class VolcanoParameters {
     constructor(view) {
-
-        const setupParameter = (param, defaultValue, callback=()=>{}) => {
+        const setupSlider = (param, callback=()=>{}, defaultValue) => {
             const slider = document.getElementById(param+"Slider");
-            if (slider) {
-                this[param] = parseFloat(slider.value);
-                slider.addEventListener('input', () => {
-                    this[param] = parseFloat(slider.value);
-                    callback();
-
-                    if (view.eruptionHandler.eruptionOngoing()) {
-                        view.eruptionHandler.resetToBeforeEruption();
-                    }
-                });
-            } else {
-                this[param] = defaultValue
+            const indicator = document.getElementById(param+"Indicator");
+            if (defaultValue !== undefined) {
+                slider.valueAsNumber = defaultValue;
             }
+            indicator.innerText = slider.value;
+            this[param] = slider.valueAsNumber;
+            slider.addEventListener('input', () => {
+                this[param] = slider.valueAsNumber;
+                indicator.innerText = slider.value;
+                callback();
+            });
         };
 
-        setupParameter("smokeSpeed", 0.01);
-        setupParameter("smokeHeight", 1.0);
-        setupParameter("smokeLifetime", 2.5);
-        setupParameter("gasDensity", 30, ()=>this.updateTriggerButtonText());
-        setupParameter("volcanoStretch", 2.0, ()=>{
-            this.updateTriggerButtonText();
+        this.smokeSpeed = 0.01;
+        this.smokeHeight = 1;
+        this.smokeLifetime = 2.5;
+
+        setupSlider("gasDensity",
+            ()=>view.checkEruption()
+        );
+        setupSlider("depth", ()=>{
+            view.checkEruption();
             view.stretchVolcano();
         });
-        setupParameter("temperature", 10, ()=>this.updateTriggerButtonText());
-        setupParameter("windSpeed", 0);
+        setupSlider("windSpeed",
+            ()=>view.checkEruption()
+        );
+
+        const depthSlider = document.getElementById("depthSlider").parentElement;
+        depthSlider.addEventListener("mouseenter", ()=>{
+            view.setTerrainOpacity(0.2)
+        });
+        depthSlider.addEventListener("mouseleave", ()=>{
+            view.setTerrainOpacity(0.8)
+        });
+    }
+
+    getLim(param) {
+        const slider = document.getElementById(param+"Slider");
+        return {
+            min: parseFloat(slider.min),
+            max: parseFloat(slider.max)
+        };
     }
 
     set(param, value) {
@@ -37,79 +54,6 @@ class VolcanoParameters {
             slider.value = value;
         }
     }
-
-    // Define ranges based on slider min/max divided into three equidistant values
-    getRanges(param) {
-        const slider = document.getElementById(param+"Slider");
-        const min = parseFloat(slider.min);
-        const max = parseFloat(slider.max);
-        const range = max - min;
-        const delta = range / 6;
-        return {
-            low: min + delta,
-            medium: min + delta*3,
-            high: min + delta*5,
-            delta: delta
-        }
-    }
-    // Function to get eruption type based on parameters
-    getEruptionType() {
-
-        const check = (param, comparison, target) => {
-            const val = this[param];
-            const range = this.getRanges(param);
-            switch (comparison) {
-                case "<": return val <= range[target];
-                case ">": return val >= range[target];
-                case "=":
-                    return Math.abs(val - range[target]) <= range.delta * 1.1;
-                default:
-                    console.error(`Unknown comparison: ${comparison}`);
-                    break;
-            }
-        }
-
-        if (
-            check("temperature", "=", "high") &&
-            check("gasDensity", "=", "low") &&
-            check("volcanoStretch", "=", "low")
-        ) {
-            return 'passive degassing';
-        } else if (
-            check("temperature", ">", "medium") &&
-            check("gasDensity", "=", "high") &&
-            check("volcanoStretch", "=", "high")
-        ) {
-            return 'strombolian eruption';
-        } else if (
-            check("temperature", "=", "medium") &&
-            check("gasDensity", "=", "high") &&
-            check("volcanoStretch", "=", "medium")
-        ) {
-            return 'vulcanian eruption';
-        } else {
-            return 'No Eruption';
-        }
-    }
-
-    // Function to update the trigger button text based on current parameters
-    updateTriggerButtonText() {
-        const type = this.getEruptionType();
-        const btn = document.getElementById('trigger-eruption-btn');
-        if (btn) {
-            if (type === 'No Eruption') {
-                btn.textContent = "No eruption possible for current parameters";
-                btn.disabled = true;
-                btn.style.opacity = '0.5';
-                btn.style.cursor = 'not-allowed';
-            } else {
-                btn.textContent = `Trigger ${type}`;
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-            }
-        }
-    };
 }
 
 export {VolcanoParameters}

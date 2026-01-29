@@ -8,16 +8,18 @@ class Smoke extends THREE.Object3D{
         super();
         this.prevNumActiveParticles = 0;
         this.smokeParticles = [];
-        this.loadedTextures = [];
+        this.darkSmokeTextures = [];
 
         this.camera = camera;
-        this.parameters = parameters
+        this.parameters = parameters;
+
+        this.smokeType = "dark";
 
         // Track current active texture set
-        this.currentSmokeTextures = this.loadedTextures;
-        this.loadedTextures = this.loadedTextures;
+        this.currentSmokeTextures = this.darkSmokeTextures;
+        this.darkSmokeTextures = this.darkSmokeTextures;
 
-        this.previousSmokeTextures = this.loadedTextures;
+        this.previousSmokeTextures = this.darkSmokeTextures;
     }
 
     createSmokeParticles() {
@@ -69,15 +71,15 @@ class Smoke extends THREE.Object3D{
         // Load both sets of textures
         Promise.all([...defaultLoadPromises, ...whiteLoadPromises]).then(textures => {
             const numDefaultTextures = defaultTexturePaths.length;
-            this.loadedTextures.push(...textures.slice(0, numDefaultTextures));
+            this.darkSmokeTextures.push(...textures.slice(0, numDefaultTextures));
             this.whiteSmokeTextures = textures.slice(numDefaultTextures);
             console.log('All smoke textures loaded successfully');
             console.log('this.whiteSmokeTextures set:', this.whiteSmokeTextures);
 
             const numParticles = 150; // Create a fixed pool of particles
             for (let i = 0; i < numParticles; i++) {
-                // Randomly select one of the loaded default textures initially
-                const randomTexture = this.loadedTextures[Math.floor(Math.random() * this.loadedTextures.length)];
+                // Randomly select one of the loaded dark textures initially
+                const randomTexture = this.darkSmokeTextures[Math.floor(Math.random() * this.darkSmokeTextures.length)];
 
                 const smokeMaterial = new THREE.MeshBasicMaterial({
                     map: randomTexture,
@@ -110,51 +112,22 @@ class Smoke extends THREE.Object3D{
         });
     }
 
-    // Function to load white smoke textures for type 1 eruption
-    loadWhiteSmokeTextures() {
-        if (this.whiteSmokeTextures) {
-            // Already loaded, just switch
-            this.currentSmokeTextures = this.whiteSmokeTextures;
-            return Promise.resolve();
-        }
-
-        const textureLoader = new THREE.TextureLoader();
-        const whiteTexturePaths = ['white_smoke1.png', 'white_smoke2.png', 'white_smoke3.png'];
-
-        const loadPromises = whiteTexturePaths.map(path => {
-            return new Promise((resolve, reject) => {
-                textureLoader.load(
-                    path,
-                    (texture) => {
-                        console.log(`White smoke texture loaded successfully: ${path}`);
-                        resolve(texture);
-                    },
-                    undefined,
-                    (error) => {
-                        console.error('Error loading white smoke texture:', error);
-                        reject(error);
-                    }
-                );
-            });
-        });
-
-        return Promise.all(loadPromises).then(textures => {
-            this.whiteSmokeTextures = textures;
-            this.currentSmokeTextures = textures;
-            console.log('All white smoke textures loaded successfully');
-        }).catch(error => {
-            console.error('Failed to load white smoke textures:', error);
-        });
-    }
-
     update() {
         const now = Date.now();
-        const speed = this.smokeSpeed || 0.01;
-        const height = this.smokeHeight || 1.0;
+        const speed = this.parameters.smokeSpeed;
+        const height = this.parameters.smokeHeight;
 
         // Set current smoke textures based on eruption type
-        this.currentSmokeTextures = this.isType1Eruption && this.whiteSmokeTextures ? this.whiteSmokeTextures : this.loadedTextures;
-        console.log('Current smoke textures set to:', this.currentSmokeTextures === this.whiteSmokeTextures ? 'white' : 'default');
+        switch (this.smokeType) {
+            case "light":
+                this.currentSmokeTextures = this.whiteSmokeTextures;
+                break;
+            case "dark":
+                this.currentSmokeTextures = this.darkSmokeTextures;
+                break;
+            default:
+                console.error(`Unknown smoke type: ${this.smokeType}!`);
+        }
 
         // If texture set changed, update all existing particles immediately
         if (this.currentSmokeTextures !== this.previousSmokeTextures) {
@@ -169,13 +142,15 @@ class Smoke extends THREE.Object3D{
         }
 
         // Depth-based movement speed
-        const stretch = this.volcanoStretch || 1.0;
-        const normalizedStretch = Math.max(0, Math.min(1, (stretch - 1.0) / 2.0));
+        const depthLim = this.parameters.getLim("depth");
+        const normalizedStretch = (this.parameters.depth - depthLim.min) / (depthLim.max-depthLim.min);
         const depthDampening = 1.0 - normalizedStretch * 0.8;
 
-        const temperature = (this.parameters.temperature ?? 10) * 5;
-        const gasDensity = this.parameters.gasDensity || 25;
-        const gasAmountNormalized = gasDensity / 100;
+
+        const gasLim = this.parameters.getLim("gasDensity");
+        const gasAmountNormalized = (this.parameters.gasDensity - gasLim.min) / (gasLim.max-gasLim.min);
+
+        const temperature = 100 ;//* (normalizedStretch * gasAmountNormalized);
 
         // --- Smoothed Temperature-based physics using interpolation ---
         const tempLow = { lf: 1.0, vf: 0.01, bm: 0.1, hdx: 0.015, hdz: 0.015 }; // Low temp properties
@@ -227,13 +202,13 @@ class Smoke extends THREE.Object3D{
             const numNew = numActiveParticles - this.prevNumActiveParticles;
             for (let i = this.prevNumActiveParticles; i < numActiveParticles; i++) {
                 if (this.smokeParticles[i]) {
-                    const stagger = ((i - this.prevNumActiveParticles) / numNew) * 1000; // Stagger over 1 second
+                    const stagger = ((i - this.prevNumActiveParticles) / numNew) * 10000; // Stagger over 5 seconds
                     this.smokeParticles[i].userData.birthTime = now - stagger;
                 }
             }
         }
-        this.prevNumActiveParticles = numActiveParticles;
 
+        this.prevNumActiveParticles = numActiveParticles;
 
         this.smokeParticles.forEach((particle, index) => {
             if (index >= numActiveParticles) {
@@ -266,7 +241,7 @@ class Smoke extends THREE.Object3D{
                 velZ = effectiveHorizontalDriftZ;
             }
 
-            velX += this.parameters.windSpeed;
+            velX += this.parameters.windSpeed * 0.01;
 
             let totalUpwardForce = (Math.random() * effectiveVerticalForce + effectiveVerticalForce / 2) + (temperature * 0.001 * effectiveBuoyancyMultiplier);
             if (this.isType1Eruption) {
@@ -274,7 +249,7 @@ class Smoke extends THREE.Object3D{
             }
 
             // --- Burst logic for shallow volcano ---
-            if (stretch < 0.9) { // Shallow volcano condition
+            if (normalizedStretch < 0.2) { // Shallow volcano condition
                 if (age < 0.2) {
                     totalUpwardForce *= 4.0; // Stronger initial burst
                 } else {
@@ -284,7 +259,7 @@ class Smoke extends THREE.Object3D{
 
             const ageProgress = Math.min(1.0, age / lifetime);
             let ageDampingFactor = 0.85;
-            if (stretch < 0.9) ageDampingFactor = 0.95; // Faster die down for shallow
+            if (normalizedStretch < 0.2) ageDampingFactor = 0.95; // Faster die down for shallow
             const ageDamping = 1.0 - (ageProgress * ageDampingFactor);
             totalUpwardForce *= ageDamping;
 

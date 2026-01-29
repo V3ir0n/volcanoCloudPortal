@@ -1,3 +1,0 @@
-- [x] Terrain clone creation removed from main.js
-- [x] Terrain clone references removed from poi.js fadeTerrain function
-- [x] Clone no longer appears or disappears with terrain

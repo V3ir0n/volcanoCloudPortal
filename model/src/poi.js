@@ -308,12 +308,12 @@ document.getElementById('toggle-visibility-btn').addEventListener('click', () =>
     if (window.volcano && window.terrain) {
         if (window.isInsideView) {
             // Go outside: fade in terrain and animate camera to default
-            fadeTerrain(false);
+            //fadeTerrain(false);
             animateCameraToDefault();
         } else {
             // Go inside: fade in slice and fade out terrain
             fadeVolcano(false);
-            fadeTerrain(true);
+            //fadeTerrain(true);
         }
     }
 });
