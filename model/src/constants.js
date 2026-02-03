@@ -33,10 +33,6 @@ export const eruptiveRegimes = [
 ];
 
 export const eruptionFeatures = {
-    idle: {
-        sound: "silence",
-        ashAmount: "none"
-    },
     weak: {
         smoke: "light",
         ashAmount: "none",
