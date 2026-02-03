@@ -13,6 +13,12 @@ body {
     height: 100vh;
 }
 
+#backButton {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+
 #infobox {
     position: absolute;
     top: 50%;
