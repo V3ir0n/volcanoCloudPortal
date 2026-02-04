@@ -46,6 +46,7 @@ export const eruptionFeatures = {
     transitional: {
         smoke: "dark",
         ashAmount: "small",
+        lava: true,
         shakeIntensity: 0.5,
         sound: "mild_eruption_sfx",
         infoBoxText: `
@@ -57,6 +58,7 @@ export const eruptionFeatures = {
     plinian: {
         smoke: "dark",
         ashAmount: "large",
+        lava: true,
         shakeIntensity: 1,
         sound: "strong_eruption_sfx",
         infoBoxText: `

@@ -59,21 +59,6 @@ class EruptionHandler {
 
     // Function to shake the camera with looping, varying speed and intensity, and uneven intervals
     shakeCamera(intensity) {
-        // Override texture of mayon_FULL3.glb with volcano_erupted_tex.png
-        const textureLoader = new THREE.TextureLoader();
-        textureLoader.setPath("resources/");
-        textureLoader.load('volcano_lava.png', (texture) => {
-            texture.encoding = THREE.sRGBEncoding; // Ensure correct color space
-            if (this.view.terrain) {
-                this.view.terrain.traverse((child) => {
-                    if (child.isMesh && child.material) {
-                        child.material.map = texture;
-                        child.material.needsUpdate = true;
-                    }
-                });
-            }
-        });
-
         let isShaking = false;
         let shakeStartTime = 0;
         let shakeDuration = 0;
@@ -164,6 +149,13 @@ class EruptionHandler {
 
         if (features.shakeIntensity) {
             this.shakeCamera(features.shakeIntensity);
+        }
+
+        // Update lava
+        if (features.lava) {
+            this.view.addLava();
+        } else {
+            this.view.removeLava();
         }
 
         // Update smoke textures
