@@ -85,8 +85,14 @@ class View {
 
         // Variables for fade animation
         this.terrain = null;
-        this.originalTerrainMaterial = null;
         this.volcano = null;
+
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.setPath("resources/");
+        textureLoader.load('volcano_lava.png', (texture) => {
+            texture.encoding = THREE.sRGBEncoding; // Ensure correct color space
+            this.lavaTexture = texture;
+        });
 
 
         // Load terrain model (single instance)
@@ -95,10 +101,10 @@ class View {
             terrainModel.scale.set(0.25, 0.25, 0.25);
             terrainModel.rotation.set(0, -135, 0);
 
-            // Store the original material for resetting
+            // Store the original textyre for resetting
             terrainModel.traverse((child) => {
-                if (child.isMesh && !this.originalTerrainMaterial) {
-                    this.originalTerrainMaterial = child.material.clone();
+                if (child.isMesh) {
+                    this.noLavaTexture = child.material.map.clone();
                 }
             });
 
@@ -142,7 +148,6 @@ class View {
             this.volcano.visible = true; // Always visible
             console.log(this.volcano);
 
-
             view.stretchVolcano();
         }, undefined, function (error) {
             console.error('An error happened loading volcano:', error);
@@ -173,6 +178,75 @@ class View {
 
         // Start animation loop
         this.renderer.setAnimationLoop(()=>this.animate());
+    }
+
+    removeLava() {
+        if (!this.terrain) {
+            return
+        }
+
+        // This will stop animation loop in addLava (if ongoing)
+        this.terrain.userData.shouldHaveLava = false;
+
+        // Reset texture
+        const terrainMesh = this.terrain.children[0];
+        terrainMesh.material.map = this.noLavaTexture.clone();
+        terrainMesh.material.needsUpdate = true;
+    }
+
+    addLava() {
+        if (!this.terrain) {
+            return
+        }
+        this.terrain.userData.shouldHaveLava = true;
+        const terrainMesh = this.terrain.children[0];
+
+        // Create a grid to load in incrementally
+        const textureWidth = 1386;
+        const textureHeight = 1381;
+        const origin = new THREE.Vector2(710, 775);
+        const d = 20;
+
+        const grid = [];
+        for (let i=0; i+d<textureWidth; i+=d) {
+            for (let j=0; j+d<textureHeight; j+=d) {
+                grid.push({
+                    box: new THREE.Box2(
+                        new THREE.Vector2(i,j),
+                        new THREE.Vector2(i+d,j+d)
+                    ),
+                    dist: new THREE.Vector2(
+                        i + (d/2),
+                        j + (d/2)
+                    ).distanceToSquared(origin)
+                });
+            }
+        }
+
+        // Cells closest to summit should be last
+        grid.sort((a,b) => b.dist - a.dist);
+
+        let dist = 0;
+        const animateLava = () => {
+            if (!this.terrain.userData.shouldHaveLava) {
+                return;
+            }
+            while (grid.slice(-1)[0].dist <= dist) {
+                const box = grid.pop().box;
+                this.renderer.copyTextureToTexture(
+                    this.lavaTexture,
+                    terrainMesh.material.map,
+                    box, box.min
+                );
+                terrainMesh.material.needsUpdate = true;
+            }
+
+            if (grid.length > 0) {
+                dist += d*d;
+                requestAnimationFrame(animateLava);
+            }
+        }
+        animateLava();
     }
 
     setTerrainOpacity(opacity) {
