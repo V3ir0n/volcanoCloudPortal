@@ -148,7 +148,10 @@ class View {
             this.volcano.visible = true; // Always visible
             console.log(this.volcano);
 
-            view.stretchVolcano();
+            this.stretchVolcano();
+
+            this.checkEruption();
+
         }, undefined, function (error) {
             console.error('An error happened loading volcano:', error);
         });
@@ -276,7 +279,6 @@ class View {
         }
     }
 
-    // Function to update the trigger button text based on current parameters
     checkEruption() {
         const regime = this.eruptionHandler.getRegime();
         if (this.eruptionHandler.previousRegime != regime) {
