@@ -107,7 +107,7 @@ class VolcanoView {
   }
 
   loadVolcanoModel() {
-    const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
+    const loader = new GLTFLoader().setPath("/map/resources/terrainMeshes/");
     const filename = `${this.place.name}.glb`;
     loader.load(filename, gltf => {
       const model = gltf.scene;

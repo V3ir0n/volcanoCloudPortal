@@ -487,8 +487,6 @@ fetch("resources/volcanoes.geojson")
   .catch((err) => {
     console.error("Failed to load GeoJSON", err);
   });
-const legendValues = computeLegendValuesFromData(data);
-        createStaticLegend(legendValues);
 
 function createStaticLegend(legendValues) {
   if (!map) return;
@@ -530,4 +528,3 @@ function createStaticLegend(legendValues) {
 document.addEventListener("DOMContentLoaded", () => {
   initMap();
 });
-
