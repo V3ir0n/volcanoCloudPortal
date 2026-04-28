@@ -350,6 +350,7 @@ function hideVolcanoControl(hide = true) {
   }
 }
 
+//Fetches  the map from CARTO and initialize as background
 function initMap() {
   const worldBounds = L.latLngBounds(
     [
@@ -365,7 +366,7 @@ function initMap() {
     maxBoundsViscosity: 1.0
   }).setView([15, 60], 2);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png", {
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
     attribution: "&copy; CARTO &copy; OSM",
     subdomains: "abcd",
     maxZoom: 19,
@@ -415,8 +416,7 @@ function initMap() {
   map.addControl(new YearControl({ position: "bottomleft" }));
 
 
-  // Load GeoJSON
-  // Load GeoJSON
+  // Fetches volcanoes as a GeoJSON Point
 fetch("resources/volcanoes.geojson")
   .then((r) => r.json())
   .then((data) => {
@@ -428,7 +428,7 @@ fetch("resources/volcanoes.geojson")
       fillOpacity: 0.8
     };
 
-    // Add features
+    // Adds circle markers that are used in main to create the emission circlesfor each volcano
     geoLayer = L.geoJSON(data, {
       pointToLayer: (feature, latlng) => {
         const radius = emissionRadius(feature.properties || {}, year);
@@ -497,7 +497,7 @@ function createStaticLegend(legendValues) {
     onAdd() {
       const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
       div.innerHTML = `
-        <div class="legend-title">Emission</div>
+        <div class="legend-title">Emission SO2 Gt/y</div>
         <div class="legend-items">
           ${legendValues.map(v => {
             const r = emissionRadius({ [String(minYear)]: v }, minYear);
