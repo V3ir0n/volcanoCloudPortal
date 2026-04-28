@@ -18,7 +18,7 @@ body {
 #map {
   height: 100%;
   width: 100%;
-  background: #262626;
+  background: #d3d9db;
 }
 
 /* --- Overlay / panel --- */
@@ -273,7 +273,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 0 16px;
-  background: #161616;
+  background: #2a2a2a;
   color: #ffd700;
   font-size: 1.1rem;
   box-shadow: 0 1px 0 rgba(255,255,255,0.05);
@@ -394,4 +394,17 @@ body {
   overflow: auto;
   color: #eee;
   line-height: 1.45;
+}
+.station-tooltip {
+  display: none;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
 }

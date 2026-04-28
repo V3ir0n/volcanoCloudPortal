@@ -80,6 +80,22 @@ export const annotations = [
             <h2>A point of interest!</h2>
             Let us pretend that this is a point of interest, but to be fair, there is nothing particularly interesting with this point...
         `
+    },
+    {
+        name: "Magma Chamber",
+        position: [0.89, -24.95, 2.1],
+        infoBoxText: `
+            <h2>Where the magic happens!</h2>
+            In this meltpot of rock and gas, the magma is stored before it finds its way to the surface. The magma chamber is a key component of the volcanic system, and its properties can influence the style and intensity of eruptions.
+        `
+    },
+    {
+        name: "Conduit",
+        position: [0.80, -1.15, 1.2],
+        infoBoxText: `
+            <h2>Where the action happens!</h2>
+            The conduit is the pathway through which magma travels from the magma chamber to the surface during an eruption. It can be thought of as a volcanic "pipe" that allows the magma to escape and create an eruption. Narrow conduits can lead to more explosive eruptions, while wider conduits may result in effusive eruptions with lava flows.
+        `
     }
 ];
 

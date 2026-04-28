@@ -76,6 +76,22 @@ class View {
         this.controls.minAzimuthAngle = -Math.PI/3; // 60 degrees (from front)
         this.controls.maxAzimuthAngle = Math.PI/3; // 60 degrees (from front)
         this.controls.enablePan = true; // Enable pan when controls are on
+        
+        //clicker for positions, remove later
+        this.canvas.addEventListener('click', event => {
+            const pointer = new THREE.Vector2(
+                (event.clientX / this.canvas.offsetWidth) * 2 - 1,
+                -(event.clientY / this.canvas.offsetHeight) * 2 + 1
+            );
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(pointer, this.camera);
+            const hits = raycaster.intersectObjects(this.scene.children, true);
+            if (hits.length > 0) {
+                const p = hits[0].point;
+                console.log(`position: [${p.x.toFixed(2)}, ${p.y.toFixed(2)}, ${p.z.toFixed(2)}]`);
+            }
+        });
+        // end of clicker
 
         setupLights(this.scene);
 
