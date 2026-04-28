@@ -71,11 +71,11 @@ export const eruptionFeatures = {
         `
     }
 };
-
+// Creating POIs
 export const annotations = [
     {
         name: "POI?",
-        position: [-4, -3, 3],
+        position: [-11, -3, 6.6], //horizontal, vertical, depth
         infoBoxText: `
             <h2>A point of interest!</h2>
             Let us pretend that this is a point of interest, but to be fair, there is nothing particularly interesting with this point...
@@ -83,7 +83,7 @@ export const annotations = [
     },
     {
         name: "Magma Chamber",
-        position: [0.89, -24.95, 2.1],
+        position: [0.89, -24.95, 2.51], 
         infoBoxText: `
             <h2>Where the magic happens!</h2>
             In this meltpot of rock and gas, the magma is stored before it finds its way to the surface. The magma chamber is a key component of the volcanic system, and its properties can influence the style and intensity of eruptions.
@@ -91,10 +91,28 @@ export const annotations = [
     },
     {
         name: "Conduit",
-        position: [0.80, -1.15, 1.2],
+        position: [0.80, -1.15, 2.1],
         infoBoxText: `
             <h2>Where the action happens!</h2>
             The conduit is the pathway through which magma travels from the magma chamber to the surface during an eruption. It can be thought of as a volcanic "pipe" that allows the magma to escape and create an eruption. Narrow conduits can lead to more explosive eruptions, while wider conduits may result in effusive eruptions with lava flows.
+        `
+    }
+    ,
+    {
+        name: "Plume",
+        position: [3.25, 10.63, 0.89],
+        infoBoxText: `
+            <h2>Where the burst happens!</h2>
+            The plume is the column of volcanic gases and ash that rises from the crater during an eruption. It can be thought of as the "chimney" of the volcano, carrying the erupted material high into the atmosphere. The size and shape of the plume can provide clues about the intensity and style of the eruption.
+        `
+    }
+    ,
+    {
+        name: "Crater",
+        position: [0.21, 8.04, 0.50],
+        infoBoxText: `
+            <h2>Where the burst happens!</h2>
+            The plume is the column of volcanic gases and ash that rises from the crater during an eruption. It can be thought of as the "chimney" of the volcano, carrying the erupted material high into the atmosphere. The size and shape of the plume can provide clues about the intensity and style of the eruption.
         `
     }
 ];
