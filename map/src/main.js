@@ -2,10 +2,8 @@ import { renderPlaceView } from "./placeview.js";
 
 let selectedPlace = null;
 
-let year = 2005;
-const minYear = 2005;
-const maxYear = 2023;
-const tickMs = 900;
+let year, minYear, maxYear;
+const tickMs = 2000; // ms for each tick when pushing play button
 let intervalId = null;
 
 let map;
@@ -36,6 +34,21 @@ function emissionRadius(props, year, options = {}) {
   const logValue = Math.log10(value + 1);
 
   return minRadius + scale * logValue;
+}
+
+// Finds max and min value of year from volcanoes.json for the emission slider.
+function computeYearRange(data) {
+  let min = Infinity, max = -Infinity; //all years will be larger than -inf and smaller than inf
+  for (const f of data.features || []) { // loop through all volcanoes
+    for (const key of Object.keys(f.properties || {})) { //loop through all properties of the volcano
+      const y = Number(key); // store property key
+      if (Number.isInteger(y) && y >= 1800 && y <= 2200) { //if key is a number
+        if (y < min) min = y; //if y is smaller than previous y
+        if (y > max) max = y;
+      }
+    }
+  }
+  return min === Infinity ? { min: 2005, max: 2023 } : { min, max }; //if min=inf no years was found and 2005,2023 are used as stand in values.
 }
 
 //for legend
@@ -77,8 +90,8 @@ function openVolcano(feature, layer) {
     map.setView(layer.getLatLng(), 10, { animate: true });
   }
 
-  const [lng, lat] = feature.geometry.coordinates;
-  renderPlaceOverlay(place, [lat, lng]);
+  const [lng, lat] = feature.geometry.coordinates; //fetches lng lat from volcanoes.json
+  renderPlaceOverlay(place, [lat, lng]);          
 }
 
 function closeOverlay() {
@@ -375,51 +388,54 @@ function initMap() {
     bounds: worldBounds
   }).addTo(map);
 
-  // Year control
-  const YearControl = L.Control.extend({
-    onAdd() {
-      const container = L.DomUtil.create("div", "leaflet-bar year-control");
-      container.innerHTML = `
-        <div class="yc-row">
-          <button class="yc-btn" aria-label="Play/Pause" title="Play/Pause">▶</button>
-          <div class="yc-display">${year}</div>
-        </div>
-        <input class="yc-slider" type="range" min="${minYear}" max="${maxYear}" step="1" value="${year}" />
-      `;
-
-      L.DomEvent.disableClickPropagation(container);
-      L.DomEvent.disableScrollPropagation(container);
-
-      const btn = container.querySelector(".yc-btn");
-      const slider = container.querySelector(".yc-slider");
-
-      btn.addEventListener("click", () => {
-        if (intervalId) {
-          stopTick();
-          btn.textContent = "▶";
-        } else {
-          startTick();
-          btn.textContent = "⏸";
-        }
-      });
-
-      slider.addEventListener("input", (e) => {
-        stopTick();
-        btn.textContent = "▶";
-        setYear(Number(e.target.value));
-      });
-
-      return container;
-    }
-  });
-
-  map.addControl(new YearControl({ position: "bottomleft" }));
-
-
   // Fetches volcanoes as a GeoJSON Point
 fetch("resources/volcanoes.geojson")
   .then((r) => r.json())
   .then((data) => {
+    const { min, max } = computeYearRange(data);
+    minYear = min;
+    maxYear = max;
+    year = minYear;
+
+    const YearControl = L.Control.extend({
+      onAdd() {
+        const container = L.DomUtil.create("div", "leaflet-bar year-control");
+        container.innerHTML = `
+          <div class="yc-row">
+            <button class="yc-btn" aria-label="Play/Pause" title="Play/Pause">▶</button>
+            <div class="yc-display">${year}</div>
+          </div>
+          <input class="yc-slider" type="range" min="${minYear}" max="${maxYear}" step="1" value="${year}" />
+        `;
+
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.disableScrollPropagation(container);
+
+        const btn = container.querySelector(".yc-btn");
+        const slider = container.querySelector(".yc-slider");
+
+        btn.addEventListener("click", () => {
+          if (intervalId) {
+            stopTick();
+            btn.textContent = "▶";
+          } else {
+            startTick();
+            btn.textContent = "⏸";
+          }
+        });
+
+        slider.addEventListener("input", (e) => {
+          stopTick();
+          btn.textContent = "▶";
+          setYear(Number(e.target.value));
+        });
+
+        return container;
+      }
+    });
+
+    map.addControl(new YearControl({ position: "bottomleft" }));
+
     const baseStyle = {
       fillColor: "#FFD700",
       color: "#000",
