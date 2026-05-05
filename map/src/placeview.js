@@ -85,6 +85,8 @@ class VolcanoView {
 
   }
 
+  // Sets up the 3D volcano model
+  // Function called upon in renderPlaceView main.js330. 
   loadVolcanoModel() {
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
     const filename = `${this.place.name}.glb`;
@@ -92,13 +94,49 @@ class VolcanoView {
       const model = gltf.scene;
       this.scene.add(model);
 
+/* 
+--------------
+FOR CALCULATION OF SCALE (remove code later)
+ */
       const boundingBox = new THREE.Box3();
       boundingBox.expandByObject(model);
+      console.log("terrain X range:", boundingBox.min.x, "to", boundingBox.max.x);
+      console.log("terrain Z range:", boundingBox.min.z, "to", boundingBox.max.z);
+      
+      let maxY = -Infinity, peakX = 0, peakZ = 0;
+      model.traverse(child => {
+        if (child.isMesh) {
+          const pos = child.geometry.attributes.position;
+          for (let i = 0; i < pos.count; i++) {
+            const y = pos.getY(i);
+            if (y > maxY) { maxY = y; peakX = pos.getX(i); peakZ = pos.getZ(i); }
+          }
+        }
+      });
+      console.log("peak at scene:", peakX.toFixed(4), peakZ.toFixed(4));
 
+
+      // RED MARKER FOR CORNER
+      if (this.place.name === "arenal") {
+        const marker = new THREE.Mesh(
+          new THREE.SphereGeometry(0.02),
+          new THREE.MeshBasicMaterial({ color: 0xff0000 })
+        );
+        marker.position.set(-0.877, 0.1, 0.816);
+        this.scene.add(marker);
+        this.render();
+      }
+      /*
+------------------------------------'
+----------------------------'
+*/
       model.position.sub(
         new THREE.Vector3(0, boundingBox.min.y, 0)
       );
       this.render();
+      this.loadStationSprites();
+
+      
     }, undefined, () => {
 
       // On error (file not found)
@@ -132,6 +170,28 @@ class VolcanoView {
     });
   }
 
+  //Fetches station lat/lon from stations.json and adds them to the scene. 
+  //Called after the volcano model is loaded in loadVolcanoModel().
+  loadStationSprites() {
+    const texture = new THREE.TextureLoader().load("resources/circle.png");
+    fetch("resources/stations.json")
+      .then(r => r.json())
+      .then(stations => {
+        stations
+          .filter(s => s.volcanoKey === this.place.name)
+          .forEach(s => {
+            const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture }));
+            sprite.scale.set(0.1, 0.1, 0.1);
+            const { x, z } = latLonToScene(s.lat, s.lng, this.latLng[0], this.latLng[1]);
+            /* remove later*/ console.log(`${s.name} (${s.lat}, ${s.lng}) -> scene (${x.toFixed(4)}, ${z.toFixed(4)})`);
+            /* remove later*/ console.log("volcano center latLng:", this.latLng);
+            sprite.position.set(x, 0.15, z);
+            this.scene.add(sprite);
+          });
+        this.render();
+      });
+  }
+
   /**
    * Render the scene, should be called whenever something changes
    */
@@ -140,11 +200,22 @@ class VolcanoView {
   }
 }
 
+// Converter for station lat/lon to scene x/z coordinates
+function latLonToScene(targetLat, targetLon, centerLat, centerLon) {
+  const radiusKm = 6.0;
+  const kmPerDegLat = 111.32;
+  const kmPerDegLon = 111.32 * Math.cos(centerLat * Math.PI / 180);
+  const dx = (targetLon - centerLon) * kmPerDegLon;
+  const dy = (targetLat - centerLat) * kmPerDegLat;
+  return { x: dx / radiusKm, z: -dy / radiusKm };
+}
+
 /**
  * Saves a blob as a file
  * @param {Blob} blob
  * @param {string} filename
  */
+
 function saveBlob(blob, filename) {
   const link = document.createElement("a");
   link.style.display = "none";
