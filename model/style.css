@@ -59,3 +59,48 @@ body {
   line-height: 1;
   transition: opacity 2s, top 0.1s ease 0s, left 0.1s ease 0s;
 }
+
+.parameters label.parameter-row {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.parameter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.parameter-header span {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.info-btn:hover,
+.info-btn:focus {
+    background: rgba(255, 255, 255, 0.08);
+    outline: none;
+}
+
+.info-btn:active {
+    transform: translateY(1px);
+}

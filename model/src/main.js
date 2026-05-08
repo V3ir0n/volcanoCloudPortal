@@ -21,6 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleAudio(audioToggle.checked);
         });
     }
+
+    const parameterInfos = {
+        depthInfo: 'Depth changes the subsurface vent depth. Deeper vents alter eruption style, model stretching, and plume behavior.',
+        gasDensityInfo: 'Gas density controls how much eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.',
+        windSpeedInfo: 'Wind speed affects plume shape and drift. Higher wind values stretch the plume more horizontally.'
+    };
+
+    const infoboxDiv = document.getElementById('infobox');
+    Object.entries(parameterInfos).forEach(([buttonId, message]) => {
+        const button = document.getElementById(buttonId);
+        if (button && infoboxDiv) {
+            button.addEventListener('mouseover', () => {
+                infoboxDiv.textContent = message;
+            });
+        }
+    });
 });
 
 function toggleAudio(enable) {
