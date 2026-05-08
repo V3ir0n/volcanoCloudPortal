@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//mnt/c/Users/Hacker/AppData/Local/**)",
+      "Read(//mnt/c/Users/Hacker/AppData/Roaming/**)",
+      "Read(//mnt/c/Users/**)"
+    ]
+  }
+}

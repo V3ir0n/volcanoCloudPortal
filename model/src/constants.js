@@ -116,6 +116,21 @@ export const annotations = [
         `
     }
 ];
+export const parameterInfos = {
+    depthInfo: `
+        <h2>Depth</h2>
+        <p>Depth changes the subsurface vent depth. Deeper vents alter eruption style, model stretching, and plume behavior.</p>
+    `,
+    gasDensityInfo: `
+        <h2>Gas Density</h2>
+        <p>Gas density controls how much eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.</p>
+    `,
+    windSpeedInfo: `
+        <h2>Wind Speed</h2>
+        <p>Wind speed affects plume shape and drift. Higher wind values stretch the plume more horizontally.</p>
+    `
+};
+
 
 export const skyTopColor = 0x0172ad;
 export const skyBottomColor = 0xffffff;
