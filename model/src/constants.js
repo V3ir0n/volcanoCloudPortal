@@ -39,7 +39,7 @@ export const eruptionFeatures = {
         sound: "silence",
         infoBoxText: `
             <h2>No Eruption</h2>
-            If there is no gas in the magma there wont be an eruption.
+            If there would be no gas no eruption would happen. (This never happens in reality, there is always some amount of gas in the magma chamber).
         `
     },
     weak: {
@@ -123,8 +123,8 @@ export const parameterInfos = {
         <p>Depth changes the subsurface vent depth. Deeper vents alter eruption style, model stretching, and plume behavior.</p>
     `,
     gasDensityInfo: `
-        <h2>Gas Density</h2>
-        <p>Gas density controls how much eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.</p>
+        <h2>Gas Content</h2>
+        <p>The more gas that is dissolved in the magma the more eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.</p>
     `,
     windSpeedInfo: `
         <h2>Wind Speed</h2>
