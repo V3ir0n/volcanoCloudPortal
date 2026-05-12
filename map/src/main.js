@@ -87,7 +87,7 @@ function openVolcano(feature, layer) {
 
   // zoom in to selected volcano
   if (layer?.getLatLng) {
-    map.setView(layer.getLatLng(), 10, { animate: true });
+    map.setView(layer.getLatLng(), 4, { animate: true });
   }
 
   const [lng, lat] = feature.geometry.coordinates; //fetches lng lat from volcanoes.json
@@ -209,7 +209,7 @@ function renderPlaceOverlay(place, latlng) {
   } else {
     overlayEl.style.display = "";
   }
-
+//------------Emission graph----------------
   const renderEmissionDiagram = (container, data) => {
   container.innerHTML = "";
 
@@ -313,6 +313,27 @@ function renderPlaceOverlay(place, latlng) {
     axisGroup.appendChild(label);
   });
 
+// Y label 
+  const yLabel = document.createElementNS(svgNS, "text");
+  yLabel.setAttribute("x", -(margin.top + innerHeight / 2));
+  yLabel.setAttribute("y", 12);
+  yLabel.setAttribute("text-anchor", "middle");
+  yLabel.setAttribute("font-size", "15");
+  yLabel.setAttribute("fill", "#ccc");
+  yLabel.setAttribute("transform", "rotate(-90)");
+  yLabel.textContent = "SO₂ (Mt/y)";
+  axisGroup.appendChild(yLabel);
+
+// X label 
+  const xLabel = document.createElementNS(svgNS, "text");
+  xLabel.setAttribute("x", margin.left + innerWidth / 2);
+  xLabel.setAttribute("y", height - 4);
+  xLabel.setAttribute("text-anchor", "middle");
+  xLabel.setAttribute("font-size", "15");
+  xLabel.setAttribute("fill", "#ccc");
+  xLabel.textContent = "Year";
+  axisGroup.appendChild(xLabel);
+
   svg.appendChild(axisGroup);
 
   // ---- polyline ----
@@ -329,6 +350,7 @@ function renderPlaceOverlay(place, latlng) {
   svg.appendChild(polyline);
   container.appendChild(svg);
 };
+//------------End emission graph----------------
 
   // Hide volcano select while overlay is open
   hideVolcanoControl(true);

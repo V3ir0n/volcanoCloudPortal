@@ -134,7 +134,7 @@ class EruptionHandler {
         // Update sound
         this.soundHandler.setSound(features.sound);
 
-        // Update infobox
+        // Update infobox if Regime changes or if it's the first eruption
         if (updateInfobox) {
             const infoboxDiv = document.getElementById('infobox');
             if (infoboxDiv) {

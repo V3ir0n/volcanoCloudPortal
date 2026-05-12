@@ -125,6 +125,8 @@ class Smoke extends THREE.Object3D{
             case "dark":
                 this.currentSmokeTextures = this.darkSmokeTextures;
                 break;
+            case "none":
+                break;
             default:
                 console.error(`Unknown smoke type: ${this.smokeType}!`);
         }
