@@ -1,5 +1,5 @@
 export const eruptiveRegimes = [
-    {depth: 2.5, gas: 0, h0: 5.9, h10: 5.7, h20: 5.4, regime: "weak"},
+    {depth: 2.5, gas: 0, h0: 5.9, h10: 5.7, h20: 5.4, regime: "none"},
     {depth: 2.5, gas: 1, h0: 6.1, h10: 5.9, h20: 5.6, regime: "weak"},
     {depth: 2.5, gas: 2, h0: 6.4, h10: 6.1, h20: 5.8, regime: "weak"},
     {depth: 2.5, gas: 3, h0: 6.7, h10: 6.3, h20: 6.0, regime: "transitional"},
@@ -7,7 +7,7 @@ export const eruptiveRegimes = [
     {depth: 2.5, gas: 5, h0: 7.3, h10: 6.9, h20: 6.6, regime: "plinian"},
     {depth: 2.5, gas: 6, h0: 7.6, h10: 7.2, h20: 6.8, regime: "plinian"},
 
-    {depth: 5.0, gas: 0, h0: 6.2, h10: 5.9, h20: 5.6, regime: "weak"},
+    {depth: 5.0, gas: 0, h0: 6.2, h10: 5.9, h20: 5.6, regime: "none"},
     {depth: 5.0, gas: 1, h0: 6.6, h10: 6.2, h20: 5.9, regime: "weak"},
     {depth: 5.0, gas: 2, h0: 6.9, h10: 6.5, h20: 6.2, regime: "transitional"},
     {depth: 5.0, gas: 3, h0: 7.3, h10: 6.9, h20: 6.6, regime: "transitional"},
@@ -15,7 +15,7 @@ export const eruptiveRegimes = [
     {depth: 5.0, gas: 5, h0: 8.0, h10: 7.6, h20: 7.3, regime: "plinian"},
     {depth: 5.0, gas: 6, h0: 8.4, h10: 8.0, h20: 7.6, regime: "plinian"},
 
-    {depth: 7.5, gas: 0, h0: 6.5, h10: 6.1, h20: 5.8, regime: "weak"},
+    {depth: 7.5, gas: 0, h0: 6.5, h10: 6.1, h20: 5.8, regime: "none"},
     {depth: 7.5, gas: 1, h0: 6.9, h10: 6.5, h20: 6.2, regime: "transitional"},
     {depth: 7.5, gas: 2, h0: 7.3, h10: 6.9, h20: 6.6, regime: "transitional"},
     {depth: 7.5, gas: 3, h0: 7.7, h10: 7.3, h20: 7.0, regime: "plinian"},
@@ -23,7 +23,7 @@ export const eruptiveRegimes = [
     {depth: 7.5, gas: 5, h0: 8.5, h10: 8.1, h20: 7.7, regime: "plinian"},
     {depth: 7.5, gas: 6, h0: 8.9, h10: 8.5, h20: 8.1, regime: "plinian"},
 
-    {depth: 10, gas: 0, h0: 6.8, h10: 6.4, h20: 6.0, regime: "weak"},
+    {depth: 10, gas: 0, h0: 6.8, h10: 6.4, h20: 6.0, regime: "none"},
     {depth: 10, gas: 1, h0: 7.2, h10: 6.8, h20: 6.5, regime: "transitional"},
     {depth: 10, gas: 2, h0: 7.7, h10: 7.3, h20: 7.0, regime: "transitional"},
     {depth: 10, gas: 3, h0: 8.1, h10: 7.7, h20: 7.3, regime: "plinian"},
@@ -33,6 +33,15 @@ export const eruptiveRegimes = [
 ];
 
 export const eruptionFeatures = {
+    none: {
+        smoke: "none",
+        ashAmount: "none",
+        sound: "silence",
+        infoBoxText: `
+            <h2>No Eruption</h2>
+            If there is no gas in the magma there wont be an eruption.
+        `
+    },
     weak: {
         smoke: "light",
         ashAmount: "none",
@@ -73,14 +82,6 @@ export const eruptionFeatures = {
 };
 // Creating POIs
 export const annotations = [
-    {
-        name: "POI?",
-        position: [-11, -3, 6.6], //horizontal, vertical, depth
-        infoBoxText: `
-            <h2>A point of interest!</h2>
-            Let us pretend that this is a point of interest, but to be fair, there is nothing particularly interesting with this point...
-        `
-    },
     {
         name: "Magma Chamber",
         position: [0.89, -24.95, 2.51], 
