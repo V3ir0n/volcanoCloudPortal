@@ -19,6 +19,12 @@ body {
     top: 10px;
 }
 
+#logoLink {
+    position: absolute;
+    left: 140px;
+    top: 10px;
+}
+
 #infobox {
     position: absolute;
     top: 50%;
@@ -40,43 +46,7 @@ body {
     z-index: 101;
 }
 
-.menu-info-btn {
-    width: 24px;
-    height: 24px;
-    min-height: 24px; /* Pico sätter ofta min-height */
-    padding: 0;       /* Ta bort Picos standard-padding */
-    margin: 0;        /* Ta bort marginaler som kan trycka ut den */
-    display: inline-block;
-    
-    background-image: url('resources/label.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    transition: filter 0.2s;
-
-    /* Tvinga bort Picos standardbakgrund och ramar */
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-}
-
-/* Remove Pico's default pseudo-element styling for buttons */
-.menu-info-btn::after {
-    display: none !important;
-    content: none !important;
-}
-
-/* För att efterlikna "röd färg" vid hover (som i din JS-kod) */
-.menu-info-btn:hover {
-    filter: sepia(100%) saturate(500%) hue-rotate(-50deg); 
-    /* Eller använd en enkel opacity-ändring om filtret blir för krångligt */
-}
-
-.annotationLabel {
+#annotationLabel {
   cursor: pointer;
   display: none;
   position: absolute;
@@ -96,6 +66,10 @@ body {
   transition: opacity 2s, top 0.1s ease 0s, left 0.1s ease 0s;
 }
 
+
+
+
+/* Malin styles */
 .parameters label.parameter-row {
     display: grid;
     gap: 0.35rem;
@@ -114,6 +88,37 @@ body {
     line-height: 1.1;
 }
 
+.parameter-info-button {
+    position: relative;
+    overflow: hidden;
+    background: transparent url("resources/label.png") center/cover no-repeat;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.parameter-info-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(255, 0, 0, 0);
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.parameter-info-button:hover::after,
+.parameter-info-button:focus::after {
+    background: rgba(255, 0, 0, 0.2);
+}
+
+.parameter-info-button:hover,
+.parameter-info-button:focus {
+    transform: scale(1.1);
+    outline: none;
+}
+
 .info-btn {
     display: inline-flex;
     align-items: center;
@@ -122,7 +127,7 @@ body {
     height: 28px;
     border-radius: 50%;
     border: none;
-    background: transparent;
+    background-color: transparent;
     color: #fff;
     cursor: pointer;
     font-size: 0.95rem;

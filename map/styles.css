@@ -41,7 +41,7 @@ body {
   right: 0;
   height: 100%;
   width: min(720px, 92vw);
-  background: #111;
+  background: #181C25;
   color: #eee;
   box-shadow: -12px 0 30px rgba(0, 0, 0, 0.45);
   z-index: 1;
@@ -55,7 +55,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: #161616;
+  background: #181C25;
   border-bottom: 1px solid #222;
   color: #FFD700;
 }
@@ -273,7 +273,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 0 16px;
-  background: #2a2a2a;
+  background: #13171F;
   color: #ffd700;
   font-size: 1.1rem;
   box-shadow: 0 1px 0 rgba(255,255,255,0.05);
@@ -372,7 +372,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 6px 16px;
-  background: #161616;
+  background: #181C25;
   border-bottom: 1px solid #222;
   color: #ffd700;
 }

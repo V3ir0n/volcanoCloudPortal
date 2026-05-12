@@ -123,7 +123,7 @@ class EruptionHandler {
         animateShake();
     };
 
-    updateEruption(regime = this.getRegime()) {
+    updateEruption(regime = this.getRegime(), updateInfobox = true) {
         if (regime === undefined) {
             console.warn("Unknown regime");
             return;
@@ -135,13 +135,15 @@ class EruptionHandler {
         this.soundHandler.setSound(features.sound);
 
         // Update infobox
-        const infoboxDiv = document.getElementById('infobox');
-        if (infoboxDiv) {
-            infoboxDiv.style.opacity = '0';
-            setTimeout(() => {
-                infoboxDiv.innerHTML = features.infoBoxText,
-                infoboxDiv.style.opacity = '1';
-            }, 250);
+        if (updateInfobox) {
+            const infoboxDiv = document.getElementById('infobox');
+            if (infoboxDiv) {
+                infoboxDiv.style.opacity = '0';
+                setTimeout(() => {
+                    infoboxDiv.innerHTML = features.infoBoxText;
+                    infoboxDiv.style.opacity = '1';
+                }, 250);
+            }
         }
 
         // Stop any ongoing shake

@@ -7,6 +7,7 @@ import {Ash} from './ash.js';
 import {VolcanoParameters} from './parameters.js';
 import {EruptionHandler} from './eruption.js';
 import {AnnotationHandler} from './annotationHandler.js';
+import {parameterInfos} from './constants.js';
 import {skyMesh} from './sky.js';
 import {setupLights} from './lights.js';
 
@@ -22,19 +23,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const parameterInfos = {
-        depthInfo: 'Depth changes the subsurface vent depth. Deeper vents alter eruption style, model stretching, and plume behavior.',
-        gasDensityInfo: 'Gas density controls how much eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.',
-        windSpeedInfo: 'Wind speed affects plume shape and drift. Higher wind values stretch the plume more horizontally.'
-    };
-
     const infoboxDiv = document.getElementById('infobox');
+    const defaultInfoboxHTML = infoboxDiv.innerHTML;
+    let parameterInfoOpen = false;
+    let openButtonId = null;
+    let firstButtonId = null;
+
     Object.entries(parameterInfos).forEach(([buttonId, message]) => {
         const button = document.getElementById(buttonId);
         if (button && infoboxDiv) {
+            if (!firstButtonId) {
+                firstButtonId = buttonId;
+            }
+
+            // Hover: only change button style
             button.addEventListener('mouseover', () => {
-                infoboxDiv.textContent = message;
+                button.classList.add('hovered');
             });
+            button.addEventListener('mouseout', () => {
+                button.classList.remove('hovered');
+            });
+
+            // Click: toggle text visibility
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                if (openButtonId === buttonId) {
+                    infoboxDiv.innerHTML = defaultInfoboxHTML;
+                    openButtonId = null;
+                    parameterInfoOpen = false;
+                } else {
+                    // Clicking a different button opens its text
+                    infoboxDiv.innerHTML = message;
+                    openButtonId = buttonId;
+                    parameterInfoOpen = true;
+                }
+            });
+        }
+    });
+
+    // Initialize with first button's info displayed
+    if (firstButtonId && parameterInfos[firstButtonId]) {
+    }
+
+    document.addEventListener('click', (event) => {
+        const clickedParameterButton = event.target.closest('.parameter-info-button');
+        if (parameterInfoOpen && !clickedParameterButton && !(view && view.annotationHandler && view.annotationHandler.annotationOpen)) {
+            infoboxDiv.innerHTML = defaultInfoboxHTML;
+            openButtonId = null;
+            parameterInfoOpen = false;
         }
     });
 });
@@ -79,7 +115,7 @@ class View {
         this.scene.add(this.ash);
         this.ash.createAshParticles();
 
-        this.eruptionHandler.updateEruption();
+        this.eruptionHandler.updateEruption(undefined, false);
 
         // Add controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -114,7 +150,6 @@ class View {
         // GLTF Loader
         const loader = new GLTFLoader();
         loader.setPath("resources/");
-
         // Variables for fade animation
         this.terrain = null;
         this.volcano = null;
@@ -182,7 +217,7 @@ class View {
 
             this.stretchVolcano();
 
-            this.checkEruption();
+            this.checkEruption(false);
 
         }, undefined, function (error) {
             console.error('An error happened loading volcano:', error);
@@ -311,10 +346,10 @@ class View {
         }
     }
 
-    checkEruption() {
+    checkEruption(updateInfobox = true) {
         const regime = this.eruptionHandler.getRegime();
         if (this.eruptionHandler.previousRegime != regime) {
-            this.eruptionHandler.updateEruption(regime);
+            this.eruptionHandler.updateEruption(regime, updateInfobox);
             this.eruptionHandler.previousRegime = regime;
         }
     };

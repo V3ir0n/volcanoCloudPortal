@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="../NOVAC_logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volcano 3D Models</title>
@@ -19,9 +20,11 @@
     </script>
 </head>
 <body>
-    <div style="position:absolute; top:10px; left:10px; display:flex; align-items:stretch; height:2.5rem; gap:10px; z-index:200;">
-        <a id="backButton" class="secondary" role="button" href=".." style="position:static; display:flex; align-items:center; justify-content:center;">← Back</a>
-        <img src="../NOVAC_logo.png" alt="NOVAC logo" style="object-fit:contain; pointer-events:none;">
+    <div style="display: flex; gap: 1rem; align-items: center;">
+      <a id="backButton" class="secondary" role="button" href="..">← Back</a>
+    <a id="logoLink" href="https://novac-community.org/" target="_blank" rel="noopener">
+      <img src="../NOVAC_logo.png" alt="NOVAC logo" style="height: 44px;">
+    </a>
     </div>
     <audio id="silence" src="resources/silence.mp3" volume="0" loop></audio>
     <audio id="strong_eruption_sfx" src="resources/strong_eruption_sfx.mp3" volume="0.5" loop></audio>
@@ -31,27 +34,27 @@
     <article class="parameters">
         <details open>
             <summary>Parameters</summary>
-            <label class="parameter-row">
+            <div class="parameter-row">
                 <div class="parameter-header">
-                    <span>Depth (<span id="depthIndicator"></span> km)</span>
-                    <button class="menu-info-btn" aria-label="Information about depth" title="Information about depth"></button>
-                </div>
-                <input type="range" id="depthSlider" min="2.5" max="10" value="5" step="2.5">
-            </label>
-            <label class="parameter-row">
-                <div class="parameter-header">
-                    <span>Gas Density (<span id="gasDensityIndicator"></span>%)</span>
-                    <button type="button" id="gasDensityInfo" class="info-btn" aria-label="Gas density info">ℹ️</button>
+                    <label for="gasDensitySlider">Gas Content (<span id="gasDensityIndicator"></span> wt%)</label>
+                    <button id="gasDensityInfo" type="button" class="parameter-info-button" aria-label="Gas density info"></button>
                 </div>
                 <input type="range" id="gasDensitySlider" min="0" max="6" value="1" step="1">
-            </label>
-            <label class="parameter-row">
+            </div>
+            <div class="parameter-row">
                 <div class="parameter-header">
-                    <span>Wind speed (<span id="windSpeedIndicator"></span> m/s)</span>
-                    <button type="button" id="windSpeedInfo" class="info-btn" aria-label="Wind speed info">ℹ️</button>
+                    <label for="depthSlider">Depth (<span id="depthIndicator"></span> km)</label>
+                    <button id="depthInfo" type="button" class="parameter-info-button" aria-label="Depth info"></button>
+                </div>
+                <input type="range" id="depthSlider" min="2.5" max="10" value="5" step="2.5">
+            </div>
+            <div class="parameter-row">
+                <div class="parameter-header">
+                    <label for="windSpeedSlider">Wind speed (<span id="windSpeedIndicator"></span> m/s)</label>
+                    <button id="windSpeedInfo" type="button" class="parameter-info-button" aria-label="Wind speed info"></button>
                 </div>
                 <input type="range" id="windSpeedSlider" min="0" max="20" value="10" step="10">
-            </label>
+            </div>
         </details>
         <hr/>
         <details open>

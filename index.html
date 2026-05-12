@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <link rel="icon" type="image/png" href="NOVAC_logo.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
@@ -15,10 +16,12 @@
   <body>
 
     <header class="container" style="display:flex; align-items:center; gap:1.25rem;">
-      <img src="NOVAC_logo.png" alt="NOVAC logo" style="max-height:88px; display:block;">
+      <a href="https://novac-community.org/" target="_blank" rel="noopener">
+        <img src="NOVAC_logo.png" alt="NOVAC logo" style="max-height:88px; display:block;">
+      </a>
       <hgroup style="margin:0;">
-        <h1>Volcanic clouds portal</h1>
-        <p>Learn about volcanic clouds and eruptions</p>
+        <h1>Volcano lab</h1>
+        <p>Learn about volcanic gas and eruptions</p>
       </hgroup>
     </header>
 
@@ -27,29 +30,56 @@
         <article>
                 <hgroup>
                     <a href="./model/index.html">
-                        <h2 role="button">Why measure volcanoes?</h2>
+                        <h2 role="button">Why measure volcanic gases?</h2>
                     </a>
-                    <p>A visualisation of the reason to measure gases emitted by volcanoes</p>
+                    <p>How gases control volcanic eruptions</p>
                 </hgroup>
             </article>
             <article>
                 <hgroup>
                     <a href="./map/index.html">
-                        <h2 role="button">Where and what?</h2>
+                        <h2 role="button">How much gas and where?</h2>
                     </a>
-                    <p>A map of the location of the volcanoes and real data</p>
+                    <p>Explore volcanic emissions around the world</p>
                 </hgroup>
             </article>
       </div>
     </main>
 
     <footer class="container">
-      <hr>
+  <!-- The Grid with partner info -->
+  <div class="grid">
+    <!-- Section 1: What is NOVAC -->
+    <section style="display: flex; align-self: end;">
       <small>
-        © 2026 InfraVis · Built for NOVAC ·
-        <a href="https://infravis.se" target="_blank" rel="noopener">InfraVis</a>
+        <strong>About NOVAC</strong><br>
+        NOVAC is a global collaboration between volcano observatories and research institutions 
+        to advance research and monitoring of volcanic emissions and its impact in the atmosphere.
       </small>
-    </footer>
+    </section>
+
+    <!-- Section 2: Sustaining Organizations -->
+    <section style="display: flex; align-self: end;">
+      <small>
+        <strong>Sustained By</strong><br>
+        The efforts of volcano observatories and: Chalmers University of Technology, 
+        the Volcano Disaster Assistance Program (VDAP), the European Commission, 
+        and the International Geoscience Programme of UNESCO/IUGS.
+      </small>
+    </section>
+
+    </div>
+
+  <!-- Single separator line -->
+  <hr>
+
+  <!-- Copyright / Final line -->
+  <small>
+    © 2026 InfraVis · Built for NOVAC ·
+    <a href="https://infravis.se" target="_blank" rel="noopener">InfraVis</a>
+  </small>
+</footer>
+   
 </body>
 
 </html>
