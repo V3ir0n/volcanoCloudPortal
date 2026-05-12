@@ -40,7 +40,43 @@ body {
     z-index: 101;
 }
 
-#annotationLabel {
+.menu-info-btn {
+    width: 24px;
+    height: 24px;
+    min-height: 24px; /* Pico sätter ofta min-height */
+    padding: 0;       /* Ta bort Picos standard-padding */
+    margin: 0;        /* Ta bort marginaler som kan trycka ut den */
+    display: inline-block;
+    
+    background-image: url('resources/label.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.2s;
+
+    /* Tvinga bort Picos standardbakgrund och ramar */
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Remove Pico's default pseudo-element styling for buttons */
+.menu-info-btn::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* För att efterlikna "röd färg" vid hover (som i din JS-kod) */
+.menu-info-btn:hover {
+    filter: sepia(100%) saturate(500%) hue-rotate(-50deg); 
+    /* Eller använd en enkel opacity-ändring om filtret blir för krångligt */
+}
+
+.annotationLabel {
   cursor: pointer;
   display: none;
   position: absolute;
