@@ -45,7 +45,7 @@ class VolcanoView {
     // Setup canvas and renderer
     this.canvas = canvasElement;
     this.canvas.width = this.canvas.parentElement.clientWidth;
-    this.canvas.height = 500;
+    this.canvas.height = 400; //space above the canvas for volcano info, can be adjusted if needed
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -60,7 +60,7 @@ class VolcanoView {
     // Setup scene, camera, camera controls, and lights
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, this.canvas.width / this.canvas.height, 0.01, 100);
-    this.camera.position.set(0.5, 0.5, 0.2);
+
 
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.maxPolarAngle = Math.PI / (2.1);
@@ -102,11 +102,24 @@ class VolcanoView {
       const boundingBox = new THREE.Box3();
       boundingBox.expandByObject(model);
 
-      //----------------------------------------------------------------
-      // Assume the terrain is centered on the volcano and scale it to fit a 12km x 12km area (6km radius)
       const terrainCenter = boundingBox.getCenter(new THREE.Vector3());
       this.terrainTransform.center.copy(terrainCenter);
 
+      //Set camera view
+      const size = boundingBox.getSize(new THREE.Vector3());
+      const dist = Math.max(size.x, size.z) * 0.8;  // zoom
+      const angle = Math.PI / 6;                      // degrees above horizon
+      this.camera.position.set(
+        terrainCenter.x,
+        terrainCenter.y + dist * Math.sin(angle),
+        terrainCenter.z + dist * Math.cos(angle)
+      );
+      this.controls.target.copy(terrainCenter);
+      this.controls.update();
+
+
+      
+//----------------------------------------------------------------
       
       let maxY = -Infinity, peakX = 0, peakZ = 0;
       model.traverse(child => {
@@ -155,7 +168,7 @@ class VolcanoView {
 ----------------------------'
 */
       model.position.sub(
-        new THREE.Vector3(0, boundingBox.min.y, 0)
+        new THREE.Vector3(0, 0, 0)
       );
       this.loadStationSprites(model);
       this.render();
