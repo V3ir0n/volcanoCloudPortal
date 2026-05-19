@@ -12,8 +12,8 @@ class MeasurementView {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             canvas: this.canvas,
-            alpha: true
         });
+        this.renderer.setClearColor(0x0a0c10);
         this.renderer.setSize(this.canvas.width, this.canvas.height);
 
         // Setup raycaster (used to check for clicked objects)
@@ -48,7 +48,7 @@ class MeasurementView {
 
 
         const loader = new GLTFLoader();
-        loader.load("../resources/terrainMeshes/mayon.glb", gltf=> {
+        loader.load("../map/resources/terrainMeshes/mayon.glb", gltf=> {
             const model = gltf.scene;
             this.scene.add(model);
             this.render();
