@@ -105,17 +105,8 @@ class VolcanoView {
       //----------------------------------------------------------------
       // Assume the terrain is centered on the volcano and scale it to fit a 12km x 12km area (6km radius)
       const terrainCenter = boundingBox.getCenter(new THREE.Vector3());
-      const terrainWidth = boundingBox.max.x - boundingBox.min.x;
-      const terrainDepth = boundingBox.max.z - boundingBox.min.z;
-      const radiusKm = 6.0;
       this.terrainTransform.center.copy(terrainCenter);
-      this.terrainTransform.scaleX = terrainWidth / (2 * radiusKm);
-      this.terrainTransform.scaleZ = terrainDepth / (2 * radiusKm);
 
-      console.log("terrain center:", terrainCenter);
-      console.log("terrain scale:", this.terrainTransform.scaleX, this.terrainTransform.scaleZ);
-      console.log("terrain X range:", boundingBox.min.x, "to", boundingBox.max.x);
-      console.log("terrain Z range:", boundingBox.min.z, "to", boundingBox.max.z);
       
       let maxY = -Infinity, peakX = 0, peakZ = 0;
       model.traverse(child => {
@@ -206,22 +197,16 @@ class VolcanoView {
   // Fetches station lat/lon from stations.json and adds sprite markers to the terrain.
   // Called after the volcano model is loaded in loadVolcanoModel().
   loadStationSprites(terrainRoot) {
-    new THREE.TextureLoader().load("resources/station.png", texture => {
+    new THREE.TextureLoader().load("resources/circle.png", texture => {
       fetch("resources/stations.json")
         .then(r => r.json())
         .then(stations => {
           stations
             .filter(s => s.volcanoKey === this.place.name)
             .forEach(s => {
-              const scenePos = this.latLonToScene(s.lat, s.lng);
               const marker = this.createStationMarker(texture);
-              const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, {
-                heightOffset: 0.03,
-                alignWithNormal: false
-              });
-              if (!placed) {
-                marker.position.set(scenePos.x, 0.15, scenePos.z);
-              }
+              const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.02 });
+              if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
               this.scene.add(marker);
             });
           this.render();
@@ -273,33 +258,12 @@ class VolcanoView {
     return this.placeObjectOnTerrain(terrainRoot, object3D, x, z, options);
   }
 
-  latLonToScene(targetLat, targetLon) {
-    const radiusKm = 6.0;
-
+  //converting latlon to scene coordinates, with optional altitude in meters. Called in placeObjectOnTerrainLatLon() when placing station markers, and also logged for the summit pin to check if it is placed correctly.
+  latLonToScene(targetLat, targetLon, altitudeMeters = 0) {
     const tgeo = new ThreeGeo();
-    const summitLatLng = this.latLng
-    const instrumentLatLng = [targetLat, targetLon] // Position of some instrument
-    const instrumentAlt = 5967; // altitude in meters
-    const radius = 6.0; // radius of bounding circle (km)
-    const {proj, unitsPerMeter} = tgeo.getProjection(summitLatLng, radius);
-
-    const toSceneCoords = (latLng, altitude) => {
-        const pos2D = new THREE.Vector2(...proj(latLng));
-        return new THREE.Vector3(pos2D.x, altitude * unitsPerMeter, -pos2D.y);
-    };
-
-    return toSceneCoords(instrumentLatLng, instrumentAlt);
-
-    /*
-    const kmPerDegLat = 111.32;
-    const kmPerDegLon = 111.32 * Math.cos(this.latLng[0] * Math.PI / 180);
-    const dx = (targetLon - this.latLng[1]) * kmPerDegLon;
-    const dy = (targetLat - this.latLng[0]) * kmPerDegLat;
-    return {
-      x: this.terrainTransform.center.x + dx * this.terrainTransform.scaleX,
-      z: this.terrainTransform.center.z - dy * this.terrainTransform.scaleZ
-    };
-    */
+    const { proj, unitsPerMeter } = tgeo.getProjection(this.latLng, 6.0);
+    const pos2D = new THREE.Vector2(...proj([targetLat, targetLon]));
+    return new THREE.Vector3(pos2D.x, altitudeMeters * unitsPerMeter, -pos2D.y);
   }
   //--------------------------------------------------------------------------
 
