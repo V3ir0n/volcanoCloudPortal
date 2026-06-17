@@ -7,6 +7,7 @@ from 'three/addons/loaders/GLTFLoader.js';
 import {GLTFExporter}
 from 'three/addons/exporters/GLTFExporter.js';
 
+const radiusKm = 10; // radius for fetching terrain data, can be adjusted if needed
 /**
  * Render a place view into the given container.
  * @param {HTMLElement} container - The .panel-body element.
@@ -186,7 +187,7 @@ class VolcanoView {
       });
       tgeo.getTerrainRgb(
         this.latLng, // [lat, lng]
-        6.0, // radius of bounding circle (km)
+        radiusKm, // radius of bounding circle (km)
         13 // zoom resolution
       ).then(terrain => {
         terrain.rotation.x = -Math.PI / 2;
@@ -274,7 +275,7 @@ class VolcanoView {
   //converting latlon to scene coordinates, with optional altitude in meters. Called in placeObjectOnTerrainLatLon() when placing station markers, and also logged for the summit pin to check if it is placed correctly.
   latLonToScene(targetLat, targetLon, altitudeMeters = 0) {
     const tgeo = new ThreeGeo();
-    const { proj, unitsPerMeter } = tgeo.getProjection(this.latLng, 6.0);
+    const { proj, unitsPerMeter } = tgeo.getProjection(this.latLng, radiusKm);
     const pos2D = new THREE.Vector2(...proj([targetLat, targetLon]));
     return new THREE.Vector3(pos2D.x, altitudeMeters * unitsPerMeter, -pos2D.y);
   }

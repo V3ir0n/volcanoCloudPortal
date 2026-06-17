@@ -1,0 +1,10 @@
+{
+  "type": "module",
+  "dependencies": {
+    "canvas": "^3.2.3",
+    "dotenv": "^17.4.2",
+    "get-pixels": "^3.3.3",
+    "three": "^0.184.0",
+    "three-geo": "^1.4.5"
+  }
+}
