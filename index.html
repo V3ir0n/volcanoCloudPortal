@@ -4,18 +4,19 @@
     <link rel="icon" type="image/png" href="NOVAC_logo.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="dark">
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     >
-    <style>
-    </style>
+    <link rel="stylesheet" href="./styles.css" />
+    
+    <!-- Header -->
     <title>Volcanic clouds</title>
   </head>
   <body>
 
-    <header class="container" style="display:flex; align-items:center; gap:1.25rem;">
+    <header style="display:flex; align-items:center; gap:1.25rem;">
       <a href="https://novac-community.org/" target="_blank" rel="noopener">
         <img src="NOVAC_logo.png" alt="NOVAC logo" style="max-height:88px; display:block;">
       </a>
@@ -25,24 +26,60 @@
       </hgroup>
     </header>
 
-    <main class="container">
-      <div class="grid">
-        <article>
-                <hgroup>
-                    <a href="./model/index.html">
-                        <h2 role="button">Why measure volcanic gases?</h2>
-                    </a>
-                    <p>How gases control volcanic eruptions</p>
-                </hgroup>
-            </article>
-            <article>
-                <hgroup>
-                    <a href="./map/index.html">
-                        <h2 role="button">How much gas and where?</h2>
-                    </a>
-                    <p>Explore volcanic emissions around the world</p>
-                </hgroup>
-            </article>
+    <!-- Grid with links to sections -->
+    <main>
+      <div class="nav-grid">
+
+        <!-- Model -->
+        <a href="./model/index.html" class="nav-card">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 8 Q7 7.5 7.5 5.5 Q7 3 9.5 3 Q11 1 13 2.5 Q15 1.5 16 3.5 Q18 3.5 17 5.5 Q17.5 7.5 15 8"/>
+            <path d="M10 8 L1 22 L23 22 L14 8"/>
+            <line x1="11" y1="8" x2="11" y2="22"/>
+            <line x1="13" y1="8" x2="13" y2="22"/>
+          </svg>
+          <h2>Volcanic gases</h2>
+          <p>How gases control volcanic eruptions</p>
+        </a>
+
+        <!-- Map -->
+        <a href="./map/index.html" class="nav-card">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3.6 9h16.8M3.6 15h16.8"/>
+            <path d="M12 3a14.5 14.5 0 0 1 3.5 9 14.5 14.5 0 0 1-3.5 9 14.5 14.5 0 0 1-3.5-9A14.5 14.5 0 0 1 12 3z"/>
+          </svg>
+          <h2>Gas around the world</h2>
+          <p>Explore volcanic emissions globally</p>
+        </a>
+
+        <!-- About -->
+        <a href="./about/index.html" class="nav-card">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="8" r="3.5"/>
+            <path d="M4.5 20c0-4.14 3.36-7.5 7.5-7.5s7.5 3.36 7.5 7.5"/>
+            <circle cx="19.5" cy="7" r="2.2"/>
+            <path d="M21.5 17.5c0-2.76-1.57-5.14-3.87-6.3"/>
+            <circle cx="4.5" cy="7" r="2.2"/>
+            <path d="M2.5 17.5c0-2.76 1.57-5.14 3.87-6.3"/>
+          </svg>
+          <h2>About NOVAC</h2>
+          <p>Who we are, why we exist, and what we do</p>
+        </a>
+
+        <!-- Measurement -->
+        <a href="./measurement/index.html" class="nav-card">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-width="2" d="M3 11 Q3 8 6.5 8 Q7 5 10 5 Q11.5 2.5 14.5 4.5 Q16 3 18 5.5 Q21.5 5.5 21.5 8.5 Q21.5 11.5 18.5 11 L3 11 Z"/>
+            <line x1="12" y1="23" x2="2"  y2="1"/>
+            <line x1="12" y1="23" x2="9"  y2="1"/>
+            <line x1="12" y1="23" x2="15" y2="1"/>
+            <line x1="12" y1="23" x2="22" y2="1"/>
+          </svg>
+          <h2>How we measure</h2>
+          <p>See how volcanic gas measurements are made</p>
+        </a>
+
       </div>
     </main>
 
