@@ -85,14 +85,6 @@ export const eruptionFeatures = {
 // Creating POIs
 export const annotations = [
     {
-        name: "POI?",
-        position: [-11, -3, 6.6], //horizontal, vertical, depth
-        infoBoxText: `
-            <h2>A point of interest!</h2>
-            Let us pretend that this is a point of interest, but to be fair, there is nothing particularly interesting with this point...
-        `
-    },
-    {
         name: "Magma Chamber",
         position: [0.89, -24.95, 2.51], 
         infoBoxText: `
