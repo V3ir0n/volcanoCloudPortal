@@ -123,7 +123,7 @@ export const annotations = [
         position: [0.21, 8.04, 0.50],
         infoBoxText: `
             <h2>Where the burst happens!</h2>
-            The plume is the column of volcanic gases and ash that rises from the crater during an eruption. It can be thought of as the "chimney" of the volcano, carrying the erupted material high into the atmosphere. The size and shape of the plume can provide clues about the intensity and style of the eruption.
+            The plume is the wind-driven cloud formed after the volcanic column has reached equilibrium with the surrounding atmosphere. The plume transports volcanic gases and ash over long distances, potentially disturbing the environment, climate or air traffic.
         `
     }
 ];
