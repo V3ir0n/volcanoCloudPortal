@@ -11,14 +11,6 @@
         ]
       },
       "properties": {
-        "name": "villarrica",
-        "display_name": "Villarrica",
-        "lat_deg": -39.4203,
-        "lon_deg": -71.9396,
-        "alt_masl": 2847,
-        "observatory": "Servicio Nacional de Geología y Minería",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
         "2005": 113,
         "2006": 105,
         "2007": 95,
@@ -38,7 +30,16 @@
         "2021": 53,
         "2022": 72,
         "2023": 137,
-        "2024": 100
+        "2024": 100,
+        "name": "villarrica",
+        "display_name": "Villarrica",
+        "lat_deg": -39.4203,
+        "lon_deg": -71.9396,
+        "alt_masl": 2847,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "meshRadiusKm": 11
       }
     },
     {
@@ -51,14 +52,6 @@
         ]
       },
       "properties": {
-        "name": "ruapehu",
-        "display_name": "Ruapehu",
-        "lat_deg": -39.28,
-        "lon_deg": 175.57,
-        "alt_masl": 2797,
-        "observatory": "Earth Sciences New Zealand",
-        "obs_acronym": "ESNZ",
-        "country": "New Zealand",
         "2005": 0,
         "2006": null,
         "2007": 0,
@@ -77,7 +70,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "ruapehu",
+        "display_name": "Ruapehu",
+        "lat_deg": -39.28,
+        "lon_deg": 175.57,
+        "alt_masl": 2797,
+        "observatory": "Earth Sciences New Zealand",
+        "obs_acronym": "ESNZ",
+        "country": "New Zealand",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -90,14 +92,6 @@
         ]
       },
       "properties": {
-        "name": "te_maari",
-        "display_name": "Te Maari",
-        "lat_deg": -39.157,
-        "lon_deg": 175.632,
-        "alt_masl": 1978,
-        "observatory": "Earth Sciences New Zealand",
-        "obs_acronym": "ESNZ",
-        "country": "New Zealand",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -116,7 +110,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "te_maari",
+        "display_name": "Te Maari",
+        "lat_deg": -39.157,
+        "lon_deg": 175.632,
+        "alt_masl": 1978,
+        "observatory": "Earth Sciences New Zealand",
+        "obs_acronym": "ESNZ",
+        "country": "New Zealand",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -129,14 +132,6 @@
         ]
       },
       "properties": {
-        "name": "llaima",
-        "display_name": "Llaima",
-        "lat_deg": -38.6973,
-        "lon_deg": -71.73,
-        "alt_masl": 3030,
-        "observatory": "Servicio Nacional de Geología y Minería",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -155,7 +150,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "llaima",
+        "display_name": "Llaima",
+        "lat_deg": -38.6973,
+        "lon_deg": -71.73,
+        "alt_masl": 3030,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -168,14 +172,6 @@
         ]
       },
       "properties": {
-        "name": "copahue",
-        "display_name": "Copahue",
-        "lat_deg": -37.8564,
-        "lon_deg": -71.1601,
-        "alt_masl": 2756,
-        "observatory": "Servicio Nacional de Geología y Minería/Servicio Geológico Minero Argentino",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile/Argentina",
         "2005": 21,
         "2006": 18,
         "2007": 38,
@@ -194,7 +190,16 @@
         "2020": 86,
         "2021": 57,
         "2022": 24,
-        "2023": 15
+        "2023": 15,
+        "name": "copahue",
+        "display_name": "Copahue",
+        "lat_deg": -37.8564,
+        "lon_deg": -71.1601,
+        "alt_masl": 2756,
+        "observatory": "Servicio Nacional de Geología y Minería/Servicio Geológico Minero Argentino",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile/Argentina",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -207,14 +212,6 @@
         ]
       },
       "properties": {
-        "name": "nevados_de_chillan",
-        "display_name": "Nevados de Chillan",
-        "lat_deg": -36.8678,
-        "lon_deg": -71.3789,
-        "alt_masl": 3170,
-        "observatory": "Servicio Nacional de Geología y Minería",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -233,7 +230,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "nevados_de_chillan",
+        "display_name": "Nevados de Chillan",
+        "lat_deg": -36.8678,
+        "lon_deg": -71.3789,
+        "alt_masl": 3170,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -246,14 +252,6 @@
         ]
       },
       "properties": {
-        "name": "planchon_peteroa",
-        "display_name": "Planchon Peteroa",
-        "lat_deg": -35.2859,
-        "lon_deg": -70.5824,
-        "alt_masl": 3642,
-        "observatory": "Servicio Nacional de Geología y Minería",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -272,7 +270,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "planchon_peteroa",
+        "display_name": "Planchon Peteroa",
+        "lat_deg": -35.2859,
+        "lon_deg": -70.5824,
+        "alt_masl": 3642,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -285,14 +292,6 @@
         ]
       },
       "properties": {
-        "name": "lascar",
-        "display_name": "Lascar",
-        "lat_deg": -23.3631,
-        "lon_deg": -67.7314,
-        "alt_masl": 5200,
-        "observatory": "Servicio Nacional de Geología y Minería",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
         "2005": 18,
         "2006": 66,
         "2007": 16,
@@ -311,7 +310,16 @@
         "2020": 6,
         "2021": 6,
         "2022": 52,
-        "2023": 7
+        "2023": 7,
+        "name": "lascar",
+        "display_name": "Lascar",
+        "lat_deg": -23.3631,
+        "lon_deg": -67.7314,
+        "alt_masl": 5200,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "meshRadiusKm": 18
       }
     },
     {
@@ -324,14 +332,6 @@
         ]
       },
       "properties": {
-        "name": "piton_de_la_fournaise",
-        "display_name": "Piton de la Fournaise",
-        "lat_deg": -21.2536,
-        "lon_deg": 55.7138,
-        "alt_masl": 2400,
-        "observatory": "Institut de Physique du Globe de Paris",
-        "obs_acronym": "IPGP",
-        "country": "France",
         "2005": 60,
         "2006": 143,
         "2007": 34,
@@ -350,7 +350,16 @@
         "2020": 49,
         "2021": 40,
         "2022": 55,
-        "2023": 38
+        "2023": 38,
+        "name": "piton_de_la_fournaise",
+        "display_name": "Piton de la Fournaise",
+        "lat_deg": -21.2536,
+        "lon_deg": 55.7138,
+        "alt_masl": 2400,
+        "observatory": "Institut de Physique du Globe de Paris",
+        "obs_acronym": "IPGP",
+        "country": "France",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -363,14 +372,6 @@
         ]
       },
       "properties": {
-        "name": "isluga",
-        "display_name": "Isluga",
-        "lat_deg": -19.1585,
-        "lon_deg": -68.8343,
-        "alt_masl": 5372,
-        "observatory": "Servicio Nacional de Geología y Minería",
-        "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
         "2005": 17,
         "2006": 0,
         "2007": 0,
@@ -389,7 +390,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 14
+        "2023": 14,
+        "name": "isluga",
+        "display_name": "Isluga",
+        "lat_deg": -19.1585,
+        "lon_deg": -68.8343,
+        "alt_masl": 5372,
+        "observatory": "Servicio Nacional de Geología y Minería",
+        "obs_acronym": "SERNAGEOMIN",
+        "country": "Chile",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -402,14 +412,6 @@
         ]
       },
       "properties": {
-        "name": "ubinas",
-        "display_name": "Ubinas",
-        "lat_deg": -16.3434,
-        "lon_deg": -70.8972,
-        "alt_masl": 5672,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
-        "obs_acronym": "INGEMMET",
-        "country": "Peru",
         "2005": 0,
         "2006": 245,
         "2007": 127,
@@ -428,7 +430,16 @@
         "2020": 25,
         "2021": 6,
         "2022": 4,
-        "2023": 42
+        "2023": 42,
+        "name": "ubinas",
+        "display_name": "Ubinas",
+        "lat_deg": -16.3434,
+        "lon_deg": -70.8972,
+        "alt_masl": 5672,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "obs_acronym": "INGEMMET",
+        "country": "Peru",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -441,14 +452,6 @@
         ]
       },
       "properties": {
-        "name": "misti",
-        "display_name": "Misti",
-        "lat_deg": -16.294,
-        "lon_deg": -71.409,
-        "alt_masl": 5822,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
-        "obs_acronym": "INGEMMET",
-        "country": "Peru",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -467,7 +470,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "misti",
+        "display_name": "Misti",
+        "lat_deg": -16.294,
+        "lon_deg": -71.409,
+        "alt_masl": 5822,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "obs_acronym": "INGEMMET",
+        "country": "Peru",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -480,14 +492,6 @@
         ]
       },
       "properties": {
-        "name": "sabancaya",
-        "display_name": "Sabancaya",
-        "lat_deg": -15.788,
-        "lon_deg": -71.8559,
-        "alt_masl": 5967,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú\"",
-        "obs_acronym": "INGEMMET/IGP",
-        "country": "Peru",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -506,7 +510,16 @@
         "2020": 199,
         "2021": 175,
         "2022": 203,
-        "2023": 161
+        "2023": 161,
+        "name": "sabancaya",
+        "display_name": "Sabancaya",
+        "lat_deg": -15.788,
+        "lon_deg": -71.8559,
+        "alt_masl": 5967,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú\"",
+        "obs_acronym": "INGEMMET/IGP",
+        "country": "Peru",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -519,14 +532,6 @@
         ]
       },
       "properties": {
-        "name": "ulawun",
-        "display_name": "Ulawun",
-        "lat_deg": -5.05,
-        "lon_deg": 151.33,
-        "alt_masl": 2334,
-        "observatory": "Rabaul Volcano Observatory",
-        "obs_acronym": "RVO",
-        "country": "Papua New Guinea",
         "2005": 150,
         "2006": 260,
         "2007": 86,
@@ -545,7 +550,16 @@
         "2020": 24,
         "2021": 171,
         "2022": 249,
-        "2023": 154
+        "2023": 154,
+        "name": "ulawun",
+        "display_name": "Ulawun",
+        "lat_deg": -5.05,
+        "lon_deg": 151.33,
+        "alt_masl": 2334,
+        "observatory": "Rabaul Volcano Observatory",
+        "obs_acronym": "RVO",
+        "country": "Papua New Guinea",
+        "meshRadiusKm": 12
       }
     },
     {
@@ -558,14 +572,6 @@
         ]
       },
       "properties": {
-        "name": "rabaul",
-        "display_name": "Rabaul",
-        "lat_deg": -4.2381,
-        "lon_deg": 152.2091,
-        "alt_masl": 223,
-        "observatory": "Rabaul Volcano Observatory",
-        "obs_acronym": "RVO",
-        "country": "Papua New Guinea",
         "2005": 212,
         "2006": 348,
         "2007": 1229,
@@ -584,7 +590,16 @@
         "2020": 12,
         "2021": 0,
         "2022": 0,
-        "2023": 4
+        "2023": 4,
+        "name": "rabaul",
+        "display_name": "Rabaul",
+        "lat_deg": -4.2381,
+        "lon_deg": 152.2091,
+        "alt_masl": 223,
+        "observatory": "Rabaul Volcano Observatory",
+        "obs_acronym": "RVO",
+        "country": "Papua New Guinea",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -597,14 +612,6 @@
         ]
       },
       "properties": {
-        "name": "manam",
-        "display_name": "Manam",
-        "lat_deg": -4.078,
-        "lon_deg": 145.039,
-        "alt_masl": 1807,
-        "observatory": "Rabaul Volcano Observatory",
-        "obs_acronym": "RVO",
-        "country": "Papua New Guinea",
         "2005": 839,
         "2006": 334,
         "2007": 534,
@@ -623,7 +630,16 @@
         "2020": 468,
         "2021": 334,
         "2022": 359,
-        "2023": 141
+        "2023": 141,
+        "name": "manam",
+        "display_name": "Manam",
+        "lat_deg": -4.078,
+        "lon_deg": 145.039,
+        "alt_masl": 1807,
+        "observatory": "Rabaul Volcano Observatory",
+        "obs_acronym": "RVO",
+        "country": "Papua New Guinea",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -636,14 +652,6 @@
         ]
       },
       "properties": {
-        "name": "sangay",
-        "display_name": "Sangay",
-        "lat_deg": -2.0056,
-        "lon_deg": -78.3408,
-        "alt_masl": 5286,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
-        "obs_acronym": "IGEPN",
-        "country": "Ecuador",
         "2005": 64,
         "2006": 81,
         "2007": 59,
@@ -662,7 +670,16 @@
         "2020": 231,
         "2021": 400,
         "2022": 375,
-        "2023": 201
+        "2023": 201,
+        "name": "sangay",
+        "display_name": "Sangay",
+        "lat_deg": -2.0056,
+        "lon_deg": -78.3408,
+        "alt_masl": 5286,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "meshRadiusKm": 42
       }
     },
     {
@@ -675,14 +692,6 @@
         ]
       },
       "properties": {
-        "name": "nyiragongo",
-        "display_name": "Nyiragongo",
-        "lat_deg": -1.5215,
-        "lon_deg": 29.2495,
-        "alt_masl": 3470,
-        "observatory": "Observatoire Volcanologique de Goma",
-        "obs_acronym": "OVG",
-        "country": "Democratic Republic of Congo",
         "2005": 266,
         "2006": 160,
         "2007": 478,
@@ -701,7 +710,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "nyiragongo",
+        "display_name": "Nyiragongo",
+        "lat_deg": -1.5215,
+        "lon_deg": 29.2495,
+        "alt_masl": 3470,
+        "observatory": "Observatoire Volcanologique de Goma",
+        "obs_acronym": "OVG",
+        "country": "Democratic Republic of Congo",
+        "meshRadiusKm": 27
       }
     },
     {
@@ -714,14 +732,6 @@
         ]
       },
       "properties": {
-        "name": "tungurahua",
-        "display_name": "Tungurahua",
-        "lat_deg": -1.4685,
-        "lon_deg": -78.4473,
-        "alt_masl": 5023,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
-        "obs_acronym": "IGEPN",
-        "country": "Ecuador",
         "2005": 224,
         "2006": 309,
         "2007": 405,
@@ -740,7 +750,16 @@
         "2020": 39,
         "2021": 68,
         "2022": 95,
-        "2023": 74
+        "2023": 74,
+        "name": "tungurahua",
+        "display_name": "Tungurahua",
+        "lat_deg": -1.4685,
+        "lon_deg": -78.4473,
+        "alt_masl": 5023,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "meshRadiusKm": 13
       }
     },
     {
@@ -753,14 +772,6 @@
         ]
       },
       "properties": {
-        "name": "sierra_negra",
-        "display_name": "Sierra Negra",
-        "lat_deg": -0.8302,
-        "lon_deg": -91.1445,
-        "alt_masl": 990,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
-        "obs_acronym": "IGEPN",
-        "country": "Ecuador",
         "2005": 7,
         "2006": 6,
         "2007": 17,
@@ -779,7 +790,16 @@
         "2020": 14,
         "2021": 6,
         "2022": 35,
-        "2023": 18
+        "2023": 18,
+        "name": "sierra_negra",
+        "display_name": "Sierra Negra",
+        "lat_deg": -0.8302,
+        "lon_deg": -91.1445,
+        "alt_masl": 990,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -792,14 +812,6 @@
         ]
       },
       "properties": {
-        "name": "cotopaxi",
-        "display_name": "Cotopaxi",
-        "lat_deg": -0.6845,
-        "lon_deg": -78.437,
-        "alt_masl": 5800,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
-        "obs_acronym": "IGEPN",
-        "country": "Ecuador",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -818,7 +830,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "cotopaxi",
+        "display_name": "Cotopaxi",
+        "lat_deg": -0.6845,
+        "lon_deg": -78.437,
+        "alt_masl": 5800,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "meshRadiusKm": 18
       }
     },
     {
@@ -831,14 +852,6 @@
         ]
       },
       "properties": {
-        "name": "el_reventador",
-        "display_name": "El Reventador",
-        "lat_deg": -0.081,
-        "lon_deg": -77.6584,
-        "alt_masl": 3510,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
-        "obs_acronym": "IGEPN",
-        "country": "Ecuador",
         "2005": 317,
         "2006": 37,
         "2007": 50,
@@ -857,7 +870,16 @@
         "2020": 15,
         "2021": 79,
         "2022": 150,
-        "2023": 49
+        "2023": 49,
+        "name": "el_reventador",
+        "display_name": "El Reventador",
+        "lat_deg": -0.081,
+        "lon_deg": -77.6584,
+        "alt_masl": 3510,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -870,14 +892,6 @@
         ]
       },
       "properties": {
-        "name": "cayambe",
-        "display_name": "Cayambe",
-        "lat_deg": 0.025,
-        "lon_deg": -77.9892,
-        "alt_masl": 5790,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
-        "obs_acronym": "IGEPN",
-        "country": "Ecuador",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -896,7 +910,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "cayambe",
+        "display_name": "Cayambe",
+        "lat_deg": 0.025,
+        "lon_deg": -77.9892,
+        "alt_masl": 5790,
+        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "obs_acronym": "IGEPN",
+        "country": "Ecuador",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -909,14 +932,6 @@
         ]
       },
       "properties": {
-        "name": "gamalama",
-        "display_name": "Gamalama",
-        "lat_deg": 0.81,
-        "lon_deg": 127.3324,
-        "alt_masl": 1680,
-        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
-        "obs_acronym": "CVGHM",
-        "country": "Indonesia",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -935,7 +950,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "gamalama",
+        "display_name": "Gamalama",
+        "lat_deg": 0.81,
+        "lon_deg": 127.3324,
+        "alt_masl": 1680,
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
+        "obs_acronym": "CVGHM",
+        "country": "Indonesia",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -948,14 +972,6 @@
         ]
       },
       "properties": {
-        "name": "galeras",
-        "display_name": "Galeras",
-        "lat_deg": 1.2214,
-        "lon_deg": -77.3592,
-        "alt_masl": 4080,
-        "observatory": "Servicio Geológico Colombiano",
-        "obs_acronym": "SGC",
-        "country": "Colombia",
         "2005": 112,
         "2006": 70,
         "2007": 89,
@@ -974,7 +990,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "galeras",
+        "display_name": "Galeras",
+        "lat_deg": 1.2214,
+        "lon_deg": -77.3592,
+        "alt_masl": 4080,
+        "observatory": "Servicio Geológico Colombiano",
+        "obs_acronym": "SGC",
+        "country": "Colombia",
+        "meshRadiusKm": 15
       }
     },
     {
@@ -987,14 +1012,6 @@
         ]
       },
       "properties": {
-        "name": "purace",
-        "display_name": "Purace",
-        "lat_deg": 2.32,
-        "lon_deg": -76.4,
-        "alt_masl": 4650,
-        "observatory": "Servicio Geológico Colombiano",
-        "obs_acronym": "SCG",
-        "country": "Colombia",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1013,7 +1030,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "purace",
+        "display_name": "Purace",
+        "lat_deg": 2.32,
+        "lon_deg": -76.4,
+        "alt_masl": 4650,
+        "observatory": "Servicio Geológico Colombiano",
+        "obs_acronym": "SCG",
+        "country": "Colombia",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1026,14 +1052,6 @@
         ]
       },
       "properties": {
-        "name": "sinabung",
-        "display_name": "Sinabung",
-        "lat_deg": 3.1693,
-        "lon_deg": 98.393,
-        "alt_masl": 2460,
-        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
-        "obs_acronym": "CVGHM",
-        "country": "Indonesia",
         "2005": 8,
         "2006": 0,
         "2007": 8,
@@ -1052,7 +1070,16 @@
         "2020": 106,
         "2021": 71,
         "2022": 64,
-        "2023": 40
+        "2023": 40,
+        "name": "sinabung",
+        "display_name": "Sinabung",
+        "lat_deg": 3.1693,
+        "lon_deg": 98.393,
+        "alt_masl": 2460,
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
+        "obs_acronym": "CVGHM",
+        "country": "Indonesia",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1065,14 +1092,6 @@
         ]
       },
       "properties": {
-        "name": "nevado_del_ruiz",
-        "display_name": "Nevado del Ruiz",
-        "lat_deg": 4.892,
-        "lon_deg": -75.3188,
-        "alt_masl": 5200,
-        "observatory": "Servicio Geológico Colombiano",
-        "obs_acronym": "SGC",
-        "country": "Colombia",
         "2005": 91,
         "2006": 44,
         "2007": 18,
@@ -1091,7 +1110,16 @@
         "2020": 414,
         "2021": 389,
         "2022": 404,
-        "2023": 412
+        "2023": 412,
+        "name": "nevado_del_ruiz",
+        "display_name": "Nevado del Ruiz",
+        "lat_deg": 4.892,
+        "lon_deg": -75.3188,
+        "alt_masl": 5200,
+        "observatory": "Servicio Geológico Colombiano",
+        "obs_acronym": "SGC",
+        "country": "Colombia",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1104,14 +1132,6 @@
         ]
       },
       "properties": {
-        "name": "turrialba",
-        "display_name": "Turrialba",
-        "lat_deg": 10.0167,
-        "lon_deg": -83.7655,
-        "alt_masl": 3340,
-        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
-        "obs_acronym": "OVSICORI",
-        "country": "Costa Rica",
         "2005": 11,
         "2006": 17,
         "2007": 90,
@@ -1130,7 +1150,16 @@
         "2020": 68,
         "2021": 71,
         "2022": 54,
-        "2023": 54
+        "2023": 54,
+        "name": "turrialba",
+        "display_name": "Turrialba",
+        "lat_deg": 10.0167,
+        "lon_deg": -83.7655,
+        "alt_masl": 3340,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1143,14 +1172,6 @@
         ]
       },
       "properties": {
-        "name": "poas",
-        "display_name": "Poas",
-        "lat_deg": 10.1963,
-        "lon_deg": -84.2299,
-        "alt_masl": 2708,
-        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
-        "obs_acronym": "OVSICORI",
-        "country": "Costa Rica",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1169,7 +1190,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "poas",
+        "display_name": "Poas",
+        "lat_deg": 10.1963,
+        "lon_deg": -84.2299,
+        "alt_masl": 2708,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1182,14 +1212,6 @@
         ]
       },
       "properties": {
-        "name": "canlaon",
-        "display_name": "Canlaon",
-        "lat_deg": 10.4096,
-        "lon_deg": 123.13,
-        "alt_masl": 2422,
-        "observatory": "Philippine Institute of Volcanology and Seismology",
-        "obs_acronym": "PHIVOLCS",
-        "country": "Philippines",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1208,7 +1230,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "canlaon",
+        "display_name": "Canlaon",
+        "lat_deg": 10.4096,
+        "lon_deg": 123.13,
+        "alt_masl": 2422,
+        "observatory": "Philippine Institute of Volcanology and Seismology",
+        "obs_acronym": "PHIVOLCS",
+        "country": "Philippines",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1221,14 +1252,6 @@
         ]
       },
       "properties": {
-        "name": "arenal",
-        "display_name": "Arenal",
-        "lat_deg": 10.4627,
-        "lon_deg": -84.7024,
-        "alt_masl": 1610,
-        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
-        "obs_acronym": "OVSICORI",
-        "country": "Costa Rica",
         "2005": 102,
         "2006": 69,
         "2007": 64,
@@ -1247,7 +1270,16 @@
         "2020": 72,
         "2021": 63,
         "2022": 38,
-        "2023": 83
+        "2023": 83,
+        "name": "arenal",
+        "display_name": "Arenal",
+        "lat_deg": 10.4627,
+        "lon_deg": -84.7024,
+        "alt_masl": 1610,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1260,14 +1292,6 @@
         ]
       },
       "properties": {
-        "name": "rincon_de_la_vieja",
-        "display_name": "Rincon de la Vieja",
-        "lat_deg": 10.83,
-        "lon_deg": -85.3239,
-        "alt_masl": 1895,
-        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
-        "obs_acronym": "OVSICORI",
-        "country": "Costa Rica",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1286,7 +1310,16 @@
         "2020": 63,
         "2021": 71,
         "2022": 53,
-        "2023": 54
+        "2023": 54,
+        "name": "rincon_de_la_vieja",
+        "display_name": "Rincon de la Vieja",
+        "lat_deg": 10.83,
+        "lon_deg": -85.3239,
+        "alt_masl": 1895,
+        "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
+        "obs_acronym": "OVSICORI",
+        "country": "Costa Rica",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1299,14 +1332,6 @@
         ]
       },
       "properties": {
-        "name": "concepcion",
-        "display_name": "Concepcion",
-        "lat_deg": 11.5385,
-        "lon_deg": -85.6224,
-        "alt_masl": 1600,
-        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
-        "obs_acronym": "INETER",
-        "country": "Guatemala",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1325,7 +1350,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "concepcion",
+        "display_name": "Concepcion",
+        "lat_deg": 11.5385,
+        "lon_deg": -85.6224,
+        "alt_masl": 1600,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1338,14 +1372,6 @@
         ]
       },
       "properties": {
-        "name": "masaya",
-        "display_name": "Masaya",
-        "lat_deg": 11.9841,
-        "lon_deg": -86.1684,
-        "alt_masl": 460,
-        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
-        "obs_acronym": "INETER",
-        "country": "Guatemala",
         "2005": 243,
         "2006": 332,
         "2007": 338,
@@ -1364,7 +1390,16 @@
         "2020": 265,
         "2021": 312,
         "2022": 291,
-        "2023": 341
+        "2023": 341,
+        "name": "masaya",
+        "display_name": "Masaya",
+        "lat_deg": 11.9841,
+        "lon_deg": -86.1684,
+        "alt_masl": 460,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1377,14 +1412,6 @@
         ]
       },
       "properties": {
-        "name": "momotombo",
-        "display_name": "Momotombo",
-        "lat_deg": 12.4238,
-        "lon_deg": -86.5388,
-        "alt_masl": 1250,
-        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
-        "obs_acronym": "INETER",
-        "country": "Guatemala",
         "2005": 57,
         "2006": 81,
         "2007": 104,
@@ -1403,7 +1430,16 @@
         "2020": 85,
         "2021": 103,
         "2022": 113,
-        "2023": 100
+        "2023": 100,
+        "name": "momotombo",
+        "display_name": "Momotombo",
+        "lat_deg": 12.4238,
+        "lon_deg": -86.5388,
+        "alt_masl": 1250,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1416,14 +1452,6 @@
         ]
       },
       "properties": {
-        "name": "telica",
-        "display_name": "Telica",
-        "lat_deg": 12.6051,
-        "lon_deg": -86.8421,
-        "alt_masl": 1061,
-        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
-        "obs_acronym": "INETER",
-        "country": "Guatemala",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1442,7 +1470,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "telica",
+        "display_name": "Telica",
+        "lat_deg": 12.6051,
+        "lon_deg": -86.8421,
+        "alt_masl": 1061,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1455,14 +1492,6 @@
         ]
       },
       "properties": {
-        "name": "san_cristobal",
-        "display_name": "San Cristobal",
-        "lat_deg": 12.7049,
-        "lon_deg": -87.0013,
-        "alt_masl": 1745,
-        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
-        "obs_acronym": "INETER",
-        "country": "Guatemala",
         "2005": 81,
         "2006": 279,
         "2007": 210,
@@ -1481,7 +1510,16 @@
         "2020": 111,
         "2021": 137,
         "2022": 159,
-        "2023": 168
+        "2023": 168,
+        "name": "san_cristobal",
+        "display_name": "San Cristobal",
+        "lat_deg": 12.7049,
+        "lon_deg": -87.0013,
+        "alt_masl": 1745,
+        "observatory": "Instituto Nicaragüense de Estudios Territoriales",
+        "obs_acronym": "INETER",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1494,14 +1532,6 @@
         ]
       },
       "properties": {
-        "name": "mayon",
-        "display_name": "Mayon",
-        "lat_deg": 13.2542,
-        "lon_deg": 123.6862,
-        "alt_masl": 2370,
-        "observatory": "Philippine Institute of Volcanology and Seismology",
-        "obs_acronym": "PHIVOLCS",
-        "country": "Philippines",
         "2005": 53,
         "2006": 364,
         "2007": 215,
@@ -1520,7 +1550,16 @@
         "2020": 96,
         "2021": 109,
         "2022": 129,
-        "2023": 276
+        "2023": 276,
+        "name": "mayon",
+        "display_name": "Mayon",
+        "lat_deg": 13.2542,
+        "lon_deg": 123.6862,
+        "alt_masl": 2370,
+        "observatory": "Philippine Institute of Volcanology and Seismology",
+        "obs_acronym": "PHIVOLCS",
+        "country": "Philippines",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1533,14 +1572,6 @@
         ]
       },
       "properties": {
-        "name": "san_miguel",
-        "display_name": "San Miguel",
-        "lat_deg": 13.4319,
-        "lon_deg": -88.2719,
-        "alt_masl": 2130,
-        "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
-        "obs_acronym": "MARN",
-        "country": "El Salvador",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1559,7 +1590,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "san_miguel",
+        "display_name": "San Miguel",
+        "lat_deg": 13.4319,
+        "lon_deg": -88.2719,
+        "alt_masl": 2130,
+        "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
+        "obs_acronym": "MARN",
+        "country": "El Salvador",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1572,14 +1612,6 @@
         ]
       },
       "properties": {
-        "name": "santa_ana",
-        "display_name": "Santa Ana",
-        "lat_deg": 13.8486,
-        "lon_deg": -89.6309,
-        "alt_masl": 2381,
-        "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
-        "obs_acronym": "MARN",
-        "country": "El Salvador",
         "2005": 209,
         "2006": 47,
         "2007": 8,
@@ -1598,7 +1630,16 @@
         "2020": 27,
         "2021": 35,
         "2022": 52,
-        "2023": 24
+        "2023": 24,
+        "name": "santa_ana",
+        "display_name": "Santa Ana",
+        "lat_deg": 13.8486,
+        "lon_deg": -89.6309,
+        "alt_masl": 2381,
+        "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
+        "obs_acronym": "MARN",
+        "country": "El Salvador",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1611,14 +1652,6 @@
         ]
       },
       "properties": {
-        "name": "fuego_guatemala",
-        "display_name": "Fuego Guatemala",
-        "lat_deg": 14.4742,
-        "lon_deg": -90.8806,
-        "alt_masl": 3763,
-        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
-        "obs_acronym": "INSIVUMEH",
-        "country": "Guatemala",
         "2005": 103,
         "2006": 97,
         "2007": 96,
@@ -1637,7 +1670,16 @@
         "2020": 128,
         "2021": 177,
         "2022": 159,
-        "2023": 132
+        "2023": 132,
+        "name": "fuego_guatemala",
+        "display_name": "Fuego Guatemala",
+        "lat_deg": 14.4742,
+        "lon_deg": -90.8806,
+        "alt_masl": 3763,
+        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
+        "obs_acronym": "INSIVUMEH",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1650,14 +1692,6 @@
         ]
       },
       "properties": {
-        "name": "santiaguito",
-        "display_name": "Santiaguito",
-        "lat_deg": 14.7383,
-        "lon_deg": -91.5681,
-        "alt_masl": 2500,
-        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
-        "obs_acronym": "INSIVUMEH",
-        "country": "Guatemala",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1676,7 +1710,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "santiaguito",
+        "display_name": "Santiaguito",
+        "lat_deg": 14.7383,
+        "lon_deg": -91.5681,
+        "alt_masl": 2500,
+        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
+        "obs_acronym": "INSIVUMEH",
+        "country": "Guatemala",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1689,14 +1732,6 @@
         ]
       },
       "properties": {
-        "name": "soufriere_hills",
-        "display_name": "Soufriere Hills",
-        "lat_deg": 16.7103,
-        "lon_deg": -62.1773,
-        "alt_masl": 915,
-        "observatory": "Montserrat Volcano Observatory",
-        "obs_acronym": "MVO",
-        "country": "Montserrat",
         "2005": 562,
         "2006": 987,
         "2007": 524,
@@ -1715,7 +1750,16 @@
         "2020": 72,
         "2021": 52,
         "2022": 61,
-        "2023": 60
+        "2023": 60,
+        "name": "soufriere_hills",
+        "display_name": "Soufriere Hills",
+        "lat_deg": 16.7103,
+        "lon_deg": -62.1773,
+        "alt_masl": 915,
+        "observatory": "Montserrat Volcano Observatory",
+        "obs_acronym": "MVO",
+        "country": "Montserrat",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1728,14 +1772,6 @@
         ]
       },
       "properties": {
-        "name": "popocatepetl",
-        "display_name": "Popocatepetl",
-        "lat_deg": 19.0233,
-        "lon_deg": -98.6224,
-        "alt_masl": 5070,
-        "observatory": "Universidad Nacional Autónoma de México",
-        "obs_acronym": "UNAM",
-        "country": "Mexico",
         "2005": 266,
         "2006": 279,
         "2007": 566,
@@ -1754,7 +1790,16 @@
         "2020": 276,
         "2021": 306,
         "2022": 353,
-        "2023": 633
+        "2023": 633,
+        "name": "popocatepetl",
+        "display_name": "Popocatepetl",
+        "lat_deg": 19.0233,
+        "lon_deg": -98.6224,
+        "alt_masl": 5070,
+        "observatory": "Universidad Nacional Autónoma de México",
+        "obs_acronym": "UNAM",
+        "country": "Mexico",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1767,14 +1812,6 @@
         ]
       },
       "properties": {
-        "name": "fuego_de_colima",
-        "display_name": "Fuego de Colima",
-        "lat_deg": 19.5117,
-        "lon_deg": -103.6167,
-        "alt_masl": 3850,
-        "observatory": "Universidad Nacional Autónoma de México",
-        "obs_acronym": "UNAM",
-        "country": "Mexico",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1793,7 +1830,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "fuego_de_colima",
+        "display_name": "Fuego de Colima",
+        "lat_deg": 19.5117,
+        "lon_deg": -103.6167,
+        "alt_masl": 3850,
+        "observatory": "Universidad Nacional Autónoma de México",
+        "obs_acronym": "UNAM",
+        "country": "Mexico",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1806,14 +1852,6 @@
         ]
       },
       "properties": {
-        "name": "etna",
-        "display_name": "Etna",
-        "lat_deg": 37.7506,
-        "lon_deg": 14.9934,
-        "alt_masl": 3330,
-        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
-        "obs_acronym": "INGV",
-        "country": "Italy",
         "2005": 575,
         "2006": 1043,
         "2007": 579,
@@ -1832,7 +1870,16 @@
         "2020": 709,
         "2021": 624,
         "2022": 852,
-        "2023": 520
+        "2023": 520,
+        "name": "etna",
+        "display_name": "Etna",
+        "lat_deg": 37.7506,
+        "lon_deg": 14.9934,
+        "alt_masl": 3330,
+        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
+        "obs_acronym": "INGV",
+        "country": "Italy",
+        "meshRadiusKm": 21
       }
     },
     {
@@ -1845,14 +1892,6 @@
         ]
       },
       "properties": {
-        "name": "vulcano",
-        "display_name": "Vulcano",
-        "lat_deg": 38.4046,
-        "lon_deg": 14.9618,
-        "alt_masl": 250,
-        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
-        "obs_acronym": "INGV",
-        "country": "Italy",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1871,7 +1910,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "vulcano",
+        "display_name": "Vulcano",
+        "lat_deg": 38.4046,
+        "lon_deg": 14.9618,
+        "alt_masl": 250,
+        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
+        "obs_acronym": "INGV",
+        "country": "Italy",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1884,14 +1932,6 @@
         ]
       },
       "properties": {
-        "name": "stromboli",
-        "display_name": "Stromboli",
-        "lat_deg": 38.792,
-        "lon_deg": 15.2124,
-        "alt_masl": 924,
-        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
-        "obs_acronym": "INGV",
-        "country": "Italy",
         "2005": 19,
         "2006": 43,
         "2007": 81,
@@ -1910,7 +1950,16 @@
         "2020": 39,
         "2021": 27,
         "2022": 22,
-        "2023": 30
+        "2023": 30,
+        "name": "stromboli",
+        "display_name": "Stromboli",
+        "lat_deg": 38.792,
+        "lon_deg": 15.2124,
+        "alt_masl": 924,
+        "observatory": "Istituto Nazionale di Geofisica e Vulcanologia",
+        "obs_acronym": "INGV",
+        "country": "Italy",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1923,14 +1972,6 @@
         ]
       },
       "properties": {
-        "name": "st_helens",
-        "display_name": "St Helens",
-        "lat_deg": 46.2,
-        "lon_deg": -122.18,
-        "alt_masl": 2549,
-        "observatory": "United States Geological Survey",
-        "obs_acronym": "USGS",
-        "country": "United States",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1949,7 +1990,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "st_helens",
+        "display_name": "St Helens",
+        "lat_deg": 46.2,
+        "lon_deg": -122.18,
+        "alt_masl": 2549,
+        "observatory": "United States Geological Survey",
+        "obs_acronym": "USGS",
+        "country": "United States",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -1962,14 +2012,6 @@
         ]
       },
       "properties": {
-        "name": "cleveland",
-        "display_name": "Cleveland",
-        "lat_deg": 52.825,
-        "lon_deg": -169.944,
-        "alt_masl": 1730,
-        "observatory": "United States Geological Survey",
-        "obs_acronym": "USGS",
-        "country": "United States",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -1988,7 +2030,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "cleveland",
+        "display_name": "Cleveland",
+        "lat_deg": 52.825,
+        "lon_deg": -169.944,
+        "alt_masl": 1730,
+        "observatory": "United States Geological Survey",
+        "obs_acronym": "USGS",
+        "country": "United States",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -2001,14 +2052,6 @@
         ]
       },
       "properties": {
-        "name": "eyjafjallajokull",
-        "display_name": "Eyjafjallajokull",
-        "lat_deg": 63.633,
-        "lon_deg": -19.633,
-        "alt_masl": 1651,
-        "observatory": "Icelandic Meteorological Office",
-        "obs_acronym": "IMO",
-        "country": "Iceland",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -2027,7 +2070,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "eyjafjallajokull",
+        "display_name": "Eyjafjallajokull",
+        "lat_deg": 63.633,
+        "lon_deg": -19.633,
+        "alt_masl": 1651,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -2040,14 +2092,6 @@
         ]
       },
       "properties": {
-        "name": "katla",
-        "display_name": "Katla",
-        "lat_deg": 63.6383,
-        "lon_deg": -19.1278,
-        "alt_masl": 1370,
-        "observatory": "Icelandic Meteorological Office",
-        "obs_acronym": "IMO",
-        "country": "Iceland",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -2066,7 +2110,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "katla",
+        "display_name": "Katla",
+        "lat_deg": 63.6383,
+        "lon_deg": -19.1278,
+        "alt_masl": 1370,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -2079,14 +2132,6 @@
         ]
       },
       "properties": {
-        "name": "krysuvik",
-        "display_name": "Krysuvik",
-        "lat_deg": 63.917,
-        "lon_deg": -22.067,
-        "alt_masl": 360,
-        "observatory": "Icelandic Meteorological Office",
-        "obs_acronym": "IMO",
-        "country": "Iceland",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -2105,7 +2150,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "krysuvik",
+        "display_name": "Krysuvik",
+        "lat_deg": 63.917,
+        "lon_deg": -22.067,
+        "alt_masl": 360,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "meshRadiusKm": 10
       }
     },
     {
@@ -2118,14 +2172,6 @@
         ]
       },
       "properties": {
-        "name": "hekla",
-        "display_name": "Hekla",
-        "lat_deg": 63.9895,
-        "lon_deg": -19.6634,
-        "alt_masl": 1490,
-        "observatory": "Icelandic Meteorological Office",
-        "obs_acronym": "IMO",
-        "country": "Iceland",
         "2005": 0,
         "2006": 0,
         "2007": 0,
@@ -2144,7 +2190,16 @@
         "2020": 0,
         "2021": 0,
         "2022": 0,
-        "2023": 0
+        "2023": 0,
+        "name": "hekla",
+        "display_name": "Hekla",
+        "lat_deg": 63.9895,
+        "lon_deg": -19.6634,
+        "alt_masl": 1490,
+        "observatory": "Icelandic Meteorological Office",
+        "obs_acronym": "IMO",
+        "country": "Iceland",
+        "meshRadiusKm": 10
       }
     }
   ]

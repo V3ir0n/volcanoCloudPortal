@@ -36,7 +36,7 @@ function emissionRadius(props, year, options = {}) {
   return minRadius + scale * logValue;
 }
 
-// Finds max and min value of year from volcanoes.json for the emission slider.
+// Finds max and min value of year from volcanoes.geojson for the emission slider.
 function computeYearRange(data) {
   let min = Infinity, max = -Infinity; //all years will be larger than -inf and smaller than inf
   for (const f of data.features || []) { // loop through all volcanoes
