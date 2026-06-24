@@ -7,7 +7,7 @@ from 'three/addons/loaders/GLTFLoader.js';
 import {GLTFExporter}
 from 'three/addons/exporters/GLTFExporter.js';
 
-const radiusKm = 10; // radius for fetching terrain data, can be adjusted if needed
+const defaultRadiusKm = 10; // radius for fetching terrain data, can be adjusted if needed
 /**
  * Render a place view into the given container.
  * @param {HTMLElement} container - The .panel-body element.
@@ -38,6 +38,7 @@ class VolcanoView {
   constructor(canvasElement, place, latLng) {
     this.place = place;
     this.latLng = latLng;
+    this.radiusKm = defaultRadiusKm;
     this.terrainTransform = {
       center: new THREE.Vector3(0, 0, 0),
       scaleX: 1,
@@ -92,148 +93,173 @@ class VolcanoView {
   }
 
   // Sets up the 3D volcano model
-  // Function called upon in renderPlaceView main.js330. 
   loadVolcanoModel() {
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
-    const filename = `${this.place.name}.glb`;
-    loader.load(filename, gltf => {
-      const model = gltf.scene;
-      this.scene.add(model);
+    this.radiusKm = this.place.raw?.meshRadiusKm ?? defaultRadiusKm;
+    const encodedName = `${this.place.name}_${this.radiusKm}km.glb`;
+    const plainName   = `${this.place.name}.glb`;
 
-      const boundingBox = new THREE.Box3();
-      boundingBox.expandByObject(model);
+    const tryLoad = (filename, onError) => loader.load(filename, gltf => {
+      const match = filename.match(/_(\d+(?:\.\d+)?)km\.glb$/);
+      if (match) this.radiusKm = parseFloat(match[1]);
+      this._onTerrainLoaded(gltf, filename);
+    }, undefined, onError);
 
-      const terrainCenter = boundingBox.getCenter(new THREE.Vector3());
-      this.terrainTransform.center.copy(terrainCenter);
+    tryLoad(encodedName, () => tryLoad(plainName, () => this._downloadTerrain()));
+  }
 
-      //Set camera view
-      const size = boundingBox.getSize(new THREE.Vector3());
-      const dist = Math.max(size.x, size.z) * 0.8;  // zoom
-      const angle = Math.PI / 6;                      // degrees above horizon
-      this.camera.position.set(
-        terrainCenter.x,
-        terrainCenter.y + dist * Math.sin(angle),
-        terrainCenter.z + dist * Math.cos(angle)
-      );
-      this.controls.target.copy(terrainCenter);
-      this.controls.update();
+  _onTerrainLoaded(gltf, filename) {
+    const model = gltf.scene;
+    this.scene.add(model);
 
+    const boundingBox = new THREE.Box3();
+    boundingBox.expandByObject(model);
 
-      
-//----------------------------------------------------------------
-      
-      let maxY = -Infinity, peakX = 0, peakZ = 0;
-      model.traverse(child => {
-        if (child.isMesh) {
-          const pos = child.geometry.attributes.position;
-          for (let i = 0; i < pos.count; i++) {
-            const y = pos.getY(i);
-            if (y > maxY) { maxY = y; peakX = pos.getX(i); peakZ = pos.getZ(i); }
-          }
+    const terrainCenter = boundingBox.getCenter(new THREE.Vector3());
+    this.terrainTransform.center.copy(terrainCenter);
+
+    const size = boundingBox.getSize(new THREE.Vector3());
+    const dist = Math.max(size.x, size.z) * 0.8;
+    const angle = Math.PI / 6;
+    this.camera.position.set(
+      terrainCenter.x,
+      terrainCenter.y + dist * Math.sin(angle),
+      terrainCenter.z + dist * Math.cos(angle)
+    );
+    this.controls.target.copy(terrainCenter);
+    this.controls.update();
+
+    let maxY = -Infinity, peakX = 0, peakZ = 0;
+    model.traverse(child => {
+      if (child.isMesh) {
+        const pos = child.geometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const y = pos.getY(i);
+          if (y > maxY) { maxY = y; peakX = pos.getX(i); peakZ = pos.getZ(i); }
         }
-      });
-      console.log("summit peak scene coords:", {
-        x: peakX,
-        z: peakZ,
-        y: maxY,
-        terrainCenter: terrainCenter.toArray(),
-        scaleX: this.terrainTransform.scaleX,
-        scaleZ: this.terrainTransform.scaleZ
-      });
-
-
-      // RED MARKER FOR CORNER
-      if (this.place.name === "arenal") {
-        const marker = new THREE.Mesh(
-          new THREE.SphereGeometry(0.02),
-          new THREE.MeshBasicMaterial({ color: 0xff0000 })
-        );
-        marker.position.set(-0.877, 0.1, 0.816);
-        this.scene.add(marker);
-        this.render();
       }
-      // PINK PIN FOR SUMMIT
-      const pinMat = new THREE.MeshBasicMaterial({ color: 0xff69b4 });
-      const pinHead = new THREE.Mesh(new THREE.SphereGeometry(0.015), pinMat);
-      const pinNeedle = new THREE.Mesh(new THREE.ConeGeometry(0.004, 0.06, 8), pinMat);
-      pinNeedle.rotation.z = Math.PI;
-      pinNeedle.position.y = -0.045;
-      const pin = new THREE.Group();
-      pin.add(pinHead);
-      pin.add(pinNeedle);
-      pin.position.set(0, 0.2, 0);
-      this.scene.add(pin);
+    });
+    console.log("summit peak scene coords:", {
+      x: peakX, z: peakZ, y: maxY,
+      terrainCenter: terrainCenter.toArray(),
+      radiusKm: this.radiusKm
+    });
 
-      /*
-------------------------------------'
-----------------------------'
-*/
-      model.position.sub(
-        new THREE.Vector3(0, 0, 0)
-      );
-      this.loadStationSprites(model);
+  //----------------------------------------------------------
+    // PINK PIN FOR SUMMIT
+    const pinMat = new THREE.MeshBasicMaterial({ color: 0xff69b4 });
+    const pinHead = new THREE.Mesh(new THREE.SphereGeometry(0.015), pinMat);
+    const pinNeedle = new THREE.Mesh(new THREE.ConeGeometry(0.004, 0.06, 8), pinMat);
+    pinNeedle.rotation.z = Math.PI;
+    pinNeedle.position.y = -0.045;
+    const pin = new THREE.Group();
+    pin.add(pinHead);
+    pin.add(pinNeedle);
+    pin.position.set(0, 0.2, 0);
+    this.scene.add(pin);
+
+    model.position.sub(new THREE.Vector3(0, 0, 0));
+    this.loadStationSprites(model);
+    this.render();
+  }
+
+  _downloadTerrain() {
+    const tokenMapbox = prompt(`The terrain for the volcano ${this.place.title} is not saved. Input a mapbox token to download. To avoid this in the future, save the downloaded file to ./resources/terrainMeshes/`);
+    if (!tokenMapbox) return;
+
+    const tgeo = new ThreeGeo({ tokenMapbox });
+    tgeo.getTerrainRgb(
+      this.latLng,
+      this.radiusKm,
+      13
+    ).then(terrain => {
+      terrain.rotation.x = -Math.PI / 2;
+      this.scene.add(terrain);
       this.render();
 
-      
-    }, undefined, () => {
-
-      // On error (file not found)
-      const tokenMapbox = prompt(`The terrain for the volcano ${this.place.title} is not saved. Input a mapbox token to download. To avoid this in the future, save the downloaded file to ./resources/terrainMeshes/`);
-      if (!tokenMapbox) {
-        return;
-      }
-      const tgeo = new ThreeGeo({
-        tokenMapbox: tokenMapbox,
-      });
-      tgeo.getTerrainRgb(
-        this.latLng, // [lat, lng]
-        radiusKm, // radius of bounding circle (km)
-        13 // zoom resolution
-      ).then(terrain => {
-        terrain.rotation.x = -Math.PI / 2;
-        this.scene.add(terrain);
-        this.render();
-
-        const gltfExporter = new GLTFExporter();
-        gltfExporter.parse(
-          terrain,
-          function(result) {
-            saveArrayBuffer(result, filename);
-          },
-          error => console.log("An error happened during parsing", error), {
-            binary: true
-          }
-        );
-      });
+      const filename = `${this.place.name}_${this.radiusKm}km.glb`;
+      const gltfExporter = new GLTFExporter();
+      gltfExporter.parse(
+        terrain,
+        result => saveArrayBuffer(result, filename),
+        error => console.log("An error happened during parsing", error),
+        { binary: true }
+      );
     });
   }
 //----------------------------------------------------------------------------------
   // Fetches station lat/lon from stations.json and adds sprite markers to the terrain.
   // Called after the volcano model is loaded in loadVolcanoModel().
   loadStationSprites(terrainRoot) {
-    new THREE.TextureLoader().load("resources/circle.png", texture => {
-      fetch("resources/stations.json")
-        .then(r => r.json())
-        .then(stations => {
-          stations
-            .filter(s => s.volcanoKey === this.place.name)
-            .forEach(s => {
-              const marker = this.createStationMarker(texture);
-              const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.02 });
-              if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
-              this.scene.add(marker);
-            });
-          this.render();
-        });
-    });
+    // Volcano centre in scene space — used to orient each marker toward it.
+    const volcCenter = this.latLonToScene(this.latLng[0], this.latLng[1]);
+
+    fetch("resources/stations.json")
+      .then(r => r.json())
+      .then(stations => {
+        stations
+          .filter(s =>
+            s.volcanoKey === this.place.name &&
+            s.dataUntil === "9999.12.31" &&
+            s.type !== "1"
+          )
+          .forEach(s => {
+            const marker = this.createStationMarker(s.coneAngle ?? 90);
+            const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.025 });
+            if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
+
+            // Rotate the marker around the vertical (Y) axis so it faces the volcano.
+            // atan2(dx, dz) gives the Y-rotation from +Z toward the volcano in the XZ plane.
+            const dx = volcCenter.x - marker.position.x;
+            const dz = volcCenter.z - marker.position.z;
+            marker.rotation.y = Math.atan2(dx, dz);
+
+            this.scene.add(marker);
+          });
+        this.render();
+      });
   }
 
-  createStationMarker(texture) {
-    const sprite = new THREE.Sprite(
-      new THREE.SpriteMaterial({ map: texture, transparent: true })
-    );
-    sprite.scale.set(0.06, 0.06, 1);
-    return sprite;
+  // Builds a 3D station marker: a cuboid body + two line arms.
+  // coneAngle controls arm direction:
+  //   90° → arms extend horizontally from the sides
+  //   60° → arms angle 30° above horizontal from the top (V shape)
+  createStationMarker(coneAngle = 90) {
+    const group = new THREE.Group();
+    const mat   = new THREE.MeshStandardMaterial({
+      color:     0xddeeff,
+      roughness: 0.4,
+      metalness: 0.2,
+    });
+
+    // Cuboid body
+    group.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.05, 0.03), mat));
+
+    // Arms as thin boxes so they also catch light
+    const armLen = 0.055;
+    const armH   = 0.008;  // arm cross-section
+    const armRad = (90 - coneAngle) * Math.PI / 180;
+    const adx    = armLen * Math.cos(armRad);
+    const adz    = armLen * Math.sin(armRad);
+
+    const addArm = (x0, z0, x1, z1) => {
+      const dx  = x1 - x0, dz = z1 - z0;
+      const len = Math.sqrt(dx * dx + dz * dz);
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(len, armH, armH), mat);
+      arm.position.set((x0 + x1) / 2, 0, (z0 + z1) / 2);
+      arm.rotation.y = -Math.atan2(dz, dx);
+      group.add(arm);
+    };
+
+    if (coneAngle >= 85) {
+      addArm(-0.04, 0,  -0.04 - adx, 0);
+      addArm( 0.04, 0,   0.04 + adx, 0);
+    } else {
+      addArm(-0.04, 0,  -0.04 - adx,  adz);
+      addArm( 0.04, 0,   0.04 + adx,  adz);
+    }
+
+    return group;
   }
 
   placeObjectOnTerrain(terrainRoot, object3D, x, z, options = {}) {
@@ -275,7 +301,7 @@ class VolcanoView {
   //converting latlon to scene coordinates, with optional altitude in meters. Called in placeObjectOnTerrainLatLon() when placing station markers, and also logged for the summit pin to check if it is placed correctly.
   latLonToScene(targetLat, targetLon, altitudeMeters = 0) {
     const tgeo = new ThreeGeo();
-    const { proj, unitsPerMeter } = tgeo.getProjection(this.latLng, radiusKm);
+    const { proj, unitsPerMeter } = tgeo.getProjection(this.latLng, this.radiusKm);
     const pos2D = new THREE.Vector2(...proj([targetLat, targetLon]));
     return new THREE.Vector3(pos2D.x, altitudeMeters * unitsPerMeter, -pos2D.y);
   }

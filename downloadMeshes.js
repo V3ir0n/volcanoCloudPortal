@@ -47,60 +47,100 @@ dotenv.config();
 
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 const OUTPUT_DIR = './map/resources/terrainMeshes/';
-const RADIUS_KM = 10;
+const GEOJSON_PATH = './map/resources/volcanoes.geojson';
+const DEFAULT_RADIUS_KM = 10;
+const STATION_BUFFER_KM = 25; // extra margin beyond the outermost station (accounts for tile quantization at zoom 13)
 const ZOOM = 13;
 
-console.log('Token loaded:', MAPBOX_TOKEN ? 'yes' : 'MISSING - check .env');
+console.log('Token loaded:', MAPBOX_TOKEN ? 'yes' : 'MISSING - check .env'); // REMOVE
 
-const geoJsonData = JSON.parse(fs.readFileSync('./map/resources/volcanoes.geojson', 'utf-8'));
-const locations = geoJsonData.features.map(feature => ({
-  title: feature.properties.name,
-  lat: feature.properties.lat_deg,
-  lng: feature.properties.lon_deg
-}));
+const geoJsonData = JSON.parse(fs.readFileSync(GEOJSON_PATH, 'utf-8'));
+const stationsData = JSON.parse(fs.readFileSync('./map/resources/stations.json', 'utf-8'));
 
-async function downloadTerrainMesh(location, index) {
-  // isNode: true uses get-pixels/node-pixels instead of browser Image API
+// calculates distance between two lat/lon coordinates
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// calculate the required radius to include all stations in the mesh
+function computeRequiredRadius(volcanoName, centerLat, centerLng) {
+  const stations = stationsData.filter(s => s.volcanoKey === volcanoName);
+  if (!stations.length) return DEFAULT_RADIUS_KM;
+
+  const maxDist = Math.max(...stations.map(s => haversineKm(centerLat, centerLng, s.lat, s.lng)));
+  const needed = Math.ceil(maxDist + STATION_BUFFER_KM);
+
+  if (needed > DEFAULT_RADIUS_KM) {
+    console.log(`  ↑ Expanding to ${needed}km (max station dist: ${maxDist.toFixed(1)}km)`);
+    return needed;
+  }
+  return DEFAULT_RADIUS_KM;
+}
+
+async function downloadTerrainMesh(feature, index, total) {
   const tgeo = new ThreeGeo({ tokenMapbox: MAPBOX_TOKEN, isNode: true });
+  const { name, lat_deg: lat, lon_deg: lng } = feature.properties;
+  const radius = computeRequiredRadius(name, lat, lng);
 
   try {
-    console.log(`[${index + 1}/${locations.length}] Downloading ${location.title}...`);
+    console.log(`[${index + 1}/${total}] Downloading ${name} (${radius}km)...`);
 
-    const terrain = await tgeo.getTerrainRgb(
-      [location.lat, location.lng],
-      RADIUS_KM,
-      ZOOM
-    );
+    const terrain = await tgeo.getTerrainRgb([lat, lng], radius, ZOOM);
+
+    let meshCount = 0;
+    terrain.traverse(child => {
+      if (child.isMesh) meshCount++;
+    });
+    console.log(`  terrain children: ${terrain.children.length}, meshes: ${meshCount}`);
+    if (meshCount === 0) throw new Error('terrain has no geometry — Mapbox token may be invalid or rate-limited');
 
     terrain.rotation.x = -Math.PI / 2;
 
     const gltfExporter = new GLTFExporter();
     const result = await gltfExporter.parseAsync(terrain, { binary: true });
 
-    const filename = path.join(OUTPUT_DIR, `${location.title}.glb`);
+    const filename = path.join(OUTPUT_DIR, `${name}_${radius}km.glb`);
     fs.writeFileSync(filename, Buffer.from(result));
-    console.log(`✓ Saved: ${location.title}.glb`);
-    return filename;
+    const { name, display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, ...yearData } = feature.properties;
+    feature.properties = { name, display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, meshRadiusKm: radius, ...yearData };
+    console.log(`✓ Saved: ${name}_${radius}km.glb`);
   } catch (error) {
-    console.error(`✗ Failed: ${location.title} - ${error.message}`);
+    console.error(`✗ Failed: ${name} - ${error.message}`);
   }
 }
 
 async function batchDownload() {
-  console.log(`\n📥 Starting download of ${locations.length} meshes at ${RADIUS_KM}km radius...\n`);
+  const filterName = process.argv[2];
+  const features = filterName
+    ? geoJsonData.features.filter(f => f.properties.name === filterName)
+    : geoJsonData.features;
+
+  if (filterName && features.length === 0) {
+    console.error(`✗ No volcano found with name "${filterName}"`);
+    process.exit(1);
+  }
+
+  console.log(`\n📥 Downloading ${features.length} mesh(es) (default ${DEFAULT_RADIUS_KM}km)...\n`);
 
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
-  for (let i = 0; i < locations.length; i++) {
-    await downloadTerrainMesh(locations[i], i);
-    if (i < locations.length - 1) {
+  for (let i = 0; i < features.length; i++) {
+    await downloadTerrainMesh(features[i], i, features.length);
+    if (i < features.length - 1) {
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
 
-  console.log(`\n✓ All downloads complete! Files saved to ${OUTPUT_DIR}\n`);
+  fs.writeFileSync(GEOJSON_PATH, JSON.stringify(geoJsonData, null, 2));
+  console.log(`\n✓ meshRadiusKm saved to volcanoes.geojson`);
+  console.log(`✓ Done! Files saved to ${OUTPUT_DIR}\n`);
 }
 
 batchDownload().catch(console.error);
