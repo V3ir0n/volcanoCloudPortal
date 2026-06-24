@@ -120,6 +120,7 @@ class VolcanoView {
 
     const size = boundingBox.getSize(new THREE.Vector3());
     const dist = Math.max(size.x, size.z) * 0.8;
+    this.markerScale = dist / 1.1; // scale markers relative to terrain footprint
     const angle = Math.PI / 6;
     this.camera.position.set(
       terrainCenter.x,
@@ -197,13 +198,19 @@ class VolcanoView {
     fetch("resources/stations.json")
       .then(r => r.json())
       .then(stations => {
-        stations
-          .filter(s =>
-            s.volcanoKey === this.place.name &&
-            s.dataUntil === "9999.12.31" &&
-            s.type !== "1"
-          )
-          .forEach(s => {
+        const filtered = stations.filter(s =>
+          s.volcanoKey === this.place.name &&
+          s.type !== "1"
+        );
+        const latestByLatLon = new Map();
+        for (const s of filtered) {
+          const key = `${s.lat},${s.lng}`;
+          const existing = latestByLatLon.get(key);
+          if (!existing || s.dataSince > existing.dataSince) {
+            latestByLatLon.set(key, s);
+          }
+        }
+        [...latestByLatLon.values()].forEach(s => {
             const marker = this.createStationMarker(s.coneAngle ?? 90);
             const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.025 });
             if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
@@ -226,6 +233,7 @@ class VolcanoView {
   //   60° → arms angle 30° above horizontal from the top (V shape)
   createStationMarker(coneAngle = 90) {
     const group = new THREE.Group();
+    group.scale.setScalar(this.markerScale ?? 1);
     const mat   = new THREE.MeshStandardMaterial({
       color:     0xddeeff,
       roughness: 0.4,
@@ -233,11 +241,11 @@ class VolcanoView {
     });
 
     // Cuboid body
-    group.add(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.05, 0.03), mat));
+    group.add(new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.04, 0.03), mat));
 
     // Arms as thin boxes so they also catch light
     const armLen = 0.055;
-    const armH   = 0.008;  // arm cross-section
+    const armH   = 0.006;  // arm cross-section area
     const armRad = (90 - coneAngle) * Math.PI / 180;
     const adx    = armLen * Math.cos(armRad);
     const adz    = armLen * Math.sin(armRad);
