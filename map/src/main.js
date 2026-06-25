@@ -4,7 +4,7 @@ let selectedPlace = null;
 
 let year = 2005;
 const minYear = 2005;
-const maxYear = 2023;
+const maxYear = 2025;
 const tickMs = 900;
 let intervalId = null;
 
@@ -495,7 +495,7 @@ function createStaticLegend(legendValues) {
     onAdd() {
       const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
       div.innerHTML = `
-        <div class="legend-title">Emission SO2 Gt/y</div>
+        <div class="legend-title">Emission of SO2 kt/y</div>
         <div class="legend-items">
           ${legendValues.map(v => {
             const r = emissionRadius({ [String(minYear)]: v }, minYear);
