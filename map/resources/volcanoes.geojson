@@ -39,7 +39,7 @@
         "observatory": "Servicio Nacional de Geología y Minería",
         "obs_acronym": "SERNAGEOMIN",
         "country": "Chile",
-        "meshRadiusKm": 11
+        "meshRadiusKm": 14
       }
     },
     {
@@ -319,7 +319,7 @@
         "observatory": "Servicio Nacional de Geología y Minería",
         "obs_acronym": "SERNAGEOMIN",
         "country": "Chile",
-        "meshRadiusKm": 18
+        "meshRadiusKm": 21
       }
     },
     {
@@ -399,7 +399,7 @@
         "observatory": "Servicio Nacional de Geología y Minería",
         "obs_acronym": "SERNAGEOMIN",
         "country": "Chile",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 12
       }
     },
     {
@@ -559,7 +559,7 @@
         "observatory": "Rabaul Volcano Observatory",
         "obs_acronym": "RVO",
         "country": "Papua New Guinea",
-        "meshRadiusKm": 12
+        "meshRadiusKm": 15
       }
     },
     {
@@ -759,7 +759,7 @@
         "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
-        "meshRadiusKm": 13
+        "meshRadiusKm": 16
       }
     },
     {
@@ -839,7 +839,7 @@
         "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
-        "meshRadiusKm": 18
+        "meshRadiusKm": 21
       }
     },
     {
@@ -999,7 +999,7 @@
         "observatory": "Servicio Geológico Colombiano",
         "obs_acronym": "SGC",
         "country": "Colombia",
-        "meshRadiusKm": 15
+        "meshRadiusKm": 18
       }
     },
     {
@@ -1079,7 +1079,7 @@
         "observatory": "Center for Volcanology and Geological Hazard Mitigation",
         "obs_acronym": "CVGHM",
         "country": "Indonesia",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 12
       }
     },
     {
@@ -1119,7 +1119,7 @@
         "observatory": "Servicio Geológico Colombiano",
         "obs_acronym": "SGC",
         "country": "Colombia",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 13
       }
     },
     {
@@ -1199,7 +1199,7 @@
         "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
         "obs_acronym": "OVSICORI",
         "country": "Costa Rica",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 13
       }
     },
     {
@@ -1319,7 +1319,7 @@
         "observatory": "Observatorio Vulcanológico y Sismológico de Costa Rica",
         "obs_acronym": "OVSICORI",
         "country": "Costa Rica",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 13
       }
     },
     {
@@ -1359,7 +1359,7 @@
         "observatory": "Instituto Nicaragüense de Estudios Territoriales",
         "obs_acronym": "INETER",
         "country": "Guatemala",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 11
       }
     },
     {
@@ -1439,7 +1439,7 @@
         "observatory": "Instituto Nicaragüense de Estudios Territoriales",
         "obs_acronym": "INETER",
         "country": "Guatemala",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 13
       }
     },
     {
@@ -1479,7 +1479,7 @@
         "observatory": "Instituto Nicaragüense de Estudios Territoriales",
         "obs_acronym": "INETER",
         "country": "Guatemala",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 11
       }
     },
     {
@@ -1559,7 +1559,7 @@
         "observatory": "Philippine Institute of Volcanology and Seismology",
         "obs_acronym": "PHIVOLCS",
         "country": "Philippines",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 13
       }
     },
     {
@@ -1599,7 +1599,7 @@
         "observatory": "Ministerio de Medio Ambiente y Recursos Naturales",
         "obs_acronym": "MARN",
         "country": "El Salvador",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 12
       }
     },
     {
@@ -1679,7 +1679,7 @@
         "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
         "obs_acronym": "INSIVUMEH",
         "country": "Guatemala",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 12
       }
     },
     {
@@ -1799,7 +1799,7 @@
         "observatory": "Universidad Nacional Autónoma de México",
         "obs_acronym": "UNAM",
         "country": "Mexico",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 12
       }
     },
     {
@@ -1839,7 +1839,7 @@
         "observatory": "Universidad Nacional Autónoma de México",
         "obs_acronym": "UNAM",
         "country": "Mexico",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 12
       }
     },
     {
@@ -2236,10 +2236,10 @@
         "lat_deg": -7.526101,
         "lon_deg": 110.410743,
         "alt_masl": 1305.645,
-        "observatory": "Center for Volcanology and Geological Hazard Mitigation??", 
-        "obs_acronym": "CVGHM??", 
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation??",
+        "obs_acronym": "CVGHM??",
         "country": "Indonesia",
-        "meshRadiusKm": 10
+        "meshRadiusKm": 13
       }
     }
   ]
