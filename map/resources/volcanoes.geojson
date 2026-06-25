@@ -2201,6 +2201,46 @@
         "country": "Iceland",
         "meshRadiusKm": 10
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          110.410743,
+          -7.526101
+        ]
+      },
+      "properties": {
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "name": "merapi",
+        "display_name": "Merapi",
+        "lat_deg": -7.526101,
+        "lon_deg": 110.410743,
+        "alt_masl": 1305.645,
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation??", 
+        "obs_acronym": "CVGHM??", 
+        "country": "Indonesia",
+        "meshRadiusKm": 10
+      }
     }
   ]
 }

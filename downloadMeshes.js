@@ -1,5 +1,15 @@
+/* 
+Download all meshes for volcanoes in map/volcanoes.geojson.
+Run the command below in your vs code terminal
+cd C:\Users\your_repository_adress node downloadMeshes.js
+OBS! Mapboxtoken needed, enter in .env file
+
+you can also use npm run download-meshes 
+or npm run download-meshes -- villarrica to filter a single volcano
+*/
+
 import { createRequire } from 'module';
-import { createCanvas, ImageData } from 'canvas';
+import { createCanvas, ImageData, Image } from 'canvas';
 import ThreeGeo from 'three-geo';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import * as fs from 'fs';
@@ -11,6 +21,7 @@ global.require = createRequire(import.meta.url);
 
 // THREE.js Texture.getDataURL() checks `image instanceof ImageData`
 global.ImageData = ImageData;
+global.Image = Image;
 
 // THREE.js Texture.getDataURL() and three-geo's getPixelsDom use document/canvas
 // canvas npm package lacks toBlob — add it via dataURL conversion
@@ -27,6 +38,7 @@ global.document = {
   createElementNS: (_ns, _tag) => makeCanvas(),
   createElement: (tag) => {
     if (tag === 'canvas') return makeCanvas();
+    if (tag === 'img') return new Image();
     return { href: '', download: '', click: () => {}, style: {} };
   },
   body: { appendChild: () => {}, removeChild: () => {} },
@@ -43,16 +55,32 @@ global.FileReader = class FileReader {
   }
 };
 
-dotenv.config();
+dotenv.config({ override: true });
 
-const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
+const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN?.trim();
 const OUTPUT_DIR = './map/resources/terrainMeshes/';
 const GEOJSON_PATH = './map/resources/volcanoes.geojson';
 const DEFAULT_RADIUS_KM = 10;
-const STATION_BUFFER_KM = 25; // extra margin beyond the outermost station (accounts for tile quantization at zoom 13)
+const STATION_BUFFER_KM = 4; // extra margin beyond the outermost station (accounts for tile quantization at zoom 13)
 const ZOOM = 13;
 
-console.log('Token loaded:', MAPBOX_TOKEN ? 'yes' : 'MISSING - check .env'); // REMOVE
+console.log('Token loaded:', MAPBOX_TOKEN ? `yes (${MAPBOX_TOKEN.length} chars, starts: ${MAPBOX_TOKEN.slice(0, 8)}...)` : 'MISSING - check .env');
+
+async function testMapboxToken() {
+  const url = `https://api.mapbox.com/v4/mapbox.terrain-rgb/13/1330/3143.pngraw?access_token=${MAPBOX_TOKEN}`;
+  try {
+    const res = await fetch(url);
+    console.log(`Mapbox tile test: HTTP ${res.status} (${res.headers.get('content-type') ?? 'no content-type'})`);
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Mapbox error response:', text.slice(0, 300));
+    }
+    return res.ok;
+  } catch (e) {
+    console.error('Mapbox fetch failed:', e.message);
+    return false;
+  }
+}
 
 const geoJsonData = JSON.parse(fs.readFileSync(GEOJSON_PATH, 'utf-8'));
 const stationsData = JSON.parse(fs.readFileSync('./map/resources/stations.json', 'utf-8'));
@@ -72,7 +100,7 @@ function computeRequiredRadius(volcanoName, centerLat, centerLng) {
   const stations = stationsData.filter(s => s.volcanoKey === volcanoName);
   if (!stations.length) return DEFAULT_RADIUS_KM;
 
-  const maxDist = Math.max(...stations.map(s => haversineKm(centerLat, centerLng, s.lat, s.lng)));
+  const maxDist = Math.max(...stations.map(s => haversineKm(centerLat, centerLng, s.lat, s.lng))); //distance between station and center
   const needed = Math.ceil(maxDist + STATION_BUFFER_KM);
 
   if (needed > DEFAULT_RADIUS_KM) {
@@ -90,7 +118,22 @@ async function downloadTerrainMesh(feature, index, total) {
   try {
     console.log(`[${index + 1}/${total}] Downloading ${name} (${radius}km)...`);
 
-    const terrain = await tgeo.getTerrainRgb([lat, lng], radius, ZOOM);
+    const baseZoom = radius > 12 ? 11 : ZOOM;
+    const zoomLevels = baseZoom === ZOOM ? [ZOOM, ZOOM - 1, ZOOM - 2] : [baseZoom];
+    let terrain;
+    for (const zoom of zoomLevels) {
+      try {
+        terrain = await tgeo.getTerrainRgb([lat, lng], radius, zoom);
+        console.log(`  zoom ${zoom} OK`);
+        break;
+      } catch (e) {
+        if (e.message?.includes('Tile not found') && zoom !== zoomLevels[zoomLevels.length - 1]) {
+          console.warn(`  zoom ${zoom} → Tile not found, retrying at ${zoom - 1}...`);
+        } else {
+          throw e;
+        }
+      }
+    }
 
     let meshCount = 0;
     terrain.traverse(child => {
@@ -106,7 +149,7 @@ async function downloadTerrainMesh(feature, index, total) {
 
     const filename = path.join(OUTPUT_DIR, `${name}_${radius}km.glb`);
     fs.writeFileSync(filename, Buffer.from(result));
-    const { name, display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, ...yearData } = feature.properties;
+    const { display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, ...yearData } = feature.properties;
     feature.properties = { name, display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, meshRadiusKm: radius, ...yearData };
     console.log(`✓ Saved: ${name}_${radius}km.glb`);
   } catch (error) {
@@ -115,6 +158,9 @@ async function downloadTerrainMesh(feature, index, total) {
 }
 
 async function batchDownload() {
+  const tokenOk = await testMapboxToken();
+  if (!tokenOk) { console.error('Aborting — fix Mapbox token first.'); process.exit(1); }
+
   const filterName = process.argv[2];
   const features = filterName
     ? geoJsonData.features.filter(f => f.properties.name === filterName)
