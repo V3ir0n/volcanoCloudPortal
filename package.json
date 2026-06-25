@@ -1,5 +1,8 @@
 {
   "type": "module",
+  "scripts": {
+    "download-meshes": "node downloadMeshes.js"
+  },
   "dependencies": {
     "canvas": "^3.2.3",
     "dotenv": "^17.4.2",
