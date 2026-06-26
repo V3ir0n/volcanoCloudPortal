@@ -1,0 +1,5 @@
+# Large 3D mesh files
+*.glb
+
+# Environment variables
+.env
