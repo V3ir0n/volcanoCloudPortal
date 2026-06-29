@@ -1,35 +1,35 @@
 export const eruptiveRegimes = [
-    {depth: 2.5, gas: 0, h0: 5.9, h10: 5.7, h20: 5.4, regime: "no eruption"},
-    {depth: 2.5, gas: 1, h0: 6.1, h10: 5.9, h20: 5.6, regime: "weak"},
-    {depth: 2.5, gas: 2, h0: 6.4, h10: 6.1, h20: 5.8, regime: "weak"},
-    {depth: 2.5, gas: 3, h0: 6.7, h10: 6.3, h20: 6.0, regime: "transitional"},
-    {depth: 2.5, gas: 4, h0: 7.0, h10: 6.6, h20: 6.3, regime: "transitional"},
-    {depth: 2.5, gas: 5, h0: 7.3, h10: 6.9, h20: 6.6, regime: "plinian"},
-    {depth: 2.5, gas: 6, h0: 7.6, h10: 7.2, h20: 6.8, regime: "plinian"},
+    {depth: 2.5, gas: 0, h0: 0.0, h10: 0.0, h20: 0.0, regime: "no eruption"},
+    {depth: 2.5, gas: 1, h0: 3.0, h10: 2.5, h20: 1.8, regime: "weak"},
+    {depth: 2.5, gas: 2, h0: 6.2, h10: 5.1, h20: 3.8, regime: "transitional"},
+    {depth: 2.5, gas: 3, h0: 6.2, h10: 5.1, h20: 3.8, regime: "transitional"},
+    {depth: 2.5, gas: 4, h0: 6.2, h10: 5.1, h20: 3.8, regime: "transitional"},
+    {depth: 2.5, gas: 5, h0: 6.2, h10: 5.1, h20: 3.8, regime: "transitional"},
+    {depth: 2.5, gas: 6, h0: 6.2, h10: 5.1, h20: 3.8, regime: "transitional"},
 
-    {depth: 5.0, gas: 0, h0: 6.2, h10: 5.9, h20: 5.6, regime: "no eruption"},
-    {depth: 5.0, gas: 1, h0: 6.6, h10: 6.2, h20: 5.9, regime: "weak"},
-    {depth: 5.0, gas: 2, h0: 6.9, h10: 6.5, h20: 6.2, regime: "transitional"},
-    {depth: 5.0, gas: 3, h0: 7.3, h10: 6.9, h20: 6.6, regime: "transitional"},
-    {depth: 5.0, gas: 4, h0: 7.7, h10: 7.3, h20: 7.0, regime: "plinian"},
-    {depth: 5.0, gas: 5, h0: 8.0, h10: 7.6, h20: 7.3, regime: "plinian"},
-    {depth: 5.0, gas: 6, h0: 8.4, h10: 8.0, h20: 7.6, regime: "plinian"},
+    {depth: 5.0, gas: 0, h0: 0.0, h10: 0.0, h20: 0.0, regime: "no eruption"},
+    {depth: 5.0, gas: 1, h0: 3.3, h10: 2.8, h20: 2.1, regime: "weak"},
+    {depth: 5.0, gas: 2, h0: 7.2, h10: 6.0, h20: 4.5, regime: "transitional"},
+    {depth: 5.0, gas: 3, h0: 11.3, h10: 9.4, h20: 7.0, regime: "explosive"},
+    {depth: 5.0, gas: 4, h0: 12.5, h10: 10.4, h20: 7.8, regime: "explosive"},
+    {depth: 5.0, gas: 5, h0: 12.5, h10: 10.4, h20: 7.8, regime: "explosive"},
+    {depth: 5.0, gas: 6, h0: 12.5, h10: 10.4, h20: 7.8, regime: "explosive"},
 
-    {depth: 7.5, gas: 0, h0: 6.5, h10: 6.1, h20: 5.8, regime: "no eruption"},
-    {depth: 7.5, gas: 1, h0: 6.9, h10: 6.5, h20: 6.2, regime: "transitional"},
-    {depth: 7.5, gas: 2, h0: 7.3, h10: 6.9, h20: 6.6, regime: "transitional"},
-    {depth: 7.5, gas: 3, h0: 7.7, h10: 7.3, h20: 7.0, regime: "plinian"},
-    {depth: 7.5, gas: 4, h0: 8.1, h10: 7.7, h20: 7.3, regime: "plinian"},
-    {depth: 7.5, gas: 5, h0: 8.5, h10: 8.1, h20: 7.7, regime: "plinian"},
-    {depth: 7.5, gas: 6, h0: 8.9, h10: 8.5, h20: 8.1, regime: "plinian"},
+    {depth: 7.5, gas: 0, h0: 0.0, h10: 0.0, h20: 0.0, regime: "no eruption"},
+    {depth: 7.5, gas: 1, h0: 3.7, h10: 3.0, h20: 2.3, regime: "weak"},
+    {depth: 7.5, gas: 2, h0: 7.9, h10: 6.6, h20: 4.9, regime: "transitional"},
+    {depth: 7.5, gas: 3, h0: 12.5, h10: 10.4, h20: 7.8, regime: "explosive"},
+    {depth: 7.5, gas: 4, h0: 17.3, h10: 14.3, h20: 10.7, regime: "explosive"},
+    {depth: 7.5, gas: 5, h0: 20.4, h10: 16.9, h20: 12.6, regime: "explosive"},
+    {depth: 7.5, gas: 6, h0: 20.4, h10: 16.9, h20: 12.6, regime: "explosive"},
 
-    {depth: 10, gas: 0, h0: 6.8, h10: 6.4, h20: 6.0, regime: "no eruption"},
-    {depth: 10, gas: 1, h0: 7.2, h10: 6.8, h20: 6.5, regime: "transitional"},
-    {depth: 10, gas: 2, h0: 7.7, h10: 7.3, h20: 7.0, regime: "transitional"},
-    {depth: 10, gas: 3, h0: 8.1, h10: 7.7, h20: 7.3, regime: "plinian"},
-    {depth: 10, gas: 4, h0: 8.6, h10: 8.2, h20: 7.8, regime: "plinian"},
-    {depth: 10, gas: 5, h0: 9.0, h10: 8.6, h20: 8.2, regime: "plinian"},
-    {depth: 10, gas: 6, h0: 9.5, h10: 9.1, h20: 8.7, regime: "plinian"},
+    {depth: 10, gas: 0, h0: 0.0, h10: 0.0, h20: 0.0, regime: "no eruption"},
+    {depth: 10, gas: 1, h0: 4.0, h10: 3.3, h20: 2.5, regime: "weak"},
+    {depth: 10, gas: 2, h0: 8.7, h10: 7.2, h20: 5.4, regime: "transitional"},
+    {depth: 10, gas: 3, h0: 13.7, h10: 11.3, h20: 8.5, regime: "explosive"},
+    {depth: 10, gas: 4, h0: 18.8, h10: 15.6, h20: 11.7, regime: "explosive"},
+    {depth: 10, gas: 5, h0: 24.2, h10: 20.1, h20: 15.0, regime: "explosive"},
+    {depth: 10, gas: 6, h0: 29.7, h10: 24.6, h20: 18.4, regime: "explosive"},
 ];
 
 export const eruptionFeatures = {
@@ -39,8 +39,9 @@ export const eruptionFeatures = {
         sound: "silence",
         infoBoxText: `
             <h2>No Eruption</h2>
-            If the magma would contain no volatiles (H2O, CO2, SO2, HCl, HF, etc.),
-            no eruptive activity will occur, (this never happens, as magma always contains some volatiles).        `
+            If the gas content is too low or the depth of the reservoir too high, 
+            no gas will reach the surface and the volcano will remain inactive.
+                   `
     },
     weak: {
         smoke: "light",
@@ -48,32 +49,32 @@ export const eruptionFeatures = {
         sound: "silence",
         infoBoxText: `
             <h2>Weak Eruption</h2>
-            If enough gas can escape from the magma avoiding overpressure, 
-            only weak eruptive or passive degassing activity will occur
+            If gas can escape from the magma before reaching the surface, 
+            only weak eruptive activity, possibly including lava flows,
+            or passive degassing will occur.
             `
     },
     transitional: {
-        smoke: "dark",
+        smoke: "light",
         ashAmount: "small",
         lava: true,
         shakeIntensity: 0.5,
         sound: "mild_eruption_sfx",
         infoBoxText: `
             <h2>Transitional Eruption</h2>
-            When gas reaches the surface with a pressure slightly above ambient,
-            some explosive activity is expected, probably including the emission of
-            fragmented magma (ash).
-        `
+            When gas reaches the surface with a pressure above ambient,
+            some explosive activity is expected, probably including magma fragmentation (ash).
+                    `
     },
-    plinian: {
+    explosive: {
         smoke: "dark",
         ashAmount: "large",
         lava: true,
         shakeIntensity: 1,
         sound: "strong_eruption_sfx",
         infoBoxText: `
-            <h2>Plinian Eruption</h2>
-            Gas-rich magma ascending quickly through the conduit will most likely create
+            <h2>Explosive Eruption</h2>
+            Gas-rich magma ascending quickly through the conduit will most likely retain
             significant overpressure when reaching the surface. This leads to explosive
             volcanic eruption, with fragmented magma (ash).
 
@@ -88,15 +89,17 @@ export const annotations = [
         position: [0.89, -24.95, 2.51], 
         infoBoxText: `
             <h2>Where the magic happens!</h2>
-            In this meltpot of rock and gas, the magma is stored before it finds its way to the surface. The magma chamber is a key component of the volcanic system, and its properties can influence the style and intensity of eruptions.
-        `
+            Magma, the mixture of molter rock, crytstals and volatiles (gases) is stored at depth.
+            The depth, compositiona, and size of the magma reservoir influence the frequency and intensity of eruptions.
+                    `
     },
     {
         name: "Conduit",
         position: [0.80, -1.15, 2.1],
         infoBoxText: `
             <h2>Where the action happens!</h2>
-            The conduit is the pathway through which magma travels from the magma chamber to the surface during an eruption. It can be thought of as a volcanic "pipe" that allows the magma to escape and create an eruption. Narrow conduits can lead to more explosive eruptions, while wider conduits may result in effusive eruptions with lava flows.
+            The conduit is the pathway through which magma travels from the magma chamber to the surface during an eruption. 
+            Narrow conduits can lead to more explosive eruptions, while wider conduits may result in effusive eruptions with lava flows.
         `
     }
     ,
@@ -104,18 +107,19 @@ export const annotations = [
         name: "Plume",
         position: [3.25, 10.63, 0.89],
         infoBoxText: `
-            <h2>Where the burst happens!</h2>
-            The plume is the column of volcanic gases and ash that rises from the crater during an eruption. It can be thought of as the "chimney" of the volcano, carrying the erupted material high into the atmosphere. The size and shape of the plume can provide clues about the intensity and style of the eruption.
-        `
+            <h2>Cloud of gases and particles is transported!</h2>
+            The plume is the wind-driven cloud formed after the volcanic column has reached equilibrium with the surrounding atmosphere. 
+            The plume transports volcanic gases and ash over long distances, potentially disturbing the environment, climate or air traffic. 
+            `
     }
     ,
     {
         name: "Crater",
         position: [0.21, 8.04, 0.50],
         infoBoxText: `
-            <h2>Where the burst happens!</h2>
-            The plume is the column of volcanic gases and ash that rises from the crater during an eruption. It can be thought of as the "chimney" of the volcano, carrying the erupted material high into the atmosphere. The size and shape of the plume can provide clues about the intensity and style of the eruption.
-        `
+            <h2>Where magma reaches the surface!</h2>
+            At the crater, magma transitions from a pressurized state to the atmosphere, releasing gases, lava, or ash.        
+            `
     }
 ];
 export const parameterInfos = {
