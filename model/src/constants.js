@@ -40,7 +40,7 @@ export const eruptionFeatures = {
         infoBoxText: `
             <h2>No Eruption</h2>
             If the magma would contain no volatiles (H2O, CO2, SO2, HCl, HF, etc.),
-            no eruptive activity will occur.        `
+            no eruptive activity will occur, (this never happens, as magma always contains some volatiles).        `
     },
     weak: {
         smoke: "light",
