@@ -533,7 +533,7 @@ function createStaticLegend(legendValues) {
     onAdd() {
       const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
       div.innerHTML = `
-        <div class="legend-title">Emission SO2 Gt/y</div>
+        <div class="legend-title">Emission of SO2 kt/y</div>
         <div class="legend-items">
           ${legendValues.map(v => {
             const r = emissionRadius({ [String(minYear)]: v }, minYear);
