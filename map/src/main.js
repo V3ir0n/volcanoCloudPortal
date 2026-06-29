@@ -399,7 +399,7 @@ function initMap() {
     worldCopyJump: false,
     maxBounds: worldBounds,
     maxBoundsViscosity: 1.0
-  }).setView([15, 60], 2);
+  }).fitBounds(worldBounds, { padding: [0, 0] });
 
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
     attribution: "&copy; CARTO &copy; OSM",
@@ -408,6 +408,14 @@ function initMap() {
     minZoom: 2,
     noWrap: true,
     bounds: worldBounds
+  }).addTo(map);
+
+  L.rectangle([[-90, -180], [-57, 180]], {
+    color: "none",
+    fillColor: "#d3d9db",
+    fillOpacity: 1,
+    weight: 0,
+    interactive: false
   }).addTo(map);
 
   // Fetches volcanoes as a GeoJSON Point
