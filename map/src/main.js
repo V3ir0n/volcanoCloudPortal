@@ -209,6 +209,8 @@ function renderPlaceOverlay(place, latlng) {
   } else {
     overlayEl.style.display = "";
   }
+
+
 //------------Emission graph----------------
   const renderEmissionDiagram = (container, data) => {
   container.innerHTML = "";
@@ -385,12 +387,13 @@ function hideVolcanoControl(hide = true) {
   }
 }
 
-//Fetches  the map from CARTO and initialize as background
+//---------------------------------INITIALIZE CARTO AS BACKGROUND-------------------------------------
+//Change how the map is centered
 function initMap() {
-  const worldBounds = L.latLngBounds(
+  const worldBounds = L.latLngBounds( 
     [
-      [-60, -180],
-      [75, 180]
+      [-85, -180],
+      [85, 180]
     ]
   );
 
@@ -398,24 +401,17 @@ function initMap() {
     zoomControl: true,
     worldCopyJump: false,
     maxBounds: worldBounds,
-    maxBoundsViscosity: 1.0
-  }).fitBounds(worldBounds, { padding: [0, 0] });
+    maxBoundsViscosity: 1.0,
+    minZoom: 2,
+  }).setView([20, 10], 2);
 
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
     attribution: "&copy; CARTO &copy; OSM",
     subdomains: "abcd",
     maxZoom: 19,
-    minZoom: 2,
+    minZoom: 1,
     noWrap: true,
-    bounds: worldBounds
-  }).addTo(map);
-
-  L.rectangle([[-90, -180], [-57, 180]], {
-    color: "none",
-    fillColor: "#d3d9db",
-    fillOpacity: 1,
-    weight: 0,
-    interactive: false
+    bounds: worldBounds,
   }).addTo(map);
 
   // Fetches volcanoes as a GeoJSON Point
