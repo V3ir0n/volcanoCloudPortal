@@ -2,6 +2,35 @@ import { renderPlaceView } from "./placeview.js";
 
 let selectedPlace = null;
 
+// ---- infobutton pop-up text ----
+let _activeTooltip = null;
+function showInfoTooltip(anchorEl, text) {
+  if (_activeTooltip) {
+    _activeTooltip.remove();
+    _activeTooltip = null;
+    return;
+  }
+  const tip = document.createElement("div");
+  tip.className = "info-tooltip";
+  tip.textContent = text;
+  document.body.appendChild(tip);
+  const r = anchorEl.getBoundingClientRect();
+  tip.style.left = `${r.left + r.width / 2}px`;
+  tip.style.top = `${r.top - 8}px`;
+  tip.style.transform = "translate(-50%, -100%)";
+  _activeTooltip = tip;
+  setTimeout(() => {
+    const dismiss = (e) => {
+      if (!tip.contains(e.target) && e.target !== anchorEl) {
+        tip.remove();
+        if (_activeTooltip === tip) _activeTooltip = null;
+        document.removeEventListener("click", dismiss);
+      }
+    };
+    document.addEventListener("click", dismiss);
+  }, 0);
+}
+
 let year, minYear, maxYear;
 const tickMs = 2000; // ms for each tick when pushing play button
 let intervalId = null;
@@ -215,6 +244,18 @@ function renderPlaceOverlay(place, latlng) {
   const renderEmissionDiagram = (container, data) => {
   container.innerHTML = "";
 
+  //Info button
+  const header = document.createElement("div");
+  header.className = "diagram-header";
+  header.innerHTML = `
+    <span class="diagram-title">SO₂ Emissions</span>
+    <button class="diagram-info-btn" type="button" aria-label="About this chart">ℹ</button>
+  `;
+  container.appendChild(header);
+  header.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
+    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions measured by NOVAC stations. Data is preliminary and zero emission may correspond to data that is not avaluated.");
+  });
+
   const svgNS = "http://www.w3.org/2000/svg";
 
   const width = 320;
@@ -323,7 +364,7 @@ function renderPlaceOverlay(place, latlng) {
   yLabel.setAttribute("font-size", "15");
   yLabel.setAttribute("fill", "#ccc");
   yLabel.setAttribute("transform", "rotate(-90)");
-  yLabel.textContent = "SO₂ (Mt/y)";
+  yLabel.textContent = "SO₂ (kt/y)";
   axisGroup.appendChild(yLabel);
 
 // X label 
@@ -430,6 +471,7 @@ fetch("resources/volcanoes.geojson")
           <div class="yc-row">
             <button class="yc-btn" aria-label="Play/Pause" title="Play/Pause">▶</button>
             <div class="yc-display">${year}</div>
+            <button class="yc-info-btn" type="button" aria-label="About this data">ℹ</button>
           </div>
           <input class="yc-slider" type="range" min="${minYear}" max="${maxYear}" step="1" value="${year}" />
         `;
@@ -439,6 +481,12 @@ fetch("resources/volcanoes.geojson")
 
         const btn = container.querySelector(".yc-btn");
         const slider = container.querySelector(".yc-slider");
+        const infoBtn = container.querySelector(".yc-info-btn");
+        // Info button pop-up text
+        infoBtn.addEventListener("click", (e) => {
+          L.DomEvent.stopPropagation(e);
+          showInfoTooltip(infoBtn, "Circle size represents annual SO₂ emissions for the selected year. Larger circles = higher emissions. Drag the slider or press play to explore different years.");
+        });
 
         btn.addEventListener("click", () => {
           if (intervalId) {

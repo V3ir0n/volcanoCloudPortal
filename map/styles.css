@@ -395,6 +395,57 @@ body {
   color: #eee;
   line-height: 1.45;
 }
+/* ---- inline info buttons ---- */
+.yc-info-btn,
+.diagram-info-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  color: #ffd700;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.yc-info-btn { margin-left: auto; }
+.yc-info-btn:hover,
+.diagram-info-btn:hover { background: rgba(255, 215, 0, 0.15); }
+
+/* ---- emission graph header ---- */
+.diagram-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 2px;
+}
+.diagram-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+/* ---- info tooltip ---- */
+.info-tooltip {
+  position: fixed;
+  background: #1a1e28;
+  color: #eee;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  max-width: 260px;
+  line-height: 1.45;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  pointer-events: none;
+}
+
 .station-tooltip {
   display: none;
   position: absolute;
