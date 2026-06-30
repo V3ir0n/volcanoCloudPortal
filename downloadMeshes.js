@@ -1,11 +1,12 @@
-/* 
+/*
 Download all meshes for volcanoes in map/volcanoes.geojson.
-Run the command below in your vs code terminal
-cd C:\Users\your_repository_adress node downloadMeshes.js
-OBS! Mapboxtoken needed, enter in .env file
 
-you can also use npm run download-meshes 
-or npm run download-meshes -- villarrica to filter a single volcano
+Set your Mapbox token in the terminal before running:
+  $env:MAPBOX_TOKEN = "your_token_here"
+
+Then run:
+  npm run download-meshes
+  npm run download-meshes -- villarrica   (single volcano)
 */
 
 import { createRequire } from 'module';
@@ -14,7 +15,6 @@ import ThreeGeo from 'three-geo';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import dotenv from 'dotenv';
 
 // es-pack-js Meta.nodeRequire needs a CJS require available on global
 global.require = createRequire(import.meta.url);
@@ -55,8 +55,6 @@ global.FileReader = class FileReader {
   }
 };
 
-dotenv.config({ override: true });
-
 const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN?.trim();
 const OUTPUT_DIR = './map/resources/terrainMeshes/';
 const GEOJSON_PATH = './map/resources/volcanoes.geojson';
@@ -64,7 +62,7 @@ const DEFAULT_RADIUS_KM = 10;
 const STATION_BUFFER_KM = 4; // extra margin beyond the outermost station (accounts for tile quantization at zoom 13)
 const ZOOM = 13;
 
-console.log('Token loaded:', MAPBOX_TOKEN ? `yes (${MAPBOX_TOKEN.length} chars, starts: ${MAPBOX_TOKEN.slice(0, 8)}...)` : 'MISSING - check .env');
+console.log('Token loaded:', MAPBOX_TOKEN ? `yes (${MAPBOX_TOKEN.length} chars, starts: ${MAPBOX_TOKEN.slice(0, 8)}...)` : 'MISSING - set $env:MAPBOX_TOKEN in terminal');
 
 async function testMapboxToken() {
   const url = `https://api.mapbox.com/v4/mapbox.terrain-rgb/13/1330/3143.pngraw?access_token=${MAPBOX_TOKEN}`;
