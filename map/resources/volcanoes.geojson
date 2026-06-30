@@ -723,7 +723,7 @@
         "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
-        "meshRadiusKm": 42,
+        "meshRadiusKm": 36,
         "2005": 64.2,
         "2006": 81.0,
         "2007": 58.5,
