@@ -68,7 +68,6 @@ async function testMapboxToken() {
   const url = `https://api.mapbox.com/v4/mapbox.terrain-rgb/13/1330/3143.pngraw?access_token=${MAPBOX_TOKEN}`;
   try {
     const res = await fetch(url);
-    console.log(`Mapbox tile test: HTTP ${res.status} (${res.headers.get('content-type') ?? 'no content-type'})`);
     if (!res.ok) {
       const text = await res.text();
       console.error('Mapbox error response:', text.slice(0, 300));
@@ -122,7 +121,6 @@ async function downloadTerrainMesh(feature, index, total) {
     for (const zoom of zoomLevels) {
       try {
         terrain = await tgeo.getTerrainRgb([lat, lng], radius, zoom);
-        console.log(`  zoom ${zoom} OK`);
         break;
       } catch (e) {
         if (e.message?.includes('Tile not found') && zoom !== zoomLevels[zoomLevels.length - 1]) {
@@ -137,7 +135,6 @@ async function downloadTerrainMesh(feature, index, total) {
     terrain.traverse(child => {
       if (child.isMesh) meshCount++;
     });
-    console.log(`  terrain children: ${terrain.children.length}, meshes: ${meshCount}`);
     if (meshCount === 0) throw new Error('terrain has no geometry — Mapbox token may be invalid or rate-limited');
 
     terrain.rotation.x = -Math.PI / 2;
@@ -148,7 +145,7 @@ async function downloadTerrainMesh(feature, index, total) {
     const filename = path.join(OUTPUT_DIR, `${name}_${radius}km.glb`);
     fs.writeFileSync(filename, Buffer.from(result));
     const { display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, ...yearData } = feature.properties;
-    feature.properties = { name, display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, meshRadiusKm: radius, ...yearData };
+    feature.properties = { name, display_name, lat_deg, lon_deg, alt_masl, observatory, obs_acronym, country, ...yearData, meshRadiusKm: radius };
     console.log(`✓ Saved: ${name}_${radius}km.glb`);
   } catch (error) {
     console.error(`✗ Failed: ${name} - ${error.message}`);
