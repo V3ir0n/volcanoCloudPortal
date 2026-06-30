@@ -4,8 +4,8 @@ import {OrbitControls}
 from "three/addons/controls/OrbitControls.js";
 import {GLTFLoader}
 from 'three/addons/loaders/GLTFLoader.js';
-import {DRACOLoader}
-from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder }
+from 'three/addons/libs/meshopt_decoder.module.js';
 import {GLTFExporter}
 from 'three/addons/exporters/GLTFExporter.js';
 
@@ -96,10 +96,8 @@ class VolcanoView {
 
   // Sets up the 3D volcano model
   loadVolcanoModel() {
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
-    loader.setDRACOLoader(dracoLoader);
+    loader.setMeshoptDecoder(MeshoptDecoder);
     this.radiusKm = this.place.raw?.meshRadiusKm ?? defaultRadiusKm;
     const encodedName = `${this.place.name}_${this.radiusKm}km.glb`;
     const plainName   = `${this.place.name}.glb`;
