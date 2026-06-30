@@ -446,6 +446,50 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -70.633172,
+          -16.749454
+        ]
+      },
+      "properties": {
+        "name": "ticsani",
+        "display_name": "Ticsani",
+        "lat_deg": -16.749454,
+        "lon_deg": -70.633172,
+        "alt_masl": 5.382,
+        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "obs_acronym": "INGEMMET",
+        "country": "Peru",
+        "meshRadiusKm": 10,
+        "2005": 0,
+        "2006": 0,
+        "2007": 0,
+        "2008": 0,
+        "2009": 0,
+        "2010": 0,
+        "2011": 0,
+        "2012": 0,
+        "2013": 0,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 0,
+        "source": "ground_based",
+        "xls_name": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -70.8972,
           -16.3434
         ]
@@ -2395,7 +2439,7 @@
         "observatory": "Icelandic Meteorological Office",
         "obs_acronym": "IMO",
         "country": "Iceland",
-        "meshRadiusKm": 10,
+        "meshRadiusKm": 11,
         "2005": 0,
         "2006": 0,
         "2007": 0,
