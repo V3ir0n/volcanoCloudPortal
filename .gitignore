@@ -1,5 +1,7 @@
-# Large 3D mesh files
+# Large 3D mesh files (uncompressed originals)
 *.glb
+!map/resources/terrainMeshes/*.glb
+map/resources/terrainMeshes/backup/
 
 # Environment variables
 .env
