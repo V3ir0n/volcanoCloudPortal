@@ -124,11 +124,11 @@ export const annotations = [
 ];
 export const parameterInfos = {
     depthInfo: `
-        <h2>Depth</h2>
+        <h2>Chamber Depth</h2>
         <p>Depth changes the subsurface vent depth. Deeper vents alter eruption style, model stretching, and plume behavior.</p>
     `,
     gasDensityInfo: `
-        <h2>Gas Content</h2>
+        <h2>Magma gas Content</h2>
         <p>The more gas that is dissolved in the magma the more eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.</p>
     `,
     windSpeedInfo: `

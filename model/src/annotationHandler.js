@@ -29,6 +29,7 @@ class AnnotationHandler {
             onAnnotationClosed(a);
         };
 
+        this.openSprite = undefined;
         this.annotationSprites = new THREE.Group();
 
         for (const annotation of annotations) {
@@ -56,29 +57,45 @@ class AnnotationHandler {
         // than the sprite, so this makes sure the label is clickable
         // too. (useful on mobile in particular)
         annotationLabel.addEventListener("click", ()=>{
+            this.openSprite = this.highlightedAnnotation;
             this.onAnnotationSelected(this.highlightedAnnotation.annotation);
             annotationLabel.style.display = "none";
         });
     }
 
     onClick(event) {
-        if (this.annotationOpen) {
-            // Close annotations on click
-            this.onAnnotationClosed();
-        } else if (this.highlightedAnnotation) {
-            // Trigger callback
-            this.onAnnotationSelected(this.highlightedAnnotation.annotation);
+        const resetHighlight = () => {
+            if (this.highlightedAnnotation) {
+                this.highlightedAnnotation.material.color.set('#ffffff');
+                this.highlightedAnnotation.scale.setScalar(annotationSizeDefault);
+                this.canvas.style.cursor = "";
+                annotationLabel.style.display = "none";
+                this.highlightedAnnotation = undefined;
+            }
+        };
 
-            // Neccesary in case we have a touch device
-            // where pointer is never moved.
-            this.highlightedAnnotation.material.color.set('#ffffff');
-            this.highlightedAnnotation.scale.setScalar(annotationSizeDefault);
-            this.canvas.style.cursor = "";
-            annotationLabel.style.display = "none";
-            this.highlightedAnnotation = undefined;
+        if (this.annotationOpen) {
+            const previousSprite = this.openSprite;
+            this.onAnnotationClosed();
+            this.openSprite = undefined;
+
+            // On touch devices pointer is never moved, so resolve hover first
+            if (!this.highlightedAnnotation) {
+                this.onPointerMove(event);
+            }
+
+            if (this.highlightedAnnotation && this.highlightedAnnotation !== previousSprite) {
+                // Clicked a different annotation — open it directly
+                this.openSprite = this.highlightedAnnotation;
+                this.onAnnotationSelected(this.highlightedAnnotation.annotation);
+            }
+            resetHighlight();
+        } else if (this.highlightedAnnotation) {
+            this.openSprite = this.highlightedAnnotation;
+            this.onAnnotationSelected(this.highlightedAnnotation.annotation);
+            resetHighlight();
         } else {
-            // Neccesary in case we have a touch device
-            // where pointer is never moved.
+            // On touch devices pointer is never moved
             this.onPointerMove(event);
         }
     }

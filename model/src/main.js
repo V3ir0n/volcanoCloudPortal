@@ -232,8 +232,7 @@ class View {
                 infoboxDiv.innerHTML = annotation.infoBoxText;
             }, ()=>{
                 // On annotation closed
-                // Reset infobox
-                this.eruptionHandler.updateEruption();
+                infoboxDiv.innerHTML = infoBoxTextBackup;
             }
         );
 
