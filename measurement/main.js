@@ -14,6 +14,7 @@ const STEP_MS = 420;         // ms between each revealed slice
 // Matches placeview.js createStationMarker(60) — 3D shape, visible from all angles.
 const CONE_HALF_RAD = 30 * Math.PI / 180;   // half-angle 30° → tan(30°) = 0.577
 
+// ── Slice math (per-slice column density & scan angle) ────────────────────────
 function sliceCD(i) {
     const t = (i + 0.5) / N;
     return CD_MAX * Math.exp(-((t - PLUME_T) ** 2) / (2 * PLUME_SIG ** 2));
@@ -24,6 +25,7 @@ function sliceScanAngle(i) {
     return 90 - ((i + 0.5) / N) * 180;
 }
 
+// ── Heatmap color mapping ──────────────────────────────────────────────────────
 // Blue → cyan → green → yellow → red heatmap
 function cdColor(cd) {
     const t = Math.min(1, Math.max(0, cd / CD_MAX));
@@ -59,6 +61,7 @@ class MeasurementView {
         });
     }
 
+    // ── Renderer setup ──────────────────────────────────────────────────────
     _initRenderer() {
         this.canvas = document.getElementById('threeCanvas');
         this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: this.canvas });
@@ -78,6 +81,7 @@ class MeasurementView {
         this.renderer.setSize(w, h);
     }
 
+    // ── Scene, camera & lighting setup ──────────────────────────────────────
     _initScene() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
@@ -92,6 +96,7 @@ class MeasurementView {
         this.scene.add(pt);
     }
 
+    // ── Terrain loading (finds summit, positions camera, builds plume & station) ──
     _loadTerrain() {
         const loader = new GLTFLoader();
         loader.setMeshoptDecoder(MeshoptDecoder);
@@ -137,6 +142,7 @@ class MeasurementView {
         }, undefined, err => console.error('Failed to load terrain:', err));
     }
 
+    // ── Station marker & scan cone geometry ─────────────────────────────────
     _buildStation(terrain, bbox, center, size, extent) {
         const sx = center.x + size.x * 0.35;
         const sz = center.z + size.z * 0.40;
@@ -410,6 +416,7 @@ class MeasurementView {
     }
 
     // ── Plume ─────────────────────────────────────────────────────────────────
+    // Particle system: rising, fading points seeded around the summit.
     _buildPlume(summit, plumeHeight) {
         const N_P = 60;
         const positions = new Float32Array(N_P * 3);
@@ -468,12 +475,14 @@ class MeasurementView {
         this.scene.add(this._plumePoints);
     }
 
+    // Fade in near the vent, hold, then fade out near the top of the plume.
     _plumeAlpha(life) {
         if (life < 0.15) return (life / 0.15) * 0.7;
         if (life > 0.65) return (1 - (life - 0.65) / 0.35) * 0.7;
         return 0.7;
     }
 
+    // Per-frame: advance each particle's life and recycle it once it reaches the top.
     _updatePlume() {
         if (!this._plumeParticles) return;
         const now = performance.now();
