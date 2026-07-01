@@ -237,7 +237,7 @@ class VolcanoView {
     const mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
     group.add(new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.023, 0.07), mat));
 
-    const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true });
+    const wireMat = new THREE.LineBasicMaterial({ color: 0xaaaaaa, opacity: 0.5, transparent: true }); //color on cone
     let scanShape;
 
     if (coneAngle === 90) {

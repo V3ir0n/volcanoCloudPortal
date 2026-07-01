@@ -268,7 +268,8 @@ body {
 }
 
 .topbar {
-  height: 48px;
+  --topbar-h: 58px;
+  height: var(--topbar-h);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -280,21 +281,27 @@ body {
   z-index: 1500;
 }
 
+.topbar img {
+  max-height: calc(var(--topbar-h) - 20px);
+  display: block;
+}
+
 .topbar-title {
   font-weight: 600;
   letter-spacing: 0.3px;
+  font-size:larger
 }
 
 .back-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: calc(var(--topbar-h) * 0.1) calc(var(--topbar-h) * 0.18);
   background: rgba(255,255,255,0.08);
   color: #fff;
   text-decoration: none;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: calc(var(--topbar-h) * 0.27);
   border: 1px solid rgba(255,255,255,0.15);
   cursor: pointer;
 }
@@ -326,16 +333,17 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  background: transparent;
+  color: #ffd700;
+  font-size: 0.78rem;
   cursor: pointer;
 }
 
-.info-btn:hover { background: rgba(255,255,255,0.16); }
+.info-btn:hover { background: rgba(255, 215, 0, 0.15); }
 .info-btn:active { transform: translateY(1px); }
 
 /* info overlay modal */

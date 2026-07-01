@@ -585,7 +585,7 @@ function createStaticLegend(legendValues) {
     onAdd() {
       const div = L.DomUtil.create("div", "leaflet-bar emission-legend");
       div.innerHTML = `
-        <div class="legend-title">Emission of SO2 kt/y</div>
+        <div class="legend-title">Emission of SO₂ kt/y</div>
         <div class="legend-items">
           ${legendValues.map(v => {
             const r = emissionRadius({ [String(minYear)]: v }, minYear);
@@ -599,6 +599,7 @@ function createStaticLegend(legendValues) {
                     fill="#FFD700" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
                 </svg>
                 <span class="legend-label">${formatEmission(v)}</span>
+                ${v === 0 ? `<button class="diagram-info-btn" type="button" aria-label="About this legend" style="margin-left:auto">ℹ</button>` : ""}
               </div>
             `;
           }).join("")}
@@ -607,6 +608,12 @@ function createStaticLegend(legendValues) {
 
       L.DomEvent.disableClickPropagation(div);
       L.DomEvent.disableScrollPropagation(div);
+
+      div.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
+        L.DomEvent.stopPropagation(e);
+        showInfoTooltip(e.currentTarget, "Data is preliminary and zero emission may correspond to data that is not avaluated.");
+      });
+
       return div;
     }
   });
