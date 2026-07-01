@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Measurement</title>
+    <title>How we measure</title>
     <style>
-      body { margin: 0; }
+      body { margin: 0; overflow: hidden; background: #0a0c10; }
     </style>
     <script type="importmap">
         {
@@ -16,6 +16,9 @@
     </script>
   </head>
   <body>
+    <div style="position:fixed;top:12px;left:12px;z-index:10;">
+      <a href=".." style="color:#ccc;text-decoration:none;background:rgba(0,0,0,0.55);padding:6px 14px;border-radius:6px;border:1px solid #444;font-family:sans-serif;font-size:13px;">← Back</a>
+    </div>
     <canvas id="threeCanvas"></canvas>
     <script type="module" src="./main.js"></script>
   </body>
