@@ -149,26 +149,13 @@ class VolcanoView {
       radiusKm: this.radiusKm
     });
 
-  //----------------------------------------------------------
-    // PINK PIN FOR SUMMIT
-    const pinMat = new THREE.MeshBasicMaterial({ color: 0xff69b4 });
-    const pinHead = new THREE.Mesh(new THREE.SphereGeometry(0.015), pinMat);
-    const pinNeedle = new THREE.Mesh(new THREE.ConeGeometry(0.004, 0.06, 8), pinMat);
-    pinNeedle.rotation.z = Math.PI;
-    pinNeedle.position.y = -0.045;
-    const pin = new THREE.Group();
-    pin.add(pinHead);
-    pin.add(pinNeedle);
-    pin.position.set(0, 0.2, 0);
-    this.scene.add(pin);
-
     model.position.sub(new THREE.Vector3(0, 0, 0));
     this.loadStationSprites(model);
     this.render();
   }
 
   _downloadTerrain() {
-    const tokenMapbox = prompt(`The terrain for the volcano ${this.place.title} is not saved. Input a mapbox token to download. To avoid this in the future, save the downloaded file to ./resources/terrainMeshes/`);
+    const tokenMapbox = prompt(`on terrain for the volcano ${this.place.title} is not saved. Input a mapbox token to download. To avoid this in the future, save the downloaded file to ./resources/terrainMeshes/`);
     if (!tokenMapbox) return;
 
     const tgeo = new ThreeGeo({ tokenMapbox });
@@ -203,7 +190,7 @@ class VolcanoView {
       .then(stations => {
         const filtered = stations.filter(s =>
           s.volcanoKey === this.place.name &&
-          s.type !== "1"
+          s.type !== "1" // TODO do we really want to exclude these?
         );
         const latestByLatLon = new Map();
         for (const s of filtered) {
@@ -213,8 +200,14 @@ class VolcanoView {
             latestByLatLon.set(key, s);
           }
         }
+        // Fixed cone length in km, independent of terrain mesh scale.
+        // Derivation: unitsPerKm = bbox_width / (2*radiusKm), markerScale = bbox_width*0.8/1.1
+        // localScale = lengthKm * unitsPerKm / markerScale → markerScale cancels → constant.
+        const CONE_LENGTH_KM = 3;
+        const coneLocalScale = CONE_LENGTH_KM * 1.1 / (1.6 * this.radiusKm);
+
         [...latestByLatLon.values()].forEach(s => {
-            const marker = this.createStationMarker(s.coneAngle ?? 90);
+            const marker = this.createStationMarker(s.coneAngle ?? 90); // if coneangle is missing use 90
             const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.025 });
             if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
 
@@ -224,51 +217,58 @@ class VolcanoView {
             const dz = volcCenter.z - marker.position.z;
             marker.rotation.y = Math.atan2(dx, dz);
 
+            const cone = marker.getObjectByName('scanCone');
+            if (cone) cone.scale.setScalar(coneLocalScale);
+
             this.scene.add(marker);
           });
         this.render();
       });
   }
 
-  // Builds a 3D station marker: a cuboid body + two line arms.
-  // coneAngle controls arm direction:
-  //   90° → arms extend horizontally from the sides
-  //   60° → arms angle 30° above horizontal from the top (V shape)
-  createStationMarker(coneAngle = 90) {
+  // Builds a 3D station marker: a cuboid body + half-cone wireframe for the scanning plane.
+  // Matches the tomography visualiser style. The cone tip is at the group origin and opens
+  // toward +Z; the caller rotates the group so +Z faces the volcano.
+  createStationMarker(coneAngle) {
     const group = new THREE.Group();
     group.scale.setScalar(this.markerScale ?? 1);
-    const mat   = new THREE.MeshStandardMaterial({
-      color:     0xddeeff,
-      roughness: 0.4,
-      metalness: 0.2,
-    });
 
-    // Cuboid body
-    group.add(new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.04, 0.03), mat));
+    // Cuboid body (proportions 1.5 : 1 : 3, deepest axis toward volcano)
+    const mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    group.add(new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.023, 0.07), mat));
 
-    // Arms as thin boxes so they also catch light
-    const armLen = 0.055;
-    const armH   = 0.006;  // arm cross-section area
-    const armRad = (90 - coneAngle) * Math.PI / 180;
-    const adx    = armLen * Math.cos(armRad);
-    const adz    = armLen * Math.sin(armRad);
+    const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.3, transparent: true });
+    let scanShape;
 
-    const addArm = (x0, z0, x1, z1) => {
-      const dx  = x1 - x0, dz = z1 - z0;
-      const len = Math.sqrt(dx * dx + dz * dz);
-      const arm = new THREE.Mesh(new THREE.BoxGeometry(len, armH, armH), mat);
-      arm.position.set((x0 + x1) / 2, 0, (z0 + z1) / 2);
-      arm.rotation.y = -Math.atan2(dz, dx);
-      group.add(arm);
-    };
-
-    if (coneAngle >= 85) {
-      addArm(-0.04, 0,  -0.04 - adx, 0);
-      addArm( 0.04, 0,   0.04 + adx, 0);
+    if (coneAngle === 90) {
+      // Vertical semicircle in the XY plane, flat face toward +Z (volcano).
+      // Spokes from center to arc points, plus arc segments — same style as the cone.
+      const N = 20;
+      const positions = [];
+      for (let i = 0; i <= N; i++) {
+        const θ = (i / N) * Math.PI; // 0 → π (right → top → left)
+        positions.push(0, 0, 0,  Math.cos(θ), Math.sin(θ), 0); // spoke
+      }
+      for (let i = 0; i < N; i++) {
+        const θ1 = (i / N) * Math.PI;
+        const θ2 = ((i + 1) / N) * Math.PI;
+        positions.push(Math.cos(θ1), Math.sin(θ1), 0,  Math.cos(θ2), Math.sin(θ2), 0); // arc
+      }
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      scanShape = new THREE.LineSegments(geom, wireMat);
     } else {
-      addArm(-0.04, 0,  -0.04 - adx,  adz);
-      addArm( 0.04, 0,   0.04 + adx,  adz);
+      // Half-cone wireframe, tip at origin, opens toward +Z.
+      const height = 1;
+      const radius = height * Math.tan((coneAngle / 2) * Math.PI / 180);
+      const coneGeom = new THREE.ConeGeometry(radius, height, 20, 1, true, 1.5 * Math.PI, Math.PI);
+      coneGeom.translate(0, -height / 2, 0);
+      coneGeom.rotateX(-Math.PI / 2);
+      scanShape = new THREE.LineSegments(new THREE.EdgesGeometry(coneGeom), wireMat);
     }
+
+    scanShape.name = 'scanCone';
+    group.add(scanShape);
 
     return group;
   }
