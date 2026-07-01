@@ -5,7 +5,181 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About NOVAC</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper:  #fbf8f0;
+      --ink:    #2b2b2b;
+      --ink-soft: #555;
+      --orange: #FF6B35;
+      --gold:   #e0a500;
+      --line:   #cfc9b8;
+    }
+    * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Patrick Hand', sans-serif;
+      font-size: 1.15rem;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, .brand-font { font-family: 'Caveat', cursive; }
+
+    /* ── Topbar ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      background: rgba(251,248,240,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--ink);
+      z-index: 1000;
+    }
+    .topbar-title { flex: 1; text-align: center; font-family: 'Caveat', cursive; font-size: 1.4rem; font-weight: 700; }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: transparent;
+      color: var(--ink);
+      text-decoration: none;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      font-family: 'Patrick Hand', sans-serif;
+      font-size: 0.95rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .back-btn:hover { background: var(--ink); color: var(--paper); transform: translateY(-1px); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 1.5rem 3rem;
+      position: relative;
+    }
+    .hero svg.doodle-volcano { width: min(220px, 55vw); height: auto; }
+    .hero h1 {
+      margin-top: 1rem;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      line-height: 1.05;
+      max-width: 720px;
+    }
+    .hero h1 .accent {
+      color: var(--orange);
+    }
+    .hero-sub {
+      margin-top: 1rem;
+      max-width: 560px;
+      color: var(--ink-soft);
+      font-size: 1.25rem;
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      max-width: 760px;
+      margin: 2rem auto 5rem;
+      padding: 0 1.5rem;
+      position: relative;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 39px;
+      width: 3px;
+      background: repeating-linear-gradient(to bottom, var(--ink) 0 10px, transparent 10px 18px);
+      opacity: 0.35;
+    }
+    @media (min-width: 620px) {
+      .timeline::before { left: 50%; margin-left: -1.5px; }
+    }
+
+    .beat {
+      position: relative;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1.25rem;
+      align-items: start;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .beat.visible { opacity: 1; transform: none; }
+
+    .beat-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 3px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+    .beat-icon svg { width: 46px; height: 46px; }
+
+    .beat-card {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      border-radius: 22px 8px 22px 8px;
+      padding: 1.1rem 1.4rem;
+      box-shadow: 5px 5px 0 rgba(43,43,43,0.12);
+    }
+    .beat:nth-child(even) .beat-card { border-radius: 8px 22px 8px 22px; }
+    .beat-card h3 {
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--orange);
+    }
+    .beat-card p { color: var(--ink); font-size: 1.05rem; }
+
+    @media (min-width: 620px) {
+      .beat { grid-template-columns: 1fr 90px 1fr; gap: 0; }
+      .beat-icon { grid-column: 2; justify-self: center; }
+      .beat-card { grid-column: 1; margin-right: 2rem; }
+      .beat:nth-child(even) .beat-card { grid-column: 3; margin-right: 0; margin-left: 2rem; }
+    }
+
+    /* ── Closing note ── */
+    .closing {
+      max-width: 600px;
+      margin: 0 auto 6rem;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .closing p { font-size: 1.2rem; color: var(--ink-soft); }
+    .closing .brand-font { font-size: 1.7rem; color: var(--orange); display: block; margin-bottom: 0.5rem; }
+
+    /* ── Footer ── */
+    .site-footer {
+      border-top: 2px solid var(--ink);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+    .site-footer a { color: var(--ink-soft); }
+    .site-footer a:hover { color: var(--orange); }
+  </style>
 </head>
 <body>
 
@@ -17,140 +191,99 @@
 
   <!-- ── Hero ── -->
   <section class="hero">
-    <div class="hero-bg-text">NOVAC</div>
-    <img class="hero-logo" src="../NOVAC_logo.png" alt="NOVAC logo">
-    <h1>Network for <em>Observation</em> of Volcanic and Atmospheric Change</h1>
-    <p class="hero-sub">
-      A global alliance of volcano observatories and researchers,
-      tracking what volcanoes release — in real time, everywhere on Earth.
-    </p>
-    <a class="hero-cta" href="https://novac-community.org/" target="_blank" rel="noopener">
-      Visit novac-community.org ↗
-    </a>
-    <div class="scroll-hint">
-      <span>Scroll to explore</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="6 9 12 15 18 9"/>
-      </svg>
-    </div>
+    <svg class="doodle-volcano" viewBox="0 0 200 160" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 145 L82 38 Q88 30 96 38 L100 44 L104 38 Q112 30 118 38 L182 145 Z"/>
+      <path d="M78 60 L104 44 L122 60" />
+      <path d="M60 145 Q100 130 140 145" opacity="0.5"/>
+      <path d="M96 34 Q92 18 100 6" stroke="#FF6B35"/>
+      <path d="M100 6 Q108 -2 106 12" stroke="#FF6B35" opacity="0.7"/>
+      <path d="M90 30 Q84 16 90 4" stroke="#e0a500" opacity="0.6"/>
+    </svg>
+    <h1>Why we watch volcanoes <span class="accent">breathe</span></h1>
+    <p class="hero-sub">Every volcano leaks gas, even while it sleeps. Reading that breath — continuously, and from every volcano at once — is how NOVAC turns an invisible signal into an early warning.</p>
   </section>
 
-  <!-- Wave -->
-  <div class="wave">
-    <svg viewBox="0 0 1440 56" preserveAspectRatio="none">
-      <path d="M0,28 C240,0 480,56 720,28 C960,0 1200,56 1440,28"
-            stroke="rgba(255,107,53,0.2)" stroke-width="1.5" fill="none"/>
-      <path d="M0,36 C320,8 640,64 960,34 C1120,20 1300,48 1440,36"
-            stroke="rgba(255,215,0,0.07)" stroke-width="1" fill="none"/>
-    </svg>
-  </div>
+  <!-- ── Timeline ── -->
+  <div class="timeline">
 
-  <!-- ── Origin ── -->
-  <section class="scene scene-split" id="origin">
-    <div class="scene-text" data-anim="left">
-      <div class="section-num">01</div>
-      <span class="eyebrow eyebrow-orange">Our beginning</span>
-      <h2>Fascinating, but dangerous</h2>
-      <p>
-        Volcanoes are fascinating natural phenomena, but they can also create some nuisances and hazards. 
-        When xxx exploded for example an entire city had to move.
-        
-        In the late 1990s, a small but passionate
-        group of volcanologists recognized that existing monitoring methods were too slow,
-        too isolated, and too expensive to keep pace with the planet's restless volcanoes.
-      </p>
-      <p>
-        A shared vision — to build a network that could measure volcanic emissions continuously
-        and automatically — brought together observatories from across five continents.
-      </p>
-      <blockquote class="pull-quote">
-        "We needed a common language for volcanoes. NOVAC became that language."
-        <br><small>— Placeholder, founding member</small>
-      </blockquote>
-    </div>
-    <div data-anim="right">
-      <div class="placeholder-img" data-label="Founding photo / archive image"></div>
-    </div>
-  </section>
-
-  <!-- Wave -->
-  <div class="wave">
-    <svg viewBox="0 0 1440 56" preserveAspectRatio="none">
-      <path d="M0,28 C360,56 720,0 1080,28 C1260,42 1380,16 1440,28"
-            stroke="rgba(255,215,0,0.1)" stroke-width="1.5" fill="none"/>
-    </svg>
-  </div>
-
-  <!-- ── Mission ── -->
-  <section class="scene scene-split reverse" id="mission">
-    <div class="scene-text" data-anim="right">
-      <div class="section-num">02</div>
-      <span class="eyebrow eyebrow-gold">What we do</span>
-      <h2>Measuring what volcanoes breathe</h2>
-      <p>
-        NOVAC instruments — scattered across crater rims, hillsides, and remote outposts —
-        scan the sky for sulfur dioxide (SO₂) and other volcanic gases around the clock.
-        Each measurement is a data point in a picture of volcanic activity that no single
-        observatory could ever capture alone.
-      </p>
-      <p>
-        Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis
-        egestas. Data collected by the network feeds hazard assessments, early-warning systems,
-        and fundamental research into how magma moves beneath the Earth's surface.
-      </p>
-    </div>
-    <div data-anim="left">
-      <div class="placeholder-img" data-label="Instrument / field photo"></div>
-    </div>
-  </section>
-
-  <!-- Wave -->
-  <div class="wave">
-    <svg viewBox="0 0 1440 56" preserveAspectRatio="none">
-      <path d="M0,18 C200,56 500,0 800,38 C1000,62 1250,8 1440,32"
-            stroke="rgba(255,107,53,0.14)" stroke-width="1.5" fill="none"/>
-      <path d="M0,40 C300,8 600,68 900,32 C1150,4 1350,52 1440,28"
-            stroke="rgba(255,215,0,0.06)" stroke-width="1" fill="none"/>
-    </svg>
-  </div>
-
-  <!-- Wave -->
-  <div class="wave">
-    <svg viewBox="0 0 1440 56" preserveAspectRatio="none">
-      <path d="M0,28 C200,52 450,4 720,32 C950,58 1200,12 1440,38"
-            stroke="rgba(255,215,0,0.09)" stroke-width="1.5" fill="none"/>
-    </svg>
-  </div>
-
-  <!-- ── Who we are ── -->
-  <section class="scene scene-split" id="team">
-    <div class="scene-text" data-anim="left">
-      <div class="section-num">03</div>
-      <span class="eyebrow eyebrow-gold">Who we are</span>
-      <h2>Scientists, engineers, and observers</h2>
-      <p>
-        NOVAC is sustained by volcano observatories and research institutions that share
-        instruments, software, and expertise. Membership spans every active volcanic region
-        on the planet — from Iceland to Indonesia, from Colombia to Japan.
-      </p>
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-        laudantium. The network is coordinated by Chalmers University of Technology and
-        supported by the European Commission, UNESCO/IUGS, and VDAP.
-      </p>
-      <div class="partner-list">
-        <span class="partner-tag">Chalmers University</span>
-        <span class="partner-tag">VDAP</span>
-        <span class="partner-tag">European Commission</span>
-        <span class="partner-tag">UNESCO / IUGS</span>
-        <span class="partner-tag">Partner observatory A</span>
-        <span class="partner-tag">Partner observatory B</span>
-        <span class="partner-tag">Partner observatory C</span>
+    <div class="beat" data-anim>
+      <div class="beat-icon">
+        <svg viewBox="0 0 60 60" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 50 L26 16 Q30 10 34 16 L52 50 Z"/>
+          <path d="M22 24 Q30 30 38 24" stroke="#FF6B35"/>
+          <path d="M28 12 Q24 4 30 -2" stroke="#e0a500" transform="translate(0,4)"/>
+        </svg>
+      </div>
+      <div class="beat-card">
+        <h3>Every volcano leaks gas</h3>
+        <p>Even a "sleeping" volcano exhales sulfur dioxide, CO₂, and other gases every day. That quiet baseline is what scientists compare everything else against.</p>
       </div>
     </div>
-    <div data-anim="right">
-      <div class="placeholder-img" data-label="Team / group photo"></div>
+
+    <div class="beat" data-anim>
+      <div class="beat-icon">
+        <svg viewBox="0 0 60 60" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="24" cy="24" r="14"/>
+          <path d="M34 34 L50 50"/>
+          <path d="M24 14 L24 24 L32 28" stroke="#FF6B35"/>
+        </svg>
+      </div>
+      <div class="beat-card">
+        <h3>A sudden rise is a warning sign</h3>
+        <p>When magma pushes closer to the surface, gas emissions often spike days or weeks before an eruption — giving nearby communities precious time to prepare.</p>
+      </div>
     </div>
+
+    <div class="beat" data-anim>
+      <div class="beat-icon">
+        <svg viewBox="0 0 60 60" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 34 L34 30 L52 18 L48 26 L34 34 L44 46 L36 44 L28 34 L14 38 Z"/>
+          <path d="M10 44 Q4 48 2 54" stroke="#e0a500"/>
+        </svg>
+      </div>
+      <div class="beat-card">
+        <h3>Gas clouds are a hazard too</h3>
+        <p>Volcanic SO₂ and ash can damage aircraft engines and harm air quality far beyond the crater rim — pilots and health agencies rely on this data daily.</p>
+      </div>
+    </div>
+
+    <div class="beat" data-anim>
+      <div class="beat-icon">
+        <svg viewBox="0 0 60 60" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="30" cy="30" r="20"/>
+          <path d="M10 30 L50 30 M30 10 Q18 30 30 50 Q42 30 30 10"/>
+          <circle cx="16" cy="18" r="2" fill="#FF6B35" stroke="none"/>
+          <circle cx="44" cy="40" r="2" fill="#FF6B35" stroke="none"/>
+          <circle cx="30" cy="50" r="2" fill="#FF6B35" stroke="none"/>
+        </svg>
+      </div>
+      <div class="beat-card">
+        <h3>One volcano can't tell the whole story</h3>
+        <p>By comparing measurements from hundreds of volcanoes worldwide, researchers spot patterns no single observatory could see alone — that's exactly what NOVAC was built for.</p>
+      </div>
+    </div>
+
+    <div class="beat" data-anim>
+      <div class="beat-icon">
+        <svg viewBox="0 0 60 60" fill="none" stroke="#2b2b2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="30" cy="30" r="20"/>
+          <path d="M30 30 L30 16" stroke="#FF6B35"/>
+          <path d="M30 30 L40 36" stroke="#FF6B35"/>
+          <path d="M30 6 L30 10 M54 30 L50 30 M30 54 L30 50 M6 30 L10 30" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="beat-card">
+        <h3>Watching, day and night</h3>
+        <p>Automated instruments now scan the sky around the clock, turning an invisible gas plume into a continuous, real-time signal of what's happening underground.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Closing ── -->
+  <section class="closing">
+    <span class="brand-font">That's the whole point of NOVAC.</span>
+    <p>One global network, watching every volcano's breath — so the next warning sign is never missed.</p>
   </section>
 
   <!-- ── Footer ── -->
@@ -165,9 +298,9 @@
   <script>
     const io = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-      { threshold: 0.12 }
+      { threshold: 0.15 }
     );
-    document.querySelectorAll('[data-anim], [data-stagger]').forEach(el => io.observe(el));
+    document.querySelectorAll('[data-anim]').forEach(el => io.observe(el));
   </script>
 
 </body>
