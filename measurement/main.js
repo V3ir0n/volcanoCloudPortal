@@ -12,7 +12,10 @@ const STEP_MS = 420;         // ms between each revealed slice
 
 // 60° half-cone opening toward +Z (volcano): tip at origin, arc sweeps upper semicircle.
 // Matches placeview.js createStationMarker(60) — 3D shape, visible from all angles.
-const CONE_HALF_RAD = 30 * Math.PI / 180;   // half-angle 30° → tan(30°) = 0.577
+const CONE_HALF_RAD = 60 * Math.PI / 180;   // half-angle 60° → tan(60°) = 1.732
+
+// World-space direction the plume drifts in, roughly horizontal.
+const WIND_DIR = new THREE.Vector3(1, 0, 3).normalize();
 
 // ── Slice math (per-slice column density & scan angle) ────────────────────────
 function sliceCD(i) {
@@ -40,6 +43,65 @@ function cdColorCss(cd) {
     return `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
 }
 
+// ── SO2 transmittance spectrum (loaded from CSV, keyed by column density) ────
+// SO2_transmission.csv columns are the modelled transmittance at each
+// wavelength for a set of column densities (ppm·m); it ramps CD_0..CD_1000
+// then mirrors back down, so only the first ascending half is unique.
+const CSV_CD_STEPS = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+
+function parseTransmissionCsv(text) {
+    const rows = text.trim().split('\n').slice(1);
+    const wavelengths = new Float64Array(rows.length);
+    const trans = CSV_CD_STEPS.map(() => new Float64Array(rows.length));
+    rows.forEach((line, r) => {
+        const cols = line.split(',');
+        wavelengths[r] = parseFloat(cols[0]);
+        for (let s = 0; s < CSV_CD_STEPS.length; s++) {
+            trans[s][r] = parseFloat(cols[s + 1]);
+        }
+    });
+    return { wavelengths, trans };
+}
+
+// The demo's scan tops out at CD_MAX (ppm·m) while the CSV spans 0-1000, so
+// scale the peak scan CD onto the CSV's full range to get a visible dip.
+const CSV_CD_SCALE = CSV_CD_STEPS[CSV_CD_STEPS.length - 1] / CD_MAX;
+
+// Linear interpolation of the transmittance spectrum at an arbitrary column density
+function transmittanceAt(spectrum, cd) {
+    const steps = CSV_CD_STEPS;
+    const clamped = Math.min(steps[steps.length - 1], Math.max(0, cd * CSV_CD_SCALE));
+    let i = 0;
+    while (i < steps.length - 2 && steps[i + 1] < clamped) i++;
+    const lo = steps[i], hi = steps[i + 1];
+    const frac = hi === lo ? 0 : (clamped - lo) / (hi - lo);
+    const a = spectrum.trans[i], b = spectrum.trans[i + 1];
+    const n = spectrum.wavelengths.length;
+    const out = new Float64Array(n);
+    for (let k = 0; k < n; k++) out[k] = a[k] + (b[k] - a[k]) * frac;
+    return out;
+}
+
+// ── Smoke puff texture (soft radial gradient, cached & reused across sprites) ──
+let smokeTexture = null;
+function getSmokeTexture() {
+    if (smokeTexture) return smokeTexture;
+    const size = 128;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const c = size / 2;
+    const gradient = ctx.createRadialGradient(c, c, 0, c, c, c);
+    gradient.addColorStop(0,   'rgba(225,225,230,0.8)');
+    gradient.addColorStop(0.5, 'rgba(255,255,255,0.4)');
+    gradient.addColorStop(1,   'rgba(255,255,255,0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+    smokeTexture = new THREE.CanvasTexture(canvas);
+    return smokeTexture;
+}
+
 // ── Main view class ───────────────────────────────────────────────────────────
 class MeasurementView {
     constructor() {
@@ -49,14 +111,17 @@ class MeasurementView {
         this.animating = false;
         this.ready = false;
 
+        this.spectrum = null;
+
         this._initRenderer();
         this._initScene();
         this._initChart();
+        this._initTransmittanceChart();
         this._initUI();
         this._loadTerrain();
+        this._loadSpectrum();
 
         this.renderer.setAnimationLoop(() => {
-            this._updatePlume();
             this.renderer.render(this.scene, this.camera);
         });
     }
@@ -144,8 +209,12 @@ class MeasurementView {
 
     // ── Station marker & scan cone geometry ─────────────────────────────────
     _buildStation(terrain, bbox, center, size, extent) {
-        const sx = center.x + size.x * 0.35;
-        const sz = center.z + size.z * 0.40;
+        // Sit directly on the downwind ray from the summit (same direction the
+        // plume drifts in _buildPlume) so the plume centerline passes straight
+        // over the station instead of drifting past it off to one side.
+        const downwindDist = extent * 0.45;
+        const sx = this.summit.x + WIND_DIR.x * downwindDist;
+        const sz = this.summit.z + WIND_DIR.z * downwindDist;
 
         const ray = new THREE.Raycaster(
             new THREE.Vector3(sx, bbox.max.y + 1, sz),
@@ -159,10 +228,10 @@ class MeasurementView {
         // Rotate so local +Z faces the volcano summit
         group.rotation.y = Math.atan2(this.summit.x - sx, this.summit.z - sz);
 
-        // Cone length: extend 1.5× past the summit so rays go through the plume
+        // Cone length: extend 1.1× past the summit so rays go through the plume
         const horizDist = Math.sqrt((this.summit.x - sx) ** 2 + (this.summit.z - sz) ** 2);
         const distToSummit = Math.sqrt(horizDist ** 2 + (this.summit.y - sy) ** 2);
-        const coneLen = distToSummit * 1.5;
+        const coneLen = distToSummit * 0.6;
         const r = coneLen * Math.tan(CONE_HALF_RAD);  // base radius at tip of cone
 
         // Small instrument body
@@ -241,7 +310,7 @@ class MeasurementView {
         `;
 
         const title = document.createElement('div');
-        title.textContent = 'Column density / ppm·m';
+        title.textContent = 'SO₂ column density / ppm·m';
         title.style.cssText = 'color:#999;font-size:11px;font-family:sans-serif;margin-bottom:6px;';
         panel.appendChild(title);
 
@@ -269,10 +338,9 @@ class MeasurementView {
             g.appendChild(mkLine(0, y, iW, y, '#2a2a2a'));
         });
 
-        // X ticks: angle offset from summit direction, −CONE_HALF (left) → +CONE_HALF (right)
-        // x = (a + CONE_HALF) / (2*CONE_HALF) * iW
+        // X ticks: scan angle, −90 (left) → +90 (right)
         [-90, -45, 0, 45, 90].forEach(a => {
-            const x = (90 - a) / 180 * iW;
+            const x = (a + 90) / 180 * iW;
             g.appendChild(mkLine(x, iH, x, iH + 4));
             const lbl = document.createElementNS(NS, 'text');
             lbl.setAttribute('x', x); lbl.setAttribute('y', iH + 14);
@@ -311,7 +379,7 @@ class MeasurementView {
         for (let i = 0; i < N; i++) {
             const cd = sliceCD(i);
             const angle = sliceScanAngle(i);
-            const bx = (90 - angle) / 180 * iW - bw / 2;
+            const bx = (angle + 90) / 180 * iW - bw / 2;
             const bh = Math.max(0, (cd / CD_MAX) * iH);
 
             const rect = document.createElementNS(NS, 'rect');
@@ -329,6 +397,125 @@ class MeasurementView {
         panel.appendChild(svg);
         document.body.appendChild(panel);
         this.chartPanel = panel;
+    }
+
+    _loadSpectrum() {
+        fetch('./SO2_transmission.csv')
+            .then(r => r.text())
+            .then(text => { this.spectrum = parseTransmissionCsv(text); })
+            .catch(err => console.error('Failed to load SO2 transmission spectrum:', err));
+    }
+
+    // ── Transmittance line chart (mirrors the CD bar chart, keyed by CD) ──────
+    _initTransmittanceChart() {
+        const NS = 'http://www.w3.org/2000/svg';
+        const W = 268, H = 162;
+        const M = { t: 8, r: 8, b: 32, l: 30 };
+        const iW = W - M.l - M.r;
+        const iH = H - M.t - M.b;
+        const wMin = 300, wMax = 330;
+
+        const panel = document.createElement('div');
+        panel.style.cssText = `
+            position:fixed; bottom:300px; right:20px; width:${W + 24}px;
+            background:rgba(8,10,14,0.88); border:1px solid #333; border-radius:8px;
+            padding:12px; box-sizing:border-box; pointer-events:none;
+            opacity:0; transition:opacity 0.35s;
+        `;
+
+        const title = document.createElement('div');
+        title.textContent = 'SO₂ transmittance / wavelength';
+        title.style.cssText = 'color:#999;font-size:11px;font-family:sans-serif;margin-bottom:6px;';
+        panel.appendChild(title);
+
+        const svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('width', W);
+        svg.setAttribute('height', H);
+
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('transform', `translate(${M.l},${M.t})`);
+
+        const mkLine = (x1, y1, x2, y2, stroke = '#555') => {
+            const el = document.createElementNS(NS, 'line');
+            el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+            el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+            el.setAttribute('stroke', stroke);
+            return el;
+        };
+
+        g.appendChild(mkLine(0, iH, iW, iH));  // x-axis
+        g.appendChild(mkLine(0, 0, 0, iH));     // y-axis
+
+        // Horizontal grid lines
+        [0.25, 0.5, 0.75].forEach(v => {
+            const y = iH - v * iH;
+            g.appendChild(mkLine(0, y, iW, y, '#2a2a2a'));
+        });
+
+        // Y ticks: transmittance 0..1
+        [0, 0.5, 1].forEach(v => {
+            const y = iH - v * iH;
+            g.appendChild(mkLine(-4, y, 0, y));
+            const lbl = document.createElementNS(NS, 'text');
+            lbl.setAttribute('x', -7); lbl.setAttribute('y', y + 3);
+            lbl.setAttribute('text-anchor', 'end');
+            lbl.setAttribute('font-size', 9);
+            lbl.setAttribute('fill', '#777');
+            lbl.textContent = v;
+            g.appendChild(lbl);
+        });
+
+        // X ticks: wavelength / nm
+        [300, 310, 320, 330].forEach(w => {
+            const x = ((w - wMin) / (wMax - wMin)) * iW;
+            g.appendChild(mkLine(x, iH, x, iH + 4));
+            const lbl = document.createElementNS(NS, 'text');
+            lbl.setAttribute('x', x); lbl.setAttribute('y', iH + 14);
+            lbl.setAttribute('text-anchor', 'middle');
+            lbl.setAttribute('font-size', 9);
+            lbl.setAttribute('fill', '#777');
+            lbl.textContent = w;
+            g.appendChild(lbl);
+        });
+
+        // X axis label
+        const xLbl = document.createElementNS(NS, 'text');
+        xLbl.setAttribute('x', iW / 2); xLbl.setAttribute('y', H - M.t - 3);
+        xLbl.setAttribute('text-anchor', 'middle');
+        xLbl.setAttribute('font-size', 9);
+        xLbl.setAttribute('fill', '#666');
+        xLbl.textContent = 'wavelength / nm';
+        g.appendChild(xLbl);
+
+        const path = document.createElementNS(NS, 'path');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#4fc3f7');
+        path.setAttribute('stroke-width', 1.5);
+        g.appendChild(path);
+        this.transPath = path;
+        this._transScale = { wMin, wMax, iW, iH };
+
+        svg.appendChild(g);
+        panel.appendChild(svg);
+        document.body.appendChild(panel);
+        this.transChartPanel = panel;
+    }
+
+    _updateTransmittance(cd) {
+        if (!this.spectrum || !this.transPath) return;
+        const curve = transmittanceAt(this.spectrum, cd);
+        const { wMin, wMax, iW, iH } = this._transScale;
+        const wl = this.spectrum.wavelengths;
+        const n = wl.length;
+        const step = Math.max(1, Math.floor(n / 300)); // downsample for a lighter path
+        let d = '';
+        for (let k = 0; k < n; k += step) {
+            const x = ((wl[k] - wMin) / (wMax - wMin)) * iW;
+            const y = iH - curve[k] * iH;
+            d += (k === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1) + ' ';
+        }
+        this.transPath.setAttribute('d', d);
+        this.transPath.setAttribute('stroke', cdColorCss(cd));
     }
 
     // ── Controls ─────────────────────────────────────────────────────────────
@@ -383,6 +570,7 @@ class MeasurementView {
         this.playBtn.textContent = 'Scanning…';
         this.playBtn.style.opacity = '0.5';
         this.chartPanel.style.opacity = '1';
+        this.transChartPanel.style.opacity = '1';
         this._step();
     }
 
@@ -395,10 +583,13 @@ class MeasurementView {
             this.playBtn.style.cursor = 'pointer';
             return;
         }
-        const i = this.currentSlice++;
+        // Reveal in order of increasing scan angle (−90 → +90) so both the
+        // 3D sweep and the chart fill left to right.
+        const i = N - 1 - this.currentSlice++;
 
         if (this.sliceMeshes[i]) this.sliceMeshes[i].material.visible = true;
         if (this.barEls[i]) this.barEls[i].setAttribute('opacity', 0.88);
+        this._updateTransmittance(sliceCD(i));
 
         setTimeout(() => this._step(), STEP_MS);
     }
@@ -409,6 +600,8 @@ class MeasurementView {
         this.sliceMeshes.forEach(m => { m.material.visible = false; });
         this.barEls.forEach(b => b.setAttribute('opacity', 0));
         this.chartPanel.style.opacity = '0';
+        this.transChartPanel.style.opacity = '0';
+        if (this.transPath) this.transPath.setAttribute('d', '');
         this.playBtn.disabled = !this.ready;
         this.playBtn.textContent = '▶  Start scan';
         this.playBtn.style.opacity = this.ready ? '1' : '0.45';
@@ -416,104 +609,51 @@ class MeasurementView {
     }
 
     // ── Plume ─────────────────────────────────────────────────────────────────
-    // Particle system: rising, fading points seeded around the summit.
+    // Static smoke-puff cloud, built once from a fixed set of drifted points —
+    // same technique as the tomographic reconstructions (overlapping low-opacity
+    // billboard sprites) rather than an animated particle stream. Rises briefly
+    // from the vent, then drifts downwind, widening and thinning as it travels.
     _buildPlume(summit, plumeHeight) {
-        const N_P = 60;
-        const positions = new Float32Array(N_P * 3);
-        const alphas    = new Float32Array(N_P);
-        const sizes     = new Float32Array(N_P);
+        const N_S = 10550;
+        const BASE_SIZE = plumeHeight * 0.05;
+        const OPACITY = 0.05;
+        const NUM_MATS = 6; // rotation variants so overlapping puffs don't look identical
 
-        this._plumeParticles = [];
-        for (let i = 0; i < N_P; i++) {
-            const life  = Math.random();
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 0.25 + Math.random() * 0.35;
-            const spread = plumeHeight * 0.1 * life;
-            positions[i * 3]     = summit.x + Math.cos(angle) * spread;
-            positions[i * 3 + 1] = summit.y + life * plumeHeight;
-            positions[i * 3 + 2] = summit.z + Math.sin(angle) * spread;
-            alphas[i] = this._plumeAlpha(life);
-            sizes[i]  = plumeHeight * (0.025 + 0.1 * life);
-            this._plumeParticles.push({ life, angle, speed });
-        }
+        const perp = new THREE.Vector3(-WIND_DIR.z, 0, WIND_DIR.x); // horizontal, across the wind
 
-        const geom = new THREE.BufferGeometry();
-        geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geom.setAttribute('pAlpha',   new THREE.BufferAttribute(alphas, 1));
-        geom.setAttribute('pSize',    new THREE.BufferAttribute(sizes, 1));
-
-        const mat = new THREE.ShaderMaterial({
-            vertexShader: `
-                attribute float pAlpha;
-                attribute float pSize;
-                varying float vAlpha;
-                void main() {
-                    vAlpha = pAlpha;
-                    vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
-                    gl_PointSize = pSize * (300.0 / -mvPos.z);
-                    gl_Position = projectionMatrix * mvPos;
-                }
-            `,
-            fragmentShader: `
-                varying float vAlpha;
-                void main() {
-                    float d = length(gl_PointCoord - vec2(0.5));
-                    if (d > 0.5) discard;
-                    float edge = 1.0 - smoothstep(0.28, 0.5, d);
-                    gl_FragColor = vec4(0.88, 0.90, 0.94, edge * vAlpha);
-                }
-            `,
+        const materials = Array.from({ length: NUM_MATS }, (_, k) => new THREE.SpriteMaterial({
+            map: getSmokeTexture(),
+            color: 0xffffff,
+            opacity: OPACITY,
             transparent: true,
             depthWrite: false,
-        });
+            rotation: (k / NUM_MATS) * Math.PI,
+        }));
 
-        this._plumePoints  = new THREE.Points(geom, mat);
-        this._plumeGeom    = geom;
-        this._plumeHeight  = plumeHeight;
-        this._plumeSummit  = summit.clone();
-        this._lastPlumeT   = performance.now();
-        this.scene.add(this._plumePoints);
-    }
+        const group = new THREE.Group();
+        const pos = new THREE.Vector3();
+        for (let i = 0; i < N_S; i++) {
+            const t = Math.random();                                   // 0 = at the vent, 1 = fully downwind
+            const rise   = plumeHeight * (0.05 + 0.35 * Math.sqrt(t));  // climbs a little, then levels off
+            const drift  = plumeHeight * 2.0 * t;                       // travels mostly horizontally
+            const spread = plumeHeight * (0.05 + 0.20 * t);             // cloud widens as it drifts
+            const jAngle = Math.random() * Math.PI * 2;
+            const jR     = spread * Math.sqrt(Math.random());
 
-    // Fade in near the vent, hold, then fade out near the top of the plume.
-    _plumeAlpha(life) {
-        if (life < 0.15) return (life / 0.15) * 0.7;
-        if (life > 0.65) return (1 - (life - 0.65) / 0.35) * 0.7;
-        return 0.7;
-    }
+            pos.copy(summit)
+                .addScaledVector(WIND_DIR, drift)
+                .addScaledVector(perp, Math.cos(jAngle) * jR);
+            pos.y += rise + Math.sin(jAngle) * jR * 0.35;
 
-    // Per-frame: advance each particle's life and recycle it once it reaches the top.
-    _updatePlume() {
-        if (!this._plumeParticles) return;
-        const now = performance.now();
-        const dt  = Math.min((now - this._lastPlumeT) / 1000, 0.05);
-        this._lastPlumeT = now;
-
-        const pos    = this._plumeGeom.attributes.position.array;
-        const alphas = this._plumeGeom.attributes.pAlpha.array;
-        const sizes  = this._plumeGeom.attributes.pSize.array;
-        const h = this._plumeHeight;
-        const s = this._plumeSummit;
-
-        for (let i = 0; i < this._plumeParticles.length; i++) {
-            const p = this._plumeParticles[i];
-            p.life += p.speed * dt;
-            if (p.life >= 1) {
-                p.life  = 0;
-                p.angle = Math.random() * Math.PI * 2;
-                p.speed = 0.25 + Math.random() * 0.35;
-            }
-            const spread = h * 0.1 * p.life;
-            pos[i * 3]     = s.x + Math.cos(p.angle) * spread;
-            pos[i * 3 + 1] = s.y + p.life * h;
-            pos[i * 3 + 2] = s.z + Math.sin(p.angle) * spread;
-            alphas[i] = this._plumeAlpha(p.life);
-            sizes[i]  = h * (0.025 + 0.1 * p.life);
+            const sprite = new THREE.Sprite(materials[Math.floor(Math.random() * NUM_MATS)]);
+            sprite.position.copy(pos);
+            const s = BASE_SIZE * (0.6 + Math.random() * 0.8);
+            sprite.scale.set(s, s, 1);
+            group.add(sprite);
         }
 
-        this._plumeGeom.attributes.position.needsUpdate = true;
-        this._plumeGeom.attributes.pAlpha.needsUpdate   = true;
-        this._plumeGeom.attributes.pSize.needsUpdate     = true;
+        this._plumePoints = group;
+        this.scene.add(group);
     }
 }
 
