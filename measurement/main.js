@@ -540,24 +540,7 @@ class MeasurementView {
             this.playBtn.style.background = 'rgba(255,215,0,0.08)';
         });
 
-        const resetBtn = document.createElement('button');
-        resetBtn.textContent = '↺  Reset';
-        resetBtn.style.cssText = `
-            padding:8px 14px; background:rgba(255,215,0,0.08); color:#ffd700;
-            border:1px solid rgba(255,215,0,0.25);
-            border-radius:6px; font-size:13px; font-family:sans-serif; cursor:pointer;
-            transition:background 0.15s;
-        `;
-        resetBtn.addEventListener('click', () => this._reset());
-        resetBtn.addEventListener('mouseover', () => {
-            resetBtn.style.background = 'rgba(255,215,0,0.22)';
-        });
-        resetBtn.addEventListener('mouseout', () => {
-            resetBtn.style.background = 'rgba(255,215,0,0.08)';
-        });
-
         ui.appendChild(this.playBtn);
-        ui.appendChild(resetBtn);
         document.body.appendChild(ui);
 
         const hint = document.createElement('div');
@@ -573,8 +556,8 @@ class MeasurementView {
     // ── Animation ────────────────────────────────────────────────────────────
     _startScan() {
         if (this.animating || !this.ready) return;
+        this._reset();
         this.animating = true;
-        this.currentSlice = 0;
         this.playBtn.disabled = true;
         this.playBtn.textContent = 'Scanning…';
         this.playBtn.style.opacity = '0.5';
@@ -604,17 +587,12 @@ class MeasurementView {
     }
 
     _reset() {
-        this.animating = false;
         this.currentSlice = 0;
         this.sliceMeshes.forEach(m => { m.material.visible = false; });
         this.barEls.forEach(b => b.setAttribute('opacity', 0));
         this.chartPanel.style.opacity = '0';
         this.transChartPanel.style.opacity = '0';
         if (this.transPath) this.transPath.setAttribute('d', '');
-        this.playBtn.disabled = !this.ready;
-        this.playBtn.textContent = '▶  Start scan';
-        this.playBtn.style.opacity = this.ready ? '1' : '0.45';
-        this.playBtn.style.cursor = this.ready ? 'pointer' : 'default';
     }
 
     // ── Plume ─────────────────────────────────────────────────────────────────
