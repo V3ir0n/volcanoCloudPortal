@@ -64,3 +64,38 @@
 .back-btn:hover {
   background: var(--btn-hover-bg);
 }
+
+/* Doc button: circular lightbulb icon linking to a reference PDF.
+   Add `<a class="doc-btn" href="..." target="_blank" ...><svg>...</svg></a>`
+   to a page's .topbar to reuse it there. */
+.doc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  color: var(--topbar-fg);
+  border: 1px solid var(--btn-border);
+  border-radius: 50%;
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.doc-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+}
+
+.doc-btn:hover,
+.doc-btn:focus {
+  background: var(--btn-hover-bg);
+  transform: translateY(-1px);
+  outline: none;
+}
