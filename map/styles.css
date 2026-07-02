@@ -54,10 +54,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 14px 16px 6px;
   background: #181C25;
-  border-bottom: 1px solid #222;
   color: #FFD700;
+}
+
+.panel-header h3 {
+  margin: 0;
 }
 
 .overlay .close-btn {
@@ -221,10 +224,16 @@ body {
 }
 
 .volcano-info {
-  margin-top: 6px;
+  margin-top: 0;
   font-size: 0.85rem;
   color: #ccc;
   padding-left: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #222;
+}
+
+.volcano-info p {
+  margin: 4px 0;
 }
 
 .leaflet-bar.volcano-control {
@@ -373,10 +382,19 @@ body {
 .yc-info-btn:hover,
 .diagram-info-btn:hover { background: rgba(255, 215, 0, 0.15); }
 
+.diagram-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 14px;
+}
+
 /* ---- emission graph header ---- */
 .diagram-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 8px 12px 2px;
 }

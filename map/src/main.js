@@ -259,21 +259,25 @@ function renderPlaceOverlay(place, latlng) {
   `;
   container.appendChild(header);
   header.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
-    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public NOVAC data.");
+    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
   });
 
   const svgNS = "http://www.w3.org/2000/svg";
 
-  const width = 320;
+  const width = 480;
   const height = 220;
 
-  const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+  const margin = { top: 20, right: 30, bottom: 40, left: 55 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
   const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("width", width);
-  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", "auto");
+  svg.style.maxWidth = `${width}px`;
+  svg.style.display = "block";
+  svg.style.margin = "0 auto";
 
   const LEGEND_VALUES = [10, 100, 1000, 10000];
 
@@ -450,7 +454,7 @@ function initMap() {
     maxBounds: worldBounds,
     maxBoundsViscosity: 1.0,
     minZoom: 2,
-  }).setView([20, 10], 2);
+  }).fitBounds(worldBounds);
 
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
     attribution: "&copy; CARTO &copy; OSM",
@@ -617,7 +621,7 @@ function createStaticLegend(legendValues) {
 
       div.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
         L.DomEvent.stopPropagation(e);
-        showInfoTooltip(e.currentTarget, "Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public NOVAC data.");
+        showInfoTooltip(e.currentTarget, "Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
       });
 
       return div;

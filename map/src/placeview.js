@@ -49,7 +49,7 @@ class VolcanoView {
     // Setup canvas and renderer
     this.canvas = canvasElement;
     this.canvas.width = this.canvas.parentElement.clientWidth;
-    this.canvas.height = 400; //space above the canvas for volcano info, can be adjusted if needed
+    this.canvas.height = 320; //space above the canvas for volcano info, can be adjusted if needed
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -190,7 +190,7 @@ class VolcanoView {
       .then(stations => {
         const filtered = stations.filter(s =>
           s.volcanoKey === this.place.name &&
-          s.type !== "1" // TODO do we really want to exclude these?
+          s.type !== "1" // type 1 stations are never placed
         );
         const latestByLatLon = new Map();
         for (const s of filtered) {
@@ -203,10 +203,12 @@ class VolcanoView {
         // Fixed cone length in km, independent of terrain mesh scale.
         // Derivation: unitsPerKm = bbox_width / (2*radiusKm), markerScale = bbox_width*0.8/1.1
         // localScale = lengthKm * unitsPerKm / markerScale → markerScale cancels → constant.
-        const CONE_LENGTH_KM = 3;
+        const CONE_LENGTH_KM = 2;
         const coneLocalScale = CONE_LENGTH_KM * 1.1 / (1.6 * this.radiusKm);
 
         [...latestByLatLon.values()].forEach(s => {
+            if (s.coneAngle === 0) return; // don't place a station marker at all
+
             const marker = this.createStationMarker(s.coneAngle ?? 90); // if coneangle is missing use 90
             const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.025 });
             if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
@@ -257,18 +259,20 @@ class VolcanoView {
       const geom = new THREE.BufferGeometry();
       geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
       scanShape = new THREE.LineSegments(geom, wireMat);
-    } else {
+    } else if (coneAngle > 0) {
       // Half-cone wireframe, tip at origin, opens toward +Z.
       const height = 1;
-      const radius = height * Math.tan((coneAngle / 2) * Math.PI / 180);
+      const radius = height * Math.tan((coneAngle / 1) * Math.PI / 180);
       const coneGeom = new THREE.ConeGeometry(radius, height, 20, 1, true, 1.5 * Math.PI, Math.PI);
       coneGeom.translate(0, -height / 2, 0);
       coneGeom.rotateX(-Math.PI / 2);
       scanShape = new THREE.LineSegments(new THREE.EdgesGeometry(coneGeom), wireMat);
     }
 
-    scanShape.name = 'scanCone';
-    group.add(scanShape);
+    if (scanShape) {
+      scanShape.name = 'scanCone';
+      group.add(scanShape);
+    }
 
     return group;
   }
