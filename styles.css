@@ -16,7 +16,11 @@ html,
       .nav-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 2rem 1.25rem;
+        grid-template-areas:
+          "model   map"
+          "about   about"
+          "measure measure";
+        gap: 0rem 1.5rem;
         max-width: 600px;
         margin: 1.5rem auto;
         padding: 0 1rem;
@@ -30,9 +34,34 @@ html,
         color: #eee;
         padding: 1rem 1.25rem;
         gap: 0.7rem;
+        width: 170px;
+        justify-self: center;
         transition: opacity 0.2s;
       }
       .nav-card:hover { opacity: 0.6; }
+
+      /* Clustered layout: two cards up top, "Why gases?" enlarged
+         and centered below them, "How we measure" centered under that. */
+      .nav-card-model { grid-area: model; }
+      .nav-card-map { grid-area: measure; }
+      .nav-card-about {
+        grid-area: about;
+        position: relative;
+        z-index: 0;
+        width: auto;
+        margin-top: -6.5rem;
+      }
+      .nav-card-about::before {
+        content: "";
+        position: absolute;
+        inset: 1.5rem;
+        background: radial-gradient(circle closest-side, rgba(255,215,0,0.22) 0%, rgba(255,215,0,0) 100%);
+        border-radius: 50%;
+        z-index: -1;
+      }
+      .nav-card-measurement {
+        grid-area: map;
+      }
       .nav-card svg {
         width: 56px;
         height: 56px;
@@ -42,6 +71,11 @@ html,
         stroke-linecap: round;
         stroke-linejoin: round;
       }
+      .nav-card-about svg {
+        stroke: #ffd700;
+        width: 96px;
+        height: 96px;
+      }
       .nav-card h2 {
         font-size: 0.68rem;
         font-weight: 700;
@@ -49,6 +83,10 @@ html,
         text-transform: uppercase;
         margin: 0;
         color: #ffd700;
+      }
+      .nav-card-about h2 {
+        font-size: 1rem;
+        white-space: nowrap;
       }
       .nav-card p {
         font-size: 0.8rem;
@@ -74,5 +112,14 @@ html,
       footer hr { border-color: rgba(255,255,255,0.1); }
       footer small, footer a { color: #9ab; }
       @media (max-width: 560px) {
-        .nav-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        .nav-grid {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "model"
+            "map"
+            "about"
+            "measure";
+          gap: 1.5rem;
+        }
+        .nav-card-about { transform: none; }
       }
