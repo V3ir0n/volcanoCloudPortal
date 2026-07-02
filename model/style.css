@@ -1,3 +1,32 @@
+/* Match the site's gold accent (see map/styles.css) instead of Pico's
+   default blue for sliders, focus rings and the audio switch.
+   !important is needed because Pico defines these same variables on
+   `:root:not([data-theme])`, which outranks a plain `:root` override. */
+:root {
+    --pico-primary: #ffd700 !important;
+    --pico-primary-background: #d1ae00 !important;
+    --pico-primary-border: #d1ae00 !important;
+    --pico-primary-hover: #ffe14d !important;
+    --pico-primary-hover-background: #e6c200 !important;
+    --pico-primary-hover-border: #e6c200 !important;
+    --pico-primary-focus: rgba(255, 215, 0, 0.375) !important;
+    --pico-primary-underline: rgba(255, 215, 0, 0.5) !important;
+    --pico-primary-inverse: #13171f !important;
+    --pico-switch-checked-background-color: var(--pico-primary-background) !important;
+    /* Audio switch's "off" track defaults to a blue-gray (#333c4e); warm
+       it up so it doesn't clash even before it's toggled on. */
+    --pico-switch-background-color: #3a3424 !important;
+
+    /* range slider thumb rests on --pico-secondary-background; warm it
+       up to match instead of Pico's default blue-gray */
+    --pico-secondary: #a68a2d !important;
+    --pico-secondary-background: #a68a2d !important;
+    --pico-secondary-border: #a68a2d !important;
+    --pico-secondary-hover: #bfa23a !important;
+    --pico-secondary-hover-background: #bfa23a !important;
+    --pico-secondary-hover-border: #bfa23a !important;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -109,13 +138,13 @@ body {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: rgba(255, 0, 0, 0);
+    background: rgba(255, 107, 53, 0);
     transition: background 0.15s ease, transform 0.15s ease;
 }
 
 .parameter-info-button:hover::after,
 .parameter-info-button:focus::after {
-    background: rgba(255, 0, 0, 0.2);
+    background: rgba(255, 107, 53, 0.35);
 }
 
 .parameter-info-button:hover,

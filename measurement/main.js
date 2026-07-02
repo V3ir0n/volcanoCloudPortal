@@ -527,25 +527,34 @@ class MeasurementView {
         this.playBtn.textContent = '▶  Start scan';
         this.playBtn.disabled = true;
         this.playBtn.style.cssText = `
-            padding:8px 20px; background:#1a5276; color:#ccc; border:none;
+            padding:8px 20px; background:rgba(255,215,0,0.08); color:#ffd700;
+            border:1px solid rgba(255,215,0,0.35);
             border-radius:6px; font-size:13px; font-family:sans-serif;
             opacity:0.45; cursor:default; transition:background 0.15s;
         `;
         this.playBtn.addEventListener('click', () => this._startScan());
         this.playBtn.addEventListener('mouseover', () => {
-            if (!this.playBtn.disabled) this.playBtn.style.background = '#2471a3';
+            if (!this.playBtn.disabled) this.playBtn.style.background = 'rgba(255,215,0,0.22)';
         });
         this.playBtn.addEventListener('mouseout', () => {
-            this.playBtn.style.background = '#1a5276';
+            this.playBtn.style.background = 'rgba(255,215,0,0.08)';
         });
 
         const resetBtn = document.createElement('button');
         resetBtn.textContent = '↺  Reset';
         resetBtn.style.cssText = `
-            padding:8px 14px; background:#2c3e50; color:#bbb; border:none;
+            padding:8px 14px; background:rgba(255,215,0,0.08); color:#ffd700;
+            border:1px solid rgba(255,215,0,0.25);
             border-radius:6px; font-size:13px; font-family:sans-serif; cursor:pointer;
+            transition:background 0.15s;
         `;
         resetBtn.addEventListener('click', () => this._reset());
+        resetBtn.addEventListener('mouseover', () => {
+            resetBtn.style.background = 'rgba(255,215,0,0.22)';
+        });
+        resetBtn.addEventListener('mouseout', () => {
+            resetBtn.style.background = 'rgba(255,215,0,0.08)';
+        });
 
         ui.appendChild(this.playBtn);
         ui.appendChild(resetBtn);

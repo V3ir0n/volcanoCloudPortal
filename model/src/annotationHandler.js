@@ -123,7 +123,7 @@ class AnnotationHandler {
                 this.canvas.style.cursor = "pointer"
                 this.highlightedAnnotation = res.object;
                 this.highlightedAnnotation.scale.setScalar(annotationSizeHighlight);
-                this.highlightedAnnotation.material.color.set('#f00');
+                this.highlightedAnnotation.material.color.set('#ff6b35');
 
                 annotationLabel.innerHTML = this.highlightedAnnotation.annotation.name;
                 annotationLabel.style.display = "block";
