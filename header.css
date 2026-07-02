@@ -1,4 +1,4 @@
-/* Shared page header (topbar + back button) used by about/map/model/measurement.
+/* Shared page header (topbar + back button) used by why/map/model/measurement.
    Pages theme it by overriding these variables before this file is applied,
    or by adding small overrides after linking it. */
 :root {
