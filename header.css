@@ -1,0 +1,55 @@
+/* Shared page header (topbar + back button) used by about/map/model/measurement.
+   Pages theme it by overriding these variables before this file is applied,
+   or by adding small overrides after linking it. */
+:root {
+  --topbar-h: 58px;
+  --topbar-bg: #13171F;
+  --topbar-fg: #ffd700;
+  --btn-border: rgba(255, 215, 0, 0.35);
+  --btn-hover-bg: rgba(255, 215, 0, 0.15);
+}
+
+/* Layout (position: static in normal flow vs. fixed overlay) is left to each
+   page, since it depends on whether the content below reserves space for the
+   bar or fills the whole viewport. */
+.topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--topbar-bg);
+  color: var(--topbar-fg);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+  z-index: 1500;
+}
+
+.topbar img {
+  max-height: calc(var(--topbar-h) - 20px);
+  display: block;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--topbar-fg);
+  text-decoration: none;
+  border: 1px solid var(--btn-border);
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+  background: var(--btn-hover-bg);
+}

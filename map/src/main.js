@@ -12,7 +12,13 @@ function showInfoTooltip(anchorEl, text) {
   }
   const tip = document.createElement("div");
   tip.className = "info-tooltip";
-  tip.textContent = text;
+  const escaped = text.replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+  tip.innerHTML = escaped.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    (_m, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
+  );
   document.body.appendChild(tip);
   const r = anchorEl.getBoundingClientRect();
   tip.style.left = `${r.left + r.width / 2}px`;
@@ -253,7 +259,7 @@ function renderPlaceOverlay(place, latlng) {
   `;
   container.appendChild(header);
   header.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
-    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions measured by NOVAC stations. Data is preliminary and zero emission may correspond to data that is not avaluated.");
+    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public NOVAC data.");
   });
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -611,7 +617,7 @@ function createStaticLegend(legendValues) {
 
       div.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
         L.DomEvent.stopPropagation(e);
-        showInfoTooltip(e.currentTarget, "Data is preliminary and zero emission may correspond to data that is not avaluated.");
+        showInfoTooltip(e.currentTarget, "Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public NOVAC data.");
       });
 
       return div;

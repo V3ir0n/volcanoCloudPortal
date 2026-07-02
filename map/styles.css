@@ -10,7 +10,7 @@ body {
 }
 
 .map-wrap {
-  height: calc(100vh - 50px);
+  height: calc(100vh - var(--topbar-h));
   width: 100%;
   position: relative;
 }
@@ -267,51 +267,15 @@ body {
   white-space: nowrap;
 }
 
-.topbar {
-  --topbar-h: 58px;
-  height: var(--topbar-h);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 16px;
-  background: #13171F;
-  color: #ffd700;
-  font-size: 1.1rem;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.05);
-  z-index: 1500;
-}
-
-.topbar img {
-  max-height: calc(var(--topbar-h) - 20px);
-  display: block;
-}
-
 .topbar-title {
   font-weight: 600;
   letter-spacing: 0.3px;
-  font-size:larger
+  font-size: larger;
 }
 
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: calc(var(--topbar-h) * 0.1) calc(var(--topbar-h) * 0.18);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: calc(var(--topbar-h) * 0.27);
-  border: 1px solid rgba(255,255,255,0.15);
-  cursor: pointer;
-}
-
-.back-btn:hover {
-  background: rgba(255,255,255,0.16);
-}
-
-.back-btn:active {
-  transform: translateY(1px);
+.topbar {
+  background: transparent;
+  box-shadow: none;
 }
 
 .leaflet-top,
@@ -325,26 +289,7 @@ body {
 }
 
 /* topbar: push title center-ish and info to far right */
-.topbar { display: flex; align-items: center; gap: 12px; }
 .topbar-title { flex: 1; text-align: center; }
-
-/* info button */
-.info-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 215, 0, 0.35);
-  background: transparent;
-  color: #ffd700;
-  font-size: 0.78rem;
-  cursor: pointer;
-}
-
-.info-btn:hover { background: rgba(255, 215, 0, 0.15); }
-.info-btn:active { transform: translateY(1px); }
 
 /* info overlay modal */
 .info-overlay {
@@ -403,6 +348,9 @@ body {
   color: #eee;
   line-height: 1.45;
 }
+.info-body a {
+  color: #6cb8ff;
+}
 /* ---- inline info buttons ---- */
 .yc-info-btn,
 .diagram-info-btn {
@@ -452,6 +400,11 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   z-index: 9999;
   pointer-events: none;
+}
+
+.info-tooltip a {
+  color: #6cb8ff;
+  pointer-events: auto;
 }
 
 .station-tooltip {

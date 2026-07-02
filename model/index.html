@@ -9,6 +9,7 @@
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     >
+    <link rel="stylesheet" href="../header.css">
     <link rel="stylesheet" href="style.css">
     <script type="importmap">
         {
@@ -20,11 +21,11 @@
     </script>
 </head>
 <body>
-    <div style="display: flex; gap: 1rem; align-items: center;">
-      <a id="backButton" class="secondary" role="button" href="..">← Back</a>
-    <a id="logoLink" href="https://novac-community.org/" target="_blank" rel="noopener">
-      <img src="../NOVAC_logo.png" alt="NOVAC logo" style="height: 44px;">
-    </a>
+    <div class="topbar">
+      <a class="back-btn" role="button" href=".." aria-label="Back to home">← Back</a>
+      <a href="https://novac-community.org/" target="_blank" rel="noopener">
+        <img src="../NOVAC_logo.png" alt="NOVAC logo">
+      </a>
     </div>
     <audio id="silence" src="resources/silence.mp3" volume="0" loop></audio>
     <audio id="strong_eruption_sfx" src="resources/strong_eruption_sfx.mp3" volume="0.5" loop></audio>
@@ -36,7 +37,7 @@
             <summary>Parameters</summary>
             <div class="parameter-row">
                 <div class="parameter-header">
-                    <label for="gasDensitySlider">Magma gas gontent (<span id="gasDensityIndicator"></span> wt%)</label>
+                    <label for="gasDensitySlider">Magma gas content (<span id="gasDensityIndicator"></span> wt%)</label>
                     <button id="gasDensityInfo" type="button" class="parameter-info-button" aria-label="Gas density info"></button>
                 </div>
                 <input type="range" id="gasDensitySlider" min="0" max="6" value="1" step="1">

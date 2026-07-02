@@ -57,14 +57,19 @@ html,
         line-height: 1.4;
         font-weight: 400;
       }
-      footer.container {
+      footer {
         background: #13171F;
         border-top: 1px solid rgba(255,255,255,0.07);
         color: #9ab;
         margin-top: 1.5rem;
-        padding-top: 1rem;
         font-size: 0.85rem;
+        display: block;
+        text-align: center;
       }
+      footer .container {
+        padding-top: 1rem;
+      }
+     
       footer strong { color: #eee; }
       footer hr { border-color: rgba(255,255,255,0.1); }
       footer small, footer a { color: #9ab; }

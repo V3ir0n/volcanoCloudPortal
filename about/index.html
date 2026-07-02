@@ -7,6 +7,7 @@
   <title>About NOVAC</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../header.css">
   <style>
     :root {
       --paper:  #fbf8f0;
@@ -15,6 +16,13 @@
       --orange: #FF6B35;
       --gold:   #e0a500;
       --line:   #cfc9b8;
+
+      /* theme header.css for this page's paper/ink palette */
+      --topbar-h: 48px;
+      --topbar-bg: rgba(251,248,240,0.92);
+      --topbar-fg: var(--ink);
+      --btn-border: var(--ink);
+      --btn-hover-bg: var(--ink);
     }
     * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -32,32 +40,13 @@
     .topbar {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 16px;
-      background: rgba(251,248,240,0.92);
       backdrop-filter: blur(8px);
       border-bottom: 2px solid var(--ink);
-      z-index: 1000;
+      box-shadow: none;
     }
     .topbar-title { flex: 1; text-align: center; font-family: 'Caveat', cursive; font-size: 1.4rem; font-weight: 700; }
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      background: transparent;
-      color: var(--ink);
-      text-decoration: none;
-      border: 2px solid var(--ink);
-      border-radius: 999px;
-      font-family: 'Patrick Hand', sans-serif;
-      font-size: 0.95rem;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .back-btn:hover { background: var(--ink); color: var(--paper); transform: translateY(-1px); }
+    .back-btn { transition: background 0.2s ease, transform 0.2s ease; }
+    .back-btn:hover { color: var(--paper); transform: translateY(-1px); }
 
     /* ── Hero ── */
     .hero {
@@ -185,7 +174,7 @@
 
   <!-- Topbar -->
   <div class="topbar">
-    <a href=".." class="back-btn">← Back</a>
+    <a href=".." class="back-btn" aria-label="Back to home">← Back</a>
     <span class="topbar-title">About NOVAC</span>
   </div>
 
