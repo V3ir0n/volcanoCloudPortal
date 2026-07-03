@@ -17,6 +17,90 @@ const CONE_HALF_RAD = 60 * Math.PI / 180;   // half-angle 60° → tan(60°) = 1
 // World-space direction the plume drifts in, roughly horizontal.
 const WIND_DIR = new THREE.Vector3(1, 0, 3).normalize();
 
+// ── Scan cone color (user-selectable, shared with the map view via localStorage) ──
+const CONE_COLOR_KEY = 'scanConeColor';
+const DEFAULT_CONE_COLOR = '#808080';
+function getStoredConeColor(defaultColor = DEFAULT_CONE_COLOR) {
+    return localStorage.getItem(CONE_COLOR_KEY) || defaultColor;
+}
+
+// Builds a scan-cone-shaped swatch button: a hidden native <input type="color">
+// (so the OS picker still works) overlaid with an SVG fan icon that renders in
+// the currently picked color, standing in for the plain browser swatch.
+function createConeColorPicker(onChange) {
+    const wrap = document.createElement('div');
+    wrap.title = 'Scan cone color';
+    wrap.style.cssText = `
+        position:relative; display:flex; align-items:center; gap:8px;
+        padding:8px 12px; background:rgba(255,215,0,0.08); color:#ffd700;
+        border:1px solid rgba(255,215,0,0.35);
+        border-radius:6px; font-size:13px; font-family:sans-serif; cursor:pointer;
+    `;
+
+    const label = document.createElement('span');
+    label.textContent = 'Scan color';
+    wrap.appendChild(label);
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const icon = document.createElementNS(NS, 'svg');
+    icon.setAttribute('viewBox', '0 0 32 24');
+    icon.setAttribute('width', '26');
+    icon.setAttribute('height', '20');
+    icon.style.pointerEvents = 'none';
+
+    const fan = document.createElementNS(NS, 'path');
+    fan.setAttribute('d', 'M2,22 A14,14 0 0 1 30,22 Z');
+    fan.setAttribute('fill-opacity', '0.55');
+    icon.appendChild(fan);
+
+    [135, 90, 45].forEach(deg => {
+        const rad = deg * Math.PI / 180;
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('x1', '16');
+        line.setAttribute('y1', '22');
+        line.setAttribute('x2', (16 + 14 * Math.cos(rad)).toFixed(2));
+        line.setAttribute('y2', (22 - 14 * Math.sin(rad)).toFixed(2));
+        line.setAttribute('stroke-width', '1');
+        icon.appendChild(line);
+    });
+
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('cx', '16');
+    dot.setAttribute('cy', '22');
+    dot.setAttribute('r', '2');
+    dot.setAttribute('fill', '#0a0c10');
+    icon.appendChild(dot);
+    wrap.appendChild(icon);
+
+    const applyColor = hex => {
+        fan.setAttribute('fill', hex);
+        fan.setAttribute('stroke', hex);
+        icon.querySelectorAll('line').forEach(l => l.setAttribute('stroke', hex));
+    };
+
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.value = getStoredConeColor();
+    input.setAttribute('list', 'coneColorPresets');
+    input.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; padding:0; margin:0; cursor:pointer;';
+    input.addEventListener('input', () => {
+        localStorage.setItem(CONE_COLOR_KEY, input.value);
+        applyColor(input.value);
+        onChange(input.value);
+    });
+    wrap.appendChild(input);
+
+    // Suggested-color swatch: the closest a web page can get to seeding the
+    // OS color picker's custom-color slots (there's no API for that).
+    const presets = document.createElement('datalist');
+    presets.id = 'coneColorPresets';
+    presets.innerHTML = `<option value="${DEFAULT_CONE_COLOR}" label="Default"></option>`;
+    wrap.appendChild(presets);
+
+    applyColor(input.value);
+    return wrap;
+}
+
 // ── Slice math (per-slice column density & scan angle) ────────────────────────
 function sliceCD(i) {
     const t = (i + 0.5) / N;
@@ -29,13 +113,17 @@ function sliceScanAngle(i) {
 }
 
 // ── Heatmap color mapping ──────────────────────────────────────────────────────
-// Blue → cyan → green → yellow → red heatmap
+// White → yellow → orange → red → near-black heatmap (matches the map view's
+// emission color scale). Picked directly rather than interpolated, same as
+// HEAT_PALETTE in map/src/main.js, so bands stay distinct instead of blurring
+// into in-between shades (e.g. a pale cream between white and yellow).
+const CD_COLOR_STOPS = ["#ffffff", "#FEF001", "#fdba01", "#ff5e00", "#c81e1e", "#2b0000"]
+    .map(hex => new THREE.Color(hex));
+
 function cdColor(cd) {
     const t = Math.min(1, Math.max(0, cd / CD_MAX));
-    if (t < 0.25) return new THREE.Color(0, t / 0.25, 1);
-    if (t < 0.5)  return new THREE.Color(0, 1, 1 - (t - 0.25) / 0.25);
-    if (t < 0.75) return new THREE.Color((t - 0.5) / 0.25, 1, 0);
-    return new THREE.Color(1, 1 - (t - 0.75) / 0.25, 0);
+    const idx = Math.min(CD_COLOR_STOPS.length - 1, Math.floor(t * CD_COLOR_STOPS.length));
+    return CD_COLOR_STOPS[idx];
 }
 
 function cdColorCss(cd) {
@@ -285,10 +373,10 @@ class MeasurementView {
         }
         const wGeom = new THREE.BufferGeometry();
         wGeom.setAttribute('position', new THREE.Float32BufferAttribute(wv, 3));
-        group.add(new THREE.LineSegments(
-            wGeom,
-            new THREE.LineBasicMaterial({ color: 0x777777, transparent: true, opacity: 0.4 })
-        ));
+        this.coneWireMat = new THREE.LineBasicMaterial({
+            color: getStoredConeColor(), transparent: true, opacity: 0.4
+        });
+        group.add(new THREE.LineSegments(wGeom, this.coneWireMat));
 
         this.scene.add(group);
     }
@@ -541,12 +629,17 @@ class MeasurementView {
         });
 
         ui.appendChild(this.playBtn);
+
+        ui.appendChild(createConeColorPicker(hex => {
+            if (this.coneWireMat) this.coneWireMat.color.set(hex);
+        }));
+
         document.body.appendChild(ui);
 
         const hint = document.createElement('div');
         hint.style.cssText = `
             position:fixed; bottom:20px; left:20px; z-index:10;
-            color:#555; font-size:11px; font-family:sans-serif;
+            color:#555; font-size:16px; font-family:sans-serif;
             max-width:220px; line-height:1.6;
         `;
         hint.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume.';
