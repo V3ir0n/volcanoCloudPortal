@@ -10,6 +10,86 @@ import {GLTFExporter}
 from 'three/addons/exporters/GLTFExporter.js';
 
 const defaultRadiusKm = 10; // radius for fetching terrain data, can be adjusted if needed
+
+// Scan cone color (user-selectable, shared with the measurement view via localStorage)
+const CONE_COLOR_KEY = "scanConeColor";
+const DEFAULT_CONE_COLOR = "#808080";
+function getStoredConeColor(defaultColor = DEFAULT_CONE_COLOR) {
+  return localStorage.getItem(CONE_COLOR_KEY) || defaultColor;
+}
+
+// Builds a scan-cone-shaped swatch button: a hidden native <input type="color">
+// (so the OS picker still works) overlaid with an SVG fan icon that renders in
+// the currently picked color, standing in for the plain browser swatch.
+function createConeColorPicker(onChange) {
+  const wrap = document.createElement("div");
+  wrap.className = "cone-color-swatch";
+  wrap.title = "Scan cone color";
+
+  const label = document.createElement("span");
+  label.textContent = "Scan color";
+  wrap.appendChild(label);
+
+  const NS = "http://www.w3.org/2000/svg";
+  const icon = document.createElementNS(NS, "svg");
+  icon.setAttribute("viewBox", "0 0 32 24");
+  icon.setAttribute("width", "30");
+  icon.setAttribute("height", "22");
+  icon.style.pointerEvents = "none";
+  icon.style.flexShrink = "0";
+
+  const fan = document.createElementNS(NS, "path");
+  fan.setAttribute("d", "M2,22 A14,14 0 0 1 30,22 Z");
+  fan.setAttribute("fill-opacity", "0.55");
+  icon.appendChild(fan);
+
+  [135, 90, 45].forEach(deg => {
+    const rad = deg * Math.PI / 180;
+    const line = document.createElementNS(NS, "line");
+    line.setAttribute("x1", "16");
+    line.setAttribute("y1", "22");
+    line.setAttribute("x2", (16 + 14 * Math.cos(rad)).toFixed(2));
+    line.setAttribute("y2", (22 - 14 * Math.sin(rad)).toFixed(2));
+    line.setAttribute("stroke-width", "1");
+    icon.appendChild(line);
+  });
+
+  const dot = document.createElementNS(NS, "circle");
+  dot.setAttribute("cx", "16");
+  dot.setAttribute("cy", "22");
+  dot.setAttribute("r", "2");
+  dot.setAttribute("fill", "#181C25");
+  icon.appendChild(dot);
+  wrap.appendChild(icon);
+
+  const applyColor = hex => {
+    fan.setAttribute("fill", hex);
+    fan.setAttribute("stroke", hex);
+    icon.querySelectorAll("line").forEach(l => l.setAttribute("stroke", hex));
+  };
+
+  const input = document.createElement("input");
+  input.type = "color";
+  input.value = getStoredConeColor();
+  input.setAttribute("list", "coneColorPresets");
+  input.addEventListener("input", () => {
+    localStorage.setItem(CONE_COLOR_KEY, input.value);
+    applyColor(input.value);
+    onChange(input.value);
+  });
+  wrap.appendChild(input);
+
+  // Suggested-color swatch: the closest a web page can get to seeding the
+  // OS color picker's custom-color slots (there's no API for that).
+  const presets = document.createElement("datalist");
+  presets.id = "coneColorPresets";
+  presets.innerHTML = `<option value="${DEFAULT_CONE_COLOR}" label="Default"></option>`;
+  wrap.appendChild(presets);
+
+  applyColor(input.value);
+  return wrap;
+}
+
 /**
  * Render a place view into the given container.
  * @param {HTMLElement} container - The .panel-body element.
@@ -29,11 +109,17 @@ export function renderPlaceView(container, place, latLng) {
   `;
   container.appendChild(infoEl);
 
+  // Scan cone color picker
+  const colorRow = document.createElement("div");
+  colorRow.className = "cone-color-row";
+
   // THREE canvas
   const canvas = document.createElement("canvas");
+  container.appendChild(colorRow);
   container.appendChild(canvas);
 
-  new VolcanoView(canvas, place, latLng);
+  const view = new VolcanoView(canvas, place, latLng);
+  colorRow.appendChild(createConeColorPicker(hex => view.setConeColor(hex)));
 }
 
 class VolcanoView {
@@ -41,6 +127,8 @@ class VolcanoView {
     this.place = place;
     this.latLng = latLng;
     this.radiusKm = defaultRadiusKm;
+    this.coneColor = getStoredConeColor();
+    this.coneWireMats = [];
     this.terrainTransform = {
       center: new THREE.Vector3(0, 0, 0),
       scaleX: 1,
@@ -239,7 +327,8 @@ class VolcanoView {
     const mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
     group.add(new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.023, 0.07), mat));
 
-    const wireMat = new THREE.LineBasicMaterial({ color: 0xaaaaaa, opacity: 0.5, transparent: true }); //color on cone
+    const wireMat = new THREE.LineBasicMaterial({ color: this.coneColor, opacity: 0.5, transparent: true }); //color on cone
+    this.coneWireMats.push(wireMat);
     let scanShape;
 
     if (coneAngle === 90) {
@@ -321,6 +410,13 @@ class VolcanoView {
     return new THREE.Vector3(pos2D.x, altitudeMeters * unitsPerMeter, -pos2D.y);
   }
   //--------------------------------------------------------------------------
+
+  // Updates the color of every scan cone wireframe currently in the scene.
+  setConeColor(hex) {
+    this.coneColor = hex;
+    this.coneWireMats.forEach(m => m.color.set(hex));
+    this.render();
+  }
 
   /**
    * Render the scene, should be called whenever something changes
