@@ -38,6 +38,7 @@ function showInfoTooltip(anchorEl, text) {
 }
 
 let year, minYear, maxYear;
+let legendValues = [0]; // fixed set of emission values markers are bucketed into (size + color)
 const tickMs = 2000; // ms for each tick when pushing play button
 let intervalId = null;
 
@@ -71,6 +72,35 @@ function emissionRadius(props, year, options = {}) {
   return minRadius + scale * logValue;
 }
 
+// Fixed palette, one hand-picked color per legend level (white for zero emissions up
+// to near-black for the highest bucket). Picked directly rather than interpolated so
+// adjacent levels (e.g. 500 vs 1000) stay clearly distinguishable instead of blurring
+// together in a narrow slice of a continuous gradient.
+const HEAT_PALETTE = ["#ffffff", "#FEF001", "#fdba01", "#ff5e00", "#c81e1e", "#2b0000"];
+
+// Maps an emission value to a heat-map color by its position in `breaks` (the same
+// fixed level list used for bucketing), so each legend level gets a distinct,
+// well-separated color regardless of how compressed the values are on a log scale.
+function emissionColor(value, breaks) {
+  const idx = breaks.indexOf(Number(value) || 0);
+  if (breaks.length <= 1) return HEAT_PALETTE[0];
+  const paletteIdx = idx === -1
+    ? HEAT_PALETTE.length - 1
+    : Math.round((idx / (breaks.length - 1)) * (HEAT_PALETTE.length - 1));
+  return HEAT_PALETTE[paletteIdx];
+}
+
+// Snaps a raw emission value up to the nearest value in `breaks` (ascending, e.g. the
+// legend's own value list), so every marker's size/color matches one of a small,
+// fixed set of legend-shown combinations instead of a continuous scale.
+function bucketEmissionValue(value, breaks) {
+  const v = Number(value) || 0;
+  for (const b of breaks) {
+    if (v <= b) return b;
+  }
+  return breaks[breaks.length - 1];
+}
+
 // Finds max and min value of year from volcanoes.geojson for the emission slider.
 function computeYearRange(data) {
   let min = Infinity, max = -Infinity; //all years will be larger than -inf and smaller than inf
@@ -86,8 +116,8 @@ function computeYearRange(data) {
   return min === Infinity ? { min: 2005, max: 2023 } : { min, max }; //if min=inf no years was found and 2005,2023 are used as stand in values.
 }
 
-//for legend
-function computeLegendValuesFromData(data) {
+// Raw (unrounded) max emission across all volcanoes and years; used to normalize the heat-map color scale.
+function computeGlobalMaxEmission(data) {
   const years = Array.from({ length: maxYear - minYear + 1 }, (_, i) => String(minYear + i));
 
   let maxVal = 0;
@@ -98,8 +128,14 @@ function computeLegendValuesFromData(data) {
       if (v > maxVal) maxVal = v;
     }
   }
+  return maxVal;
+}
+
+//for legend
+function computeLegendValuesFromData(data) {
+  const maxVal = computeGlobalMaxEmission(data);
   // round up
-  const niceMax = maxVal <= 0 ? 0 : Math.ceil(maxVal / 500) * 500; 
+  const niceMax = maxVal <= 0 ? 0 : Math.ceil(maxVal / 500) * 500;
   return [0, 10, 100, 500, 1000, niceMax].filter((v, i, arr) => v >= 0 && arr.indexOf(v) === i);
 }
 
@@ -159,14 +195,16 @@ function setYear(newYear) {
     }
   }
 
-  // update circle radius based on the new year
+  // update circle radius and heat-map color based on the new year
   if (geoLayer) {
     geoLayer.eachLayer((layer) => {
       if (!layer.feature || typeof layer.setRadius !== "function") return;
 
       const props = layer.feature.properties || {};
-      const r = emissionRadius(props, year);
-      layer.setRadius(r);
+      const raw = Number(props[String(year)]) || 0;
+      const bucketV = bucketEmissionValue(raw, legendValues);
+      layer.setRadius(emissionRadius({ [String(year)]: bucketV }, year));
+      layer.setStyle({ fillColor: emissionColor(bucketV, legendValues) });
     });
   }
 }
@@ -473,6 +511,7 @@ fetch("resources/volcanoes.geojson")
     minYear = min;
     maxYear = max;
     year = minYear;
+    legendValues = computeLegendValuesFromData(data);
 
     const YearControl = L.Control.extend({
       onAdd() {
@@ -495,7 +534,7 @@ fetch("resources/volcanoes.geojson")
         // Info button pop-up text
         infoBtn.addEventListener("click", (e) => {
           L.DomEvent.stopPropagation(e);
-          showInfoTooltip(infoBtn, "Circle size represents annual SO₂ emissions for the selected year. Larger circles = higher emissions. Drag the slider or press play to explore different years.");
+          showInfoTooltip(infoBtn, "Circle size and color represent annual SO₂ emissions for the selected year. Larger, redder circles = higher emissions. Drag the slider or press play to explore different years.");
         });
 
         btn.addEventListener("click", () => {
@@ -521,7 +560,6 @@ fetch("resources/volcanoes.geojson")
     map.addControl(new YearControl({ position: "bottomleft" }));
 
     const baseStyle = {
-      fillColor: "#FFD700",
       color: "#000",
       weight: 1,
       opacity: 1,
@@ -531,10 +569,13 @@ fetch("resources/volcanoes.geojson")
     // Adds circle markers that are used in main to create the emission circlesfor each volcano
     geoLayer = L.geoJSON(data, {
       pointToLayer: (feature, latlng) => {
-        const radius = emissionRadius(feature.properties || {}, year);
+        const props = feature.properties || {};
+        const raw = Number(props[String(year)]) || 0;
+        const bucketV = bucketEmissionValue(raw, legendValues);
         return L.circleMarker(latlng, {
           ...baseStyle,
-          radius
+          radius: emissionRadius({ [String(year)]: bucketV }, year),
+          fillColor: emissionColor(bucketV, legendValues)
         });
       },
       onEachFeature: (feature, layer) => {
@@ -545,8 +586,7 @@ fetch("resources/volcanoes.geojson")
       }
     }).addTo(map);
 
-    // Build legend values from data and add static legend
-    const legendValues = computeLegendValuesFromData(data);
+    // Add static legend showing the fixed set of size/color combinations
     createStaticLegend(legendValues);
 
     // Define the VolcanoControl here (in the same scope)
@@ -601,12 +641,13 @@ function createStaticLegend(legendValues) {
             const r = emissionRadius({ [String(minYear)]: v }, minYear);
             const size = Math.ceil(r * 2) + 6;
             const c = Math.ceil(size / 2);
+            const fill = emissionColor(v, legendValues);
 
             return `
               <div class="legend-row">
                 <svg width="${size}" height="${size}" aria-hidden="true">
                   <circle cx="${c}" cy="${c}" r="${r}"
-                    fill="#FFD700" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
+                    fill="${fill}" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
                 </svg>
                 <span class="legend-label">${formatEmission(v)}</span>
                 ${v === 0 ? `<button class="diagram-info-btn" type="button" aria-label="About this legend" style="margin-left:auto">ℹ</button>` : ""}
@@ -621,7 +662,7 @@ function createStaticLegend(legendValues) {
 
       div.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
         L.DomEvent.stopPropagation(e);
-        showInfoTooltip(e.currentTarget, "Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
+        showInfoTooltip(e.currentTarget, "Circle size and color each fall into one of a fixed set of levels based on annual SO₂ emissions — larger, darker-red circles mean higher emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
       });
 
       return div;

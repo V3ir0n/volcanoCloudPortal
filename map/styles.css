@@ -10,7 +10,7 @@ body {
 }
 
 .map-wrap {
-  height: calc(100vh - var(--topbar-h));
+  height: 100vh;
   width: 100%;
   position: relative;
 }
@@ -115,7 +115,9 @@ body {
 }
 
 .year-control {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(19, 23, 31, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #ffd700;
   padding: 0.5rem 0.75rem;
   border-radius: 0.5rem;
@@ -163,12 +165,13 @@ body {
 }
 
 .volcano-control {
-  pointer-events: auto; 
-  background: rgba(30, 30, 30, 0.85);
+  pointer-events: auto;
+  background: rgba(19, 23, 31, 0.55);
 
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .volcano-select {
@@ -176,7 +179,7 @@ body {
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #444;
-  background: #202020;
+  background: #262b36;
   color: #f0f0f0;
   cursor: pointer;
   outline: none;
@@ -194,7 +197,7 @@ body {
 
 .volcano-select:hover {
   border-color: #777;
-  background: #2a2a2a;
+  background: #313742;
 }
 
 
@@ -241,7 +244,9 @@ body {
 }
 
 .emission-legend {
-  background: rgba(0,0,0,0.66);
+  background: rgba(19, 23, 31, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #eee;
   padding: 10px 12px;
   border-radius: 10px;
@@ -283,13 +288,23 @@ body {
 }
 
 .topbar {
-  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(19, 23, 31, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   box-shadow: none;
 }
 
 .leaflet-top,
 .leaflet-bottom {
   pointer-events: none;
+}
+
+.leaflet-top {
+  padding-top: var(--topbar-h);
 }
 
 .leaflet-top .leaflet-control,
