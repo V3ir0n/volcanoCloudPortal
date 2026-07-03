@@ -107,9 +107,10 @@ function sliceCD(i) {
     return CD_MAX * Math.exp(-((t - PLUME_T) ** 2) / (2 * PLUME_SIG ** 2));
 }
 
-// φ=0 (right, +X local) → +90°; φ=π (left, −X local) → −90°
+// φ=0 (left, +X local) → −90°; φ=π (right, −X local) → +90°
+// (forward = local +Z toward the volcano, up = +Y ⇒ right = forward×up = local −X)
 function sliceScanAngle(i) {
-    return 90 - ((i + 0.5) / N) * 180;
+    return ((i + 0.5) / N) * 180 - 90;
 }
 
 // ── Heatmap color mapping ──────────────────────────────────────────────────────
@@ -131,11 +132,12 @@ function cdColor(cd) {
 }
 
 function cdColorCss(cd) {
-    // Lightened relative to cdColor(): the 3D cone's dark red reads fine against the
-    // bright terrain/basemap behind it, but the same color sat too dark against the
-    // chart panel's near-black background (rgba(8,10,14,0.88)).
-    const c = cdColor(cd).clone().lerp(new THREE.Color(0xffffff), 0.25);
-    return `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
+    // getHexString() converts three.js's internal linear-light r/g/b back to sRGB.
+    // Building "rgb(r*255,...)" straight from those linear values (as this used to)
+    // silently darkens every color — worst for the darkest stop, whose intended
+    // #8b0000 (139,0,0) rendered as roughly rgb(66,0,0), nearly invisible against
+    // the chart panel's near-black background.
+    return `#${cdColor(cd).getHexString()}`;
 }
 
 // ── SO2 transmittance spectrum (loaded from CSV, keyed by column density) ────
@@ -675,9 +677,9 @@ class MeasurementView {
             this.playBtn.style.cursor = 'pointer';
             return;
         }
-        // Reveal in order of increasing scan angle (−90 → +90) so both the
-        // 3D sweep and the chart fill left to right.
-        const i = N - 1 - this.currentSlice++;
+        // Reveal in order of increasing scan angle (−90 → +90, see sliceScanAngle)
+        // so both the 3D sweep and the chart fill left to right.
+        const i = this.currentSlice++;
 
         if (this.sliceMeshes[i]) this.sliceMeshes[i].material.visible = true;
         if (this.barEls[i]) this.barEls[i].setAttribute('opacity', 0.88);
