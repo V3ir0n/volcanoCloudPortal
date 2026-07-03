@@ -115,11 +115,13 @@ html,
         .nav-grid {
           grid-template-columns: 1fr;
           grid-template-areas:
+            "why"
             "model"
             "map"
-            "why"
             "measure";
           gap: 1.5rem;
         }
-        .nav-card-why { transform: none; }
+        .nav-card-why {
+          margin-top: 0;
+        }
       }
