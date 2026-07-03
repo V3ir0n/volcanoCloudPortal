@@ -113,11 +113,15 @@ function sliceScanAngle(i) {
 }
 
 // ── Heatmap color mapping ──────────────────────────────────────────────────────
-// White → yellow → orange → red → near-black heatmap (matches the map view's
-// emission color scale). Picked directly rather than interpolated, same as
-// HEAT_PALETTE in map/src/main.js, so bands stay distinct instead of blurring
-// into in-between shades (e.g. a pale cream between white and yellow).
-const CD_COLOR_STOPS = ["#ffffff", "#FEF001", "#fdba01", "#ff5e00", "#c81e1e", "#2b0000"]
+// White → yellow → orange → red → dark red heatmap. Picked directly rather than
+// interpolated, same as HEAT_PALETTE in map/src/main.js, so bands stay distinct
+// instead of blurring into in-between shades (e.g. a pale cream between white
+// and yellow). Unlike that map palette, the scene here clears to near-black
+// (0x0a0c10, see renderer.setClearColor below), so the last two stops are kept
+// brighter than HEAT_PALETTE's — a near-black top stop would make the highest
+// column density the least visible slice, and too-similar reds would make the
+// last two bands indistinguishable against each other.
+const CD_COLOR_STOPS = ["#ffffff", "#FEF001", "#fdba01", "#ff5e00", "#e0341f", "#8b0000"]
     .map(hex => new THREE.Color(hex));
 
 function cdColor(cd) {
@@ -127,7 +131,10 @@ function cdColor(cd) {
 }
 
 function cdColorCss(cd) {
-    const c = cdColor(cd);
+    // Lightened relative to cdColor(): the 3D cone's dark red reads fine against the
+    // bright terrain/basemap behind it, but the same color sat too dark against the
+    // chart panel's near-black background (rgba(8,10,14,0.88)).
+    const c = cdColor(cd).clone().lerp(new THREE.Color(0xffffff), 0.25);
     return `rgb(${Math.round(c.r * 255)},${Math.round(c.g * 255)},${Math.round(c.b * 255)})`;
 }
 
