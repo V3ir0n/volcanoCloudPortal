@@ -4,13 +4,16 @@
     <link rel="icon" type="image/png" href="NOVAC_logo.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="dark">
+    <meta name="color-scheme" content="light">
     <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css" />
     <link rel="stylesheet" href="./styles.css" />
-    
+
     <!-- Header -->
     <title>NOVAC Open Academy</title>
   </head>
@@ -69,14 +72,11 @@
         <!-- Why (clustered center, enlarged) -->
         <a href="./why/index.html" class="nav-card nav-card-why">
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="8" r="3.5"/>
-            <path d="M4.5 20c0-4.14 3.36-7.5 7.5-7.5s7.5 3.36 7.5 7.5"/>
-            <circle cx="19.5" cy="7" r="2.2"/>
-            <path d="M21.5 17.5c0-2.76-1.57-5.14-3.87-6.3"/>
-            <circle cx="4.5" cy="7" r="2.2"/>
-            <path d="M2.5 17.5c0-2.76 1.57-5.14 3.87-6.3"/>
+            <path d="M8 21.6 Q5.6 17.6 8.8 14.4 Q12 11.2 8.8 8 Q6.4 5.6 8.8 2.4"/>
+            <path d="M12.8 21.6 Q10.4 17.6 13.6 14.4 Q16.8 11.2 13.6 8 Q11.2 5.6 13.6 2.4" opacity="0.65"/>
+            <path d="M17.6 21.6 Q15.2 17.6 18.4 14.4 Q21.6 11.2 18.4 8" opacity="0.4"/>
           </svg>
-          <h2>Why gases?</h2>
+          <h2>Why gas</h2>
           <p>Why we should care about volcanic gas emissions</p>
         </a>
 
@@ -85,10 +85,11 @@
 
     <footer>
   <div class="container">
-  <!-- The Grid with partner info -->
-  <div class="grid">
+  <!-- Stack with partner info, credits -->
+  <div style="display: flex; flex-direction: column; gap: 0.75em;">
+
     <!-- Section 1: What is NOVAC -->
-    <section style="display: flex; align-self: end;">
+    <section>
       <small>
         <strong>About NOVAC</strong><br>
         "About NOVAC: The Network for Observation of Volcanic and Atmospheric Change is a global collaboration between volcano observatories and research institutions that advances the monitoring and scientific understanding of volcanic emissions and their impacts."
@@ -96,27 +97,25 @@
     </section>
 
     <!-- Section 2: Sustaining Organizations -->
-    <section style="display: flex; align-self: end;">
+    <section>
       <small>
         <strong>Sustained By</strong><br>
-        
         "The joint effort of volcano observatories, Chalmers University of Technology, and the Volcano Disaster Assistance Program of the United States Geological Survey. Established through funding from the European Commission, the International Geoscience Programme of UNESCO/IUGS, the Swedish Space Agency, The Swedish Research Council and other funding sources over the years."
       </small>
     </section>
 
-    </div>
-
-  <!-- Single separator line -->
-  <hr>
-
-  <!-- Copyright / Final line -->
-  <small>
-    <strong>Credits</strong><br>
-    This page is funded by Chalmers University of Technology and developed within an     <a href="https://infravis.se" target="_blank" rel="noopener">InfraVis</a>
-/Chalmers project including the following people: Santiago Arellano & Malin Lindgren (Chalmers),
+    <!-- Section 3: Credits -->
+    <section>
+      <small>
+        <strong>Credits</strong><br>
+        This page is funded by Chalmers University of Technology and developed within an     <a href="https://infravis.se" target="_blank" rel="noopener">InfraVis</a>
+/Chalmers project including the following people: Santiago Arellano, Malin Lindgren and Bo Galle (Chalmers),
 Joakim Bohlin, Kristin Åkerlund, Jessica Cistakova, Tristan Bridge, Matteo Tomasini (InfraVis)
-    <!--© 2026 InfraVis · Built for NOVAC · -->
-  </small>
+        <!--© 2026 InfraVis · Built for NOVAC · -->
+      </small>
+    </section>
+
+  </div>
   </div>
 </footer>
    

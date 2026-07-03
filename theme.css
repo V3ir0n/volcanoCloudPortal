@@ -1,0 +1,108 @@
+/* theme.css -- site-wide design tokens plus the shared topbar layout.
+   Link this before buttons.css and any page-local stylesheet:
+     <link rel="stylesheet" href="theme.css">
+     <link rel="stylesheet" href="buttons.css">
+     <link rel="stylesheet" href="./styles.css">
+   Pages theme the topbar by overriding --topbar-bg/--topbar-fg/--btn-border/
+   --btn-hover-bg after this file is linked (see why/styles.css). Position
+   (static in normal flow vs. fixed overlay) is left to each page, since it
+   depends on whether the content below reserves space for the bar. */
+
+:root {
+  /* ---- Color: paper theme (promoted from the why page) ---- */
+  --color-paper:        #fbf8f0;  /* page background */
+  --color-paper-raised: #ffffff;  /* cards / raised surfaces on paper */
+  --color-ink:           #2b2b2b; /* primary text / strokes */
+  --color-ink-soft:       #555555;/* secondary text */
+  --color-ink-faint:      #888888;/* tertiary text / meta */
+  --color-line:          #cfc9b8; /* borders, dividers, dotted rules */
+  --color-orange:        #FF6B35; /* primary accent -- CTAs, active/hover, emphasis */
+  --color-orange-rgb:    255, 107, 53;
+  --color-gold:           #e0a500; /* the site's gold accent -- header text, button text/border,
+                                       highlights, focus, data/legend */
+  --color-gold-rgb:       224, 165, 0;
+
+  /* Translucent "glass" surface tokens for panels overlaid on the Leaflet
+     map / three.js canvases */
+  --glass-bg:     rgba(251, 248, 240, 0.92);
+  --glass-border: rgba(43, 43, 43, 0.16);
+  --glass-shadow: 0 4px 16px rgba(43, 43, 43, 0.20);
+  --glass-blur:   10px;
+
+  /* ---- Fonts ---- */
+  --font-brand:      'Caveat', cursive;              /* headings, brand moments */
+  --font-body:        'Patrick Hand', sans-serif;     /* body copy, UI labels, buttons */
+  --font-scientific:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Type scale (rem) ---- */
+  --text-xs:   0.75rem;  /* fine print, min/max labels, dt/dd meta */
+  --text-sm:   0.85rem;  /* secondary labels, legend rows, tooltips, buttons */
+  --text-base: 1rem;     /* default UI text */
+  --text-body: 1.15rem;  /* Patrick Hand prose body */
+  --text-md:   1.05rem;  /* sub-lead paragraphs */
+  --text-lg:   1.25rem;  /* card titles, hero-sub */
+  --text-xl:   1.6rem;   /* section/card headings (Caveat) */
+  --text-2xl:  clamp(2.4rem, 6vw, 4rem); /* hero */
+
+  --text-num-sm: 0.85rem; /* inline numeric labels */
+  --text-num-md: 1.05rem; /* slider value readouts, legend numbers */
+  --text-num-lg: 1.25rem; /* year-counter style big readouts */
+
+  /* ---- Spacing scale ---- */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-5: 24px; --space-6: 32px;
+
+  /* ---- Radii ---- */
+  --radius-pill:   999px;
+  --radius-circle: 50%;
+  --radius-md:     10px;
+  --radius-sm:     6px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 2px 8px rgba(43, 43, 43, 0.12);
+  --shadow-md: 0 6px 20px rgba(43, 43, 43, 0.18);
+  --shadow-doodle: 5px 5px 0 rgba(43, 43, 43, 0.12); /* why's hand-drawn card shadow */
+
+  /* ---- Transitions ---- */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+
+  /* ---- Shared topbar theme (absorbed from header.css) ---- */
+  --topbar-h: 58px;
+  --topbar-bg: var(--glass-bg);
+  --topbar-fg: var(--color-gold);
+
+  /* ---- Shared button theme: gold text/border with a translucent gold
+     glow on hover, matching the NOVAC logo's gold ring. Applies to every
+     .btn / .back-btn / .doc-btn sitewide. ---- */
+  --btn-fg: var(--color-gold);
+  --btn-border: rgba(var(--color-gold-rgb), 0.5);
+  --btn-hover-bg: rgba(var(--color-gold-rgb), 0.18);
+}
+
+/* ---- Shared topbar layout ---- */
+.topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--topbar-bg);
+  color: var(--topbar-fg);
+  box-shadow: 0 1px 0 rgba(43, 43, 43, 0.08);
+  z-index: 1500;
+}
+
+.topbar img {
+  max-height: calc(var(--topbar-h) - 20px);
+  display: block;
+  flex-shrink: 0;
+}
+
+.topbar-title {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

@@ -30,12 +30,7 @@ function getStoredConeColor(defaultColor = DEFAULT_CONE_COLOR) {
 function createConeColorPicker(onChange) {
     const wrap = document.createElement('div');
     wrap.title = 'Scan cone color';
-    wrap.style.cssText = `
-        position:relative; display:flex; align-items:center; gap:8px;
-        padding:8px 12px; background:rgba(255,215,0,0.08); color:#ffd700;
-        border:1px solid rgba(255,215,0,0.35);
-        border-radius:6px; font-size:13px; font-family:sans-serif; cursor:pointer;
-    `;
+    wrap.className = 'cone-color-picker';
 
     const label = document.createElement('span');
     label.textContent = 'Scan color';
@@ -68,7 +63,7 @@ function createConeColorPicker(onChange) {
     dot.setAttribute('cx', '16');
     dot.setAttribute('cy', '22');
     dot.setAttribute('r', '2');
-    dot.setAttribute('fill', '#0a0c10');
+    dot.setAttribute('fill', '#2b2b2b');
     icon.appendChild(dot);
     wrap.appendChild(icon);
 
@@ -299,8 +294,6 @@ class MeasurementView {
             this._buildStation(model, bbox, center, size, extent);
             this.ready = true;
             this.playBtn.disabled = false;
-            this.playBtn.style.opacity = '1';
-            this.playBtn.style.cursor = 'pointer';
         }, undefined, err => console.error('Failed to load terrain:', err));
     }
 
@@ -390,7 +383,7 @@ class MeasurementView {
         this.scene.add(group);
     }
 
-    // ── Bar chart ─────────────────────────────────────────────────────────────
+    // ── Bar chart SO2─────────────────────────────────────────────────────────────
     _initChart() {
         const NS = 'http://www.w3.org/2000/svg';
         const W = 268, H = 162;
@@ -399,16 +392,11 @@ class MeasurementView {
         const iH = H - M.t - M.b;
 
         const panel = document.createElement('div');
-        panel.style.cssText = `
-            position:fixed; bottom:76px; right:20px; width:${W + 24}px;
-            background:rgba(8,10,14,0.88); border:1px solid #333; border-radius:8px;
-            padding:12px; box-sizing:border-box; pointer-events:none;
-            opacity:0; transition:opacity 0.35s;
-        `;
+        panel.className = 'chart-panel chart-panel--cd';
 
         const title = document.createElement('div');
         title.textContent = 'SO₂ column density / ppm·m';
-        title.style.cssText = 'color:#999;font-size:11px;font-family:sans-serif;margin-bottom:6px;';
+        title.className = 'chart-panel__title';
         panel.appendChild(title);
 
         const svg = document.createElementNS(NS, 'svg');
@@ -432,7 +420,7 @@ class MeasurementView {
         // Horizontal grid lines
         [50, 100, 150].forEach(v => {
             const y = iH - (v / CD_MAX) * iH;
-            g.appendChild(mkLine(0, y, iW, y, '#2a2a2a'));
+            g.appendChild(mkLine(0, y, iW, y, '#cfc9b8'));
         });
 
         // X ticks: scan angle, −90 (left) → +90 (right)
@@ -443,7 +431,7 @@ class MeasurementView {
             lbl.setAttribute('x', x); lbl.setAttribute('y', iH + 14);
             lbl.setAttribute('text-anchor', 'middle');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#777');
+            lbl.setAttribute('fill', '#555555');
             lbl.textContent = a;
             g.appendChild(lbl);
         });
@@ -453,7 +441,7 @@ class MeasurementView {
         xLbl.setAttribute('x', iW / 2); xLbl.setAttribute('y', H - M.t - 3);
         xLbl.setAttribute('text-anchor', 'middle');
         xLbl.setAttribute('font-size', 9);
-        xLbl.setAttribute('fill', '#666');
+        xLbl.setAttribute('fill', '#555555');
         xLbl.textContent = 'scan angle / deg';
         g.appendChild(xLbl);
 
@@ -465,7 +453,7 @@ class MeasurementView {
             lbl.setAttribute('x', -7); lbl.setAttribute('y', y + 3);
             lbl.setAttribute('text-anchor', 'end');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#777');
+            lbl.setAttribute('fill', '#555555');
             lbl.textContent = v;
             g.appendChild(lbl);
         });
@@ -513,16 +501,11 @@ class MeasurementView {
         const wMin = 300, wMax = 330;
 
         const panel = document.createElement('div');
-        panel.style.cssText = `
-            position:fixed; bottom:300px; right:20px; width:${W + 24}px;
-            background:rgba(8,10,14,0.88); border:1px solid #333; border-radius:8px;
-            padding:12px; box-sizing:border-box; pointer-events:none;
-            opacity:0; transition:opacity 0.35s;
-        `;
+        panel.className = 'chart-panel chart-panel--trans';
 
         const title = document.createElement('div');
         title.textContent = 'SO₂ transmittance / wavelength';
-        title.style.cssText = 'color:#999;font-size:11px;font-family:sans-serif;margin-bottom:6px;';
+        title.className = 'chart-panel__title';
         panel.appendChild(title);
 
         const svg = document.createElementNS(NS, 'svg');
@@ -546,7 +529,7 @@ class MeasurementView {
         // Horizontal grid lines
         [0.25, 0.5, 0.75].forEach(v => {
             const y = iH - v * iH;
-            g.appendChild(mkLine(0, y, iW, y, '#2a2a2a'));
+            g.appendChild(mkLine(0, y, iW, y, '#cfc9b8'));
         });
 
         // Y ticks: transmittance 0..1
@@ -557,7 +540,7 @@ class MeasurementView {
             lbl.setAttribute('x', -7); lbl.setAttribute('y', y + 3);
             lbl.setAttribute('text-anchor', 'end');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#777');
+            lbl.setAttribute('fill', '#555555');
             lbl.textContent = v;
             g.appendChild(lbl);
         });
@@ -570,7 +553,7 @@ class MeasurementView {
             lbl.setAttribute('x', x); lbl.setAttribute('y', iH + 14);
             lbl.setAttribute('text-anchor', 'middle');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#777');
+            lbl.setAttribute('fill', '#555555');
             lbl.textContent = w;
             g.appendChild(lbl);
         });
@@ -580,7 +563,7 @@ class MeasurementView {
         xLbl.setAttribute('x', iW / 2); xLbl.setAttribute('y', H - M.t - 3);
         xLbl.setAttribute('text-anchor', 'middle');
         xLbl.setAttribute('font-size', 9);
-        xLbl.setAttribute('fill', '#666');
+        xLbl.setAttribute('fill', '#555555');
         xLbl.textContent = 'wavelength / nm';
         g.appendChild(xLbl);
 
@@ -618,24 +601,13 @@ class MeasurementView {
     // ── Controls ─────────────────────────────────────────────────────────────
     _initUI() {
         const ui = document.createElement('div');
-        ui.style.cssText = 'position:fixed;bottom:20px;right:20px;display:flex;gap:8px;z-index:10;';
+        ui.className = 'scan-controls';
 
         this.playBtn = document.createElement('button');
         this.playBtn.textContent = '▶  Start scan';
         this.playBtn.disabled = true;
-        this.playBtn.style.cssText = `
-            padding:8px 20px; background:rgba(255,215,0,0.08); color:#ffd700;
-            border:1px solid rgba(255,215,0,0.35);
-            border-radius:6px; font-size:13px; font-family:sans-serif;
-            opacity:0.45; cursor:default; transition:background 0.15s;
-        `;
+        this.playBtn.className = 'btn btn--pill btn--outline scan-play-btn';
         this.playBtn.addEventListener('click', () => this._startScan());
-        this.playBtn.addEventListener('mouseover', () => {
-            if (!this.playBtn.disabled) this.playBtn.style.background = 'rgba(255,215,0,0.22)';
-        });
-        this.playBtn.addEventListener('mouseout', () => {
-            this.playBtn.style.background = 'rgba(255,215,0,0.08)';
-        });
 
         ui.appendChild(this.playBtn);
 
@@ -646,11 +618,7 @@ class MeasurementView {
         document.body.appendChild(ui);
 
         const hint = document.createElement('div');
-        hint.style.cssText = `
-            position:fixed; bottom:20px; left:20px; z-index:10;
-            color:#555; font-size:16px; font-family:sans-serif;
-            max-width:220px; line-height:1.6;
-        `;
+        hint.className = 'scan-hint';
         hint.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume.';
         document.body.appendChild(hint);
     }
@@ -662,7 +630,6 @@ class MeasurementView {
         this.animating = true;
         this.playBtn.disabled = true;
         this.playBtn.textContent = 'Scanning…';
-        this.playBtn.style.opacity = '0.5';
         this.chartPanel.style.opacity = '1';
         this.transChartPanel.style.opacity = '1';
         this._step();
@@ -673,8 +640,6 @@ class MeasurementView {
             this.animating = false;
             this.playBtn.disabled = false;
             this.playBtn.textContent = '▶  Scan again';
-            this.playBtn.style.opacity = '1';
-            this.playBtn.style.cursor = 'pointer';
             return;
         }
         // Reveal in order of increasing scan angle (−90 → +90, see sliceScanAngle)

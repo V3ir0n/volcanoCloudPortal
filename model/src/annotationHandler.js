@@ -1,11 +1,59 @@
 import * as THREE from 'three';
 import {annotations} from './constants.js';
 
-const textureLoader = new THREE.TextureLoader();
-const spriteTexture = textureLoader.load(
-    "resources/label.png",
-    texture => texture.colorSpace = THREE.SRGBColorSpace
-);
+// Inverted from the site-wide .info-btn look (gold ring on a transparent
+// background) to a solid gold disc with a white ring and "ℹ" glyph, same
+// font as the HTML buttons, so the markers stay legible against the 3D scene.
+const infoGlyphFont = "Patrick Hand";
+
+function drawInfoGlyph(ctx, size) {
+    ctx.clearRect(0, 0, size, size);
+
+    const gold = "#e0a500";
+    const white = "#ffffff";
+    const ringWidth = size * 0.06;
+    const radius = size / 2 - ringWidth / 2 - 2;
+
+    ctx.fillStyle = gold;
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = white;
+    ctx.lineWidth = ringWidth;
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, radius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = white;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `${size * 0.62}px "${infoGlyphFont}", sans-serif`;
+    ctx.fillText("ℹ", size / 2, size / 2 + size * 0.02);
+}
+
+function createInfoSpriteTexture() {
+    const size = 128;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    drawInfoGlyph(ctx, size);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+
+    // The glyph may render with a fallback font until the webfont finishes
+    // loading; redraw once it's ready so it matches the HTML buttons exactly.
+    document.fonts.load(`${size * 0.62}px "${infoGlyphFont}"`).then(() => {
+        drawInfoGlyph(ctx, size);
+        texture.needsUpdate = true;
+    }).catch(() => {});
+
+    return texture;
+}
+
+const spriteTexture = createInfoSpriteTexture();
 
 const annotationSizeDefault = 0.05;
 const annotationSizeHighlight = 0.055;

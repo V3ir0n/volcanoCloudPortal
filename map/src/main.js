@@ -21,9 +21,14 @@ function showInfoTooltip(anchorEl, text) {
   );
   document.body.appendChild(tip);
   const r = anchorEl.getBoundingClientRect();
-  tip.style.left = `${r.left + r.width / 2}px`;
+  const margin = 8;
+  const left = Math.min(
+    Math.max(r.left + r.width / 2 - tip.offsetWidth / 2, margin),
+    window.innerWidth - tip.offsetWidth - margin
+  );
+  tip.style.left = `${left}px`;
   tip.style.top = `${r.top - 8}px`;
-  tip.style.transform = "translate(-50%, -100%)";
+  tip.style.transform = "translateY(-100%)";
   _activeTooltip = tip;
   setTimeout(() => {
     const dismiss = (e) => {
@@ -256,7 +261,7 @@ function renderPlaceOverlay(place, latlng) {
       <div class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
         <header class="panel-header">
           <h3 id="panel-title"></h3>
-          <button class="close-btn" aria-label="Close">&times;</button>
+          <button class="btn btn--icon btn--ghost info-close" aria-label="Close">&times;</button>
         </header>
         <div class="panel-body"></div>
       </div>
@@ -271,7 +276,7 @@ function renderPlaceOverlay(place, latlng) {
       }
     });
     // Close button
-    overlayEl.querySelector(".close-btn").addEventListener("click", () => {
+    overlayEl.querySelector(".info-close").addEventListener("click", () => {
       closeOverlay();
     });
     // Backdrop click
@@ -293,7 +298,7 @@ function renderPlaceOverlay(place, latlng) {
   header.className = "diagram-header";
   header.innerHTML = `
     <span class="diagram-title">SO₂ Emissions</span>
-    <button class="diagram-info-btn" type="button" aria-label="About this chart">ℹ</button>
+    <button class="btn btn--icon btn--icon-sm btn--outline info-btn diagram-info-btn" type="button" aria-label="About this chart">ℹ</button>
   `;
   container.appendChild(header);
   header.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
@@ -343,7 +348,7 @@ function renderPlaceOverlay(place, latlng) {
   xAxis.setAttribute("y1", margin.top + innerHeight);
   xAxis.setAttribute("x2", margin.left + innerWidth);
   xAxis.setAttribute("y2", margin.top + innerHeight);
-  xAxis.setAttribute("stroke", "#888");
+  xAxis.setAttribute("stroke", "#888888");
   axisGroup.appendChild(xAxis);
 
   // Y axis
@@ -352,7 +357,7 @@ function renderPlaceOverlay(place, latlng) {
   yAxis.setAttribute("y1", margin.top);
   yAxis.setAttribute("x2", margin.left);
   yAxis.setAttribute("y2", margin.top + innerHeight);
-  yAxis.setAttribute("stroke", "#888");
+  yAxis.setAttribute("stroke", "#888888");
   axisGroup.appendChild(yAxis);
 
   // Y
@@ -366,7 +371,7 @@ function renderPlaceOverlay(place, latlng) {
     tick.setAttribute("x2", margin.left);
     tick.setAttribute("y1", y);
     tick.setAttribute("y2", y);
-    tick.setAttribute("stroke", "#888");
+    tick.setAttribute("stroke", "#888888");
     axisGroup.appendChild(tick);
 
     const label = document.createElementNS(svgNS, "text");
@@ -374,7 +379,7 @@ function renderPlaceOverlay(place, latlng) {
     label.setAttribute("y", y + 4);
     label.setAttribute("text-anchor", "end");
     label.setAttribute("font-size", "10");
-    label.setAttribute("fill", "#ccc");
+    label.setAttribute("fill", "#555555");
     label.textContent = Math.round(value);
     axisGroup.appendChild(label);
   }
@@ -391,7 +396,7 @@ function renderPlaceOverlay(place, latlng) {
     tick.setAttribute("x2", x);
     tick.setAttribute("y1", margin.top + innerHeight);
     tick.setAttribute("y2", margin.top + innerHeight + 4);
-    tick.setAttribute("stroke", "#888");
+    tick.setAttribute("stroke", "#888888");
     axisGroup.appendChild(tick);
 
     const label = document.createElementNS(svgNS, "text");
@@ -399,7 +404,7 @@ function renderPlaceOverlay(place, latlng) {
     label.setAttribute("y", margin.top + innerHeight + 16);
     label.setAttribute("text-anchor", "middle");
     label.setAttribute("font-size", "10");
-    label.setAttribute("fill", "#ccc");
+    label.setAttribute("fill", "#555555");
     label.textContent = year;
     axisGroup.appendChild(label);
   });
@@ -410,7 +415,7 @@ function renderPlaceOverlay(place, latlng) {
   yLabel.setAttribute("y", 12);
   yLabel.setAttribute("text-anchor", "middle");
   yLabel.setAttribute("font-size", "15");
-  yLabel.setAttribute("fill", "#ccc");
+  yLabel.setAttribute("fill", "#555555");
   yLabel.setAttribute("transform", "rotate(-90)");
   yLabel.textContent = "SO₂ (kt/y)";
   axisGroup.appendChild(yLabel);
@@ -421,7 +426,7 @@ function renderPlaceOverlay(place, latlng) {
   xLabel.setAttribute("y", height - 4);
   xLabel.setAttribute("text-anchor", "middle");
   xLabel.setAttribute("font-size", "15");
-  xLabel.setAttribute("fill", "#ccc");
+  xLabel.setAttribute("fill", "#555555");
   xLabel.textContent = "Year";
   axisGroup.appendChild(xLabel);
 
@@ -435,7 +440,7 @@ function renderPlaceOverlay(place, latlng) {
   const polyline = document.createElementNS(svgNS, "polyline");
   polyline.setAttribute("points", points);
   polyline.setAttribute("fill", "none");
-  polyline.setAttribute("stroke", "orange");
+  polyline.setAttribute("stroke", "#FF6B35");
   polyline.setAttribute("stroke-width", "2");
 
   svg.appendChild(polyline);
@@ -518,9 +523,9 @@ fetch("resources/volcanoes.geojson")
         const container = L.DomUtil.create("div", "leaflet-bar year-control");
         container.innerHTML = `
           <div class="yc-row">
-            <button class="yc-btn" aria-label="Play/Pause" title="Play/Pause">▶</button>
+            <button class="btn btn--icon btn--icon-sm btn--outline yc-btn" aria-label="Play/Pause" title="Play/Pause">▶</button>
             <div class="yc-display">${year}</div>
-            <button class="yc-info-btn" type="button" aria-label="About this data">ℹ</button>
+            <button class="btn btn--icon btn--icon-sm btn--outline info-btn yc-info-btn" type="button" aria-label="About this data">ℹ</button>
           </div>
           <input class="yc-slider" type="range" min="${minYear}" max="${maxYear}" step="1" value="${year}" />
         `;
@@ -650,7 +655,7 @@ function createStaticLegend(legendValues) {
                     fill="${fill}" fill-opacity="0.8" stroke="#000" stroke-width="1"></circle>
                 </svg>
                 <span class="legend-label">${formatEmission(v)}</span>
-                ${v === 0 ? `<button class="diagram-info-btn" type="button" aria-label="About this legend" style="margin-left:auto">ℹ</button>` : ""}
+                ${v === 0 ? `<button class="btn btn--icon btn--icon-sm btn--outline info-btn diagram-info-btn" type="button" aria-label="About this legend" style="margin-left:auto">ℹ</button>` : ""}
               </div>
             `;
           }).join("")}

@@ -1,0 +1,161 @@
+/* Match the site's paper/orange accent (see theme.css) instead of Pico's
+   default blue for sliders, focus rings and the audio switch.
+   !important is needed because Pico defines these same variables on
+   `:root:not([data-theme])`, which outranks a plain `:root` override. */
+:root {
+    --pico-primary: #FF6B35 !important;
+    --pico-primary-background: #e0552a !important;
+    --pico-primary-border: #e0552a !important;
+    --pico-primary-hover: #ff8259 !important;
+    --pico-primary-hover-background: #cc4a22 !important;
+    --pico-primary-hover-border: #cc4a22 !important;
+    --pico-primary-focus: rgba(255, 107, 53, 0.375) !important;
+    --pico-primary-underline: rgba(255, 107, 53, 0.5) !important;
+    --pico-primary-inverse: #fbf8f0 !important;
+    --pico-switch-checked-background-color: var(--pico-primary-background) !important;
+    /* Audio switch's "off" track defaults to a blue-gray (#333c4e); warm
+       it up to a neutral paper-line tone so it doesn't clash even before
+       it's toggled on. */
+    --pico-switch-background-color: #cfc9b8 !important;
+
+    /* range slider thumb rests on --pico-secondary-background; warm it
+       up to match instead of Pico's default blue-gray */
+    --pico-secondary: #b8946a !important;
+    --pico-secondary-background: #b8946a !important;
+    --pico-secondary-border: #b8946a !important;
+    --pico-secondary-hover: #c9a87e !important;
+    --pico-secondary-hover-background: #c9a87e !important;
+    --pico-secondary-hover-border: #c9a87e !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+}
+
+.transparentBg {
+    background-color: rgb(from var(--pico-background-color) r g b / 0.5);
+}
+
+#container {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* the canvas fills the whole viewport, so the bar overlays it rather than
+   reserving space in normal flow */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: none;
+}
+
+#infobox {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    max-width: 300px;
+    word-wrap: break-word;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-ink);
+}
+
+#infobox p {
+    color: var(--color-ink);
+}
+
+#infobox h2 {
+    font-family: var(--font-brand);
+    color: var(--color-gold);
+}
+
+.parameters label {
+    color: var(--color-ink) !important;
+    opacity: 1 !important;
+}
+
+.parameters {
+    position: absolute;
+    top: calc(var(--topbar-h) + 10px);
+    right: 10px;
+    width: 260px;
+    max-height: calc(98% - var(--topbar-h));
+    overflow-y: scroll;
+    z-index: 101;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-ink);
+}
+
+/* Floats directly over the 3D scene (lava/ash/sky colors vary
+   unpredictably), so -- like the map page's .station-tooltip -- this
+   deliberately stays a dark high-contrast chip rather than following the
+   light site theme. */
+#annotationLabel {
+  cursor: pointer;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  margin-left: 20px;
+  padding: 15px;
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.5) -30%,
+      rgba(0, 0, 0, 0.2));
+  color: white;
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  font-size: 20px;
+  line-height: 1;
+  transition: opacity 2s, top 0.1s ease 0s, left 0.1s ease 0s;
+}
+
+.parameters label.parameter-row {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.parameter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.parameter-header label {
+    font-size: var(--text-sm);
+    line-height: 1.2;
+}
+
+.parameter-header span {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.1;
+    font-family: var(--font-scientific);
+}
+
+/* Visual skin comes from buttons.css (.btn .btn--icon .btn--icon-sm
+   .btn--outline .info-btn); this class remains as a JS hook plus layout tweak. */
+.parameter-info-button {
+    margin-right: -10px;
+}

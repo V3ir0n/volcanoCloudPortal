@@ -11,7 +11,10 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
-  <link rel="stylesheet" href="../header.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../theme.css" />
+  <link rel="stylesheet" href="../buttons.css" />
   <link rel="stylesheet" href="./styles.css" />
   <script type="importmap">
     {
@@ -30,7 +33,7 @@
         <img src="../NOVAC_logo.png" alt="NOVAC logo">
       </a>
     <span class="topbar-title">Volcanoes in NOVAC</span>
-    <button class="back-btn info-btn" type="button" aria-haspopup="dialog" aria-controls="info-overlay">
+    <button class="back-btn" type="button" aria-haspopup="dialog" aria-controls="info-overlay">
       About this map
     </button>
   </div>
@@ -43,7 +46,7 @@
   <div class="info-panel" role="dialog" aria-modal="true" aria-labelledby="info-title" tabindex="-1">
     <header class="info-header">
       <h2 id="info-title">About this map</h2>
-      <button class="info-close" type="button" aria-label="Close" data-close>&times;</button>
+      <button class="btn btn--icon btn--ghost info-close" type="button" aria-label="Close" data-close>&times;</button>
     </header>
 
     <div class="info-body">
@@ -70,7 +73,7 @@
     document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.getElementById("info-overlay");
   const panel = overlay?.querySelector(".info-panel");
-  const openBtn = document.querySelector(".info-btn");
+  const openBtn = document.querySelector('[aria-controls="info-overlay"]');
 
   function openInfo() {
     if (!overlay) return;

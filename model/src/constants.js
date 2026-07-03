@@ -88,7 +88,7 @@ export const annotations = [
         name: "Magma Chamber",
         position: [0.89, -24.95, 2.51], 
         infoBoxText: `
-            <h2>Where the magic happens!</h2>
+            <h2>Where the Magic Happens</h2>
             Magma, the mixture of molter rock, crytstals and volatiles (gases) is stored at depth.
             The depth, compositiona, and size of the magma reservoir influence the frequency and intensity of eruptions.
                     `
@@ -97,7 +97,7 @@ export const annotations = [
         name: "Conduit",
         position: [0.80, -1.15, 2.1],
         infoBoxText: `
-            <h2>Where the action happens!</h2>
+            <h2>Where the Action Happens</h2>
             The conduit is the pathway through which magma travels from the magma chamber to the surface during an eruption. 
             Narrow conduits can lead to more explosive eruptions, while wider conduits may result in effusive eruptions with lava flows.
         `
@@ -107,7 +107,7 @@ export const annotations = [
         name: "Plume",
         position: [3.25, 10.63, 0.89],
         infoBoxText: `
-            <h2>Cloud of gases and particles is transported!</h2>
+            <h2>Cloud of Gases and Particles Is Transported</h2>
             The plume is the wind-driven cloud formed after the volcanic column has reached equilibrium with the surrounding atmosphere. 
             The plume transports volcanic gases and ash over long distances, potentially disturbing the environment, climate or air traffic. 
             `
@@ -117,7 +117,7 @@ export const annotations = [
         name: "Crater",
         position: [0.21, 8.04, 0.50],
         infoBoxText: `
-            <h2>Where magma reaches the surface!</h2>
+            <h2>Where Magma Reaches the Surface</h2>
             At the crater, magma transitions from a pressurized state to the atmosphere, releasing gases, lava, or ash.        
             `
     }

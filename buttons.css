@@ -1,0 +1,157 @@
+/* buttons.css -- unified button component. Depends on theme.css tokens;
+   link theme.css first.
+
+   Usage:
+     <button class="btn btn--pill btn--outline">Text</button>
+     <button class="btn btn--pill btn--outline"><svg class="btn__icon">...</svg>Text</button>
+     <button class="btn btn--icon btn--outline" aria-label="..."><svg class="btn__icon">...</svg></button>
+     <button class="btn btn--icon btn--icon-sm btn--outline" aria-label="...">i</button>
+
+   .back-btn / .doc-btn are kept as backward-compatible aliases so existing
+   topbar markup doesn't need to change. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-decoration: none;
+  background: transparent;
+  color: var(--btn-fg, var(--color-ink));
+  border: 1px solid transparent;
+  flex-shrink: 0;
+  transition: background var(--transition-base), color var(--transition-base),
+              transform var(--transition-base);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ---- Shape modifiers ---- */
+.btn--pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.btn--icon {
+  width: var(--btn-size, 36px);
+  height: var(--btn-size, 36px);
+  padding: 0;
+  border-radius: var(--radius-circle);
+}
+
+.btn--icon-sm {
+  --btn-size: 24px;
+  font-size: var(--text-xs);
+}
+
+/* Info button: circular "i" indicator used for inline help across pages.
+   Sized up from the base --icon-sm font-size so the glyph stands taller
+   in the circle. */
+.info-btn {
+  font-size: 1rem;
+}
+
+/* ---- Skin modifiers ---- */
+.btn--outline {
+  border-color: var(--btn-border, var(--color-ink));
+}
+.btn--outline:hover,
+.btn--outline:focus-visible {
+  background: var(--btn-hover-bg, var(--color-ink));
+  transform: translateY(-1px);
+}
+
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  background: rgba(43, 43, 43, 0.08);
+}
+
+.btn__icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  flex-shrink: 0;
+}
+.btn--icon-sm .btn__icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---- Back-compat aliases (existing markup, zero HTML churn) ---- */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--topbar-fg, var(--color-ink));
+  text-decoration: none;
+  border: 1px solid var(--btn-border, var(--color-ink));
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background var(--transition-base), color var(--transition-base),
+              transform var(--transition-base);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.back-btn:hover,
+.back-btn:focus-visible {
+  background: var(--btn-hover-bg, var(--color-ink));
+  transform: translateY(-1px);
+}
+
+/* Doc button: circular lightbulb icon linking to a reference PDF.
+   Add `<a class="doc-btn" href="..." target="_blank" ...><svg>...</svg></a>`
+   to a page's .topbar to reuse it there. */
+.doc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  color: var(--topbar-fg, var(--color-ink));
+  border: 1px solid var(--btn-border, var(--color-ink));
+  border-radius: var(--radius-circle);
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--transition-base), color var(--transition-base),
+              transform var(--transition-base);
+}
+
+.doc-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+}
+
+.doc-btn:hover,
+.doc-btn:focus-visible {
+  background: var(--btn-hover-bg, var(--color-ink));
+  transform: translateY(-1px);
+  outline: none;
+}
