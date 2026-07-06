@@ -1,4 +1,4 @@
-import { renderPlaceView } from "./placeview.js";
+import { renderPlaceView, createConeColorPicker } from "./placeview.js";
 
 let selectedPlace = null;
 
@@ -290,17 +290,22 @@ function renderPlaceOverlay(place, latlng) {
 
 
 //------------Emission graph----------------
-  const renderEmissionDiagram = (container, data) => {
+  const renderEmissionDiagram = (container, data, view) => {
   container.innerHTML = "";
 
   //Info button
   const header = document.createElement("div");
   header.className = "diagram-header";
   header.innerHTML = `
-    <span class="diagram-title">SO₂ Emissions</span>
-    <button class="btn btn--icon btn--icon-sm btn--outline info-btn diagram-info-btn" type="button" aria-label="About this chart">ℹ</button>
+    <div class="diagram-title-group">
+      <span class="diagram-title">SO₂ Emissions</span>
+      <button class="btn btn--icon btn--icon-sm btn--outline info-btn diagram-info-btn" type="button" aria-label="About this chart">ℹ</button>
+    </div>
   `;
   container.appendChild(header);
+  if (view) {
+    header.appendChild(createConeColorPicker(hex => view.setConeColor(hex)));
+  }
   header.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
     showInfoTooltip(e.currentTarget, "Annual SO₂ emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
   });
@@ -458,7 +463,7 @@ function renderPlaceOverlay(place, latlng) {
 
   // Body via placeview.js
   const bodyEl = overlayEl.querySelector(".panel-body");
-  renderPlaceView(bodyEl, place, latlng);
+  const view = renderPlaceView(bodyEl, place, latlng);
   //diagram div
   const diagramContainer = overlayEl.querySelector(".diagram-container");
     if (bodyEl && diagramContainer) bodyEl.appendChild(diagramContainer);
@@ -467,7 +472,7 @@ function renderPlaceOverlay(place, latlng) {
     const data = place.raw;
     if (diagramContainer) {
       diagramContainer.innerHTML = "";
-      renderEmissionDiagram(diagramContainer, data);
+      renderEmissionDiagram(diagramContainer, data, view);
     }
 
   overlayEl.focus();

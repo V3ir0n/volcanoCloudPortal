@@ -71,27 +71,9 @@ body {
   font-size: var(--text-md);
 }
 
-.cone-color-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0 16px 12px;
-  font-size: var(--text-sm);
-  color: var(--color-ink-soft);
-}
-
 .cone-color-swatch {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  background: rgba(43, 43, 43, 0.05);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  color: var(--color-ink-soft);
-  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .cone-color-swatch input[type="color"] {
@@ -320,7 +302,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: var(--glass-bg);
+  background: var(--topbar-bg);
   border-bottom: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -412,11 +394,19 @@ body {
 
 /* ---- emission graph header ---- */
 .diagram-header {
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   padding: 8px 12px 2px;
+}
+.diagram-title-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 auto;
 }
 .diagram-title {
   font-size: var(--text-sm);

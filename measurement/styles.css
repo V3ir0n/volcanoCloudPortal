@@ -12,7 +12,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: var(--glass-bg);
+  background: transparent;
   border-bottom: 1px solid var(--glass-border);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -21,16 +21,6 @@ body {
 
 .cone-color-picker {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: transparent;
-  color: var(--color-ink-soft);
-  border-radius: var(--radius-sm);
-  font-size: var(--text-sm);
-  font-family: var(--font-body);
-  cursor: pointer;
 }
 
 .cone-color-picker input[type="color"] {
@@ -70,10 +60,6 @@ body {
   margin-bottom: 6px;
 }
 
-/* .scan-controls and .scan-hint float directly over the (unthemed, near-
-   black) three.js canvas rather than on page chrome, so -- like the model
-   page's #infobox -- they get an explicit glass background rather than
-   relying on the page background showing through. */
 .scan-controls {
   position: fixed;
   bottom: 20px;
@@ -82,12 +68,6 @@ body {
   align-items: center;
   gap: 8px;
   z-index: 10;
-  padding: 8px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 .scan-play-btn:disabled {
@@ -100,15 +80,9 @@ body {
   bottom: 20px;
   left: 20px;
   z-index: 10;
-  color: var(--color-ink-soft);
+  color: rgba(255, 255, 255, 0.85);
   font-size: var(--text-base);
   font-family: var(--font-body);
   max-width: 220px;
   line-height: 1.6;
-  padding: 12px 14px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
 }

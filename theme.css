@@ -69,7 +69,10 @@
 
   /* ---- Shared topbar theme (absorbed from header.css) ---- */
   --topbar-h: 58px;
-  --topbar-bg: var(--glass-bg);
+  /* Deliberately much more transparent than --glass-bg (used by panels/
+     tooltips that need to stay legible on their own) -- the topbar sits
+     right on top of the 3D/map view and can lean on --glass-blur instead. */
+  --topbar-bg: rgba(251, 248, 240, 0.25);
   --topbar-fg: var(--color-gold);
 
   /* ---- Shared button theme: gold text/border with a translucent gold

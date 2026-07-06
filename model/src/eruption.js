@@ -141,6 +141,7 @@ class EruptionHandler {
                 infoboxDiv.style.opacity = '0';
                 setTimeout(() => {
                     infoboxDiv.innerHTML = features.infoBoxText;
+                    infoboxDiv.hidden = false;
                     infoboxDiv.style.opacity = '1';
                 }, 250);
             }

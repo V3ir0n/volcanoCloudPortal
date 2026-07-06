@@ -24,18 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const infoboxDiv = document.getElementById('infobox');
-    const defaultInfoboxHTML = infoboxDiv.innerHTML;
     let parameterInfoOpen = false;
     let openButtonId = null;
-    let firstButtonId = null;
+
+    const closeParameterInfo = () => {
+        infoboxDiv.innerHTML = '';
+        infoboxDiv.hidden = true;
+        openButtonId = null;
+        parameterInfoOpen = false;
+    };
 
     Object.entries(parameterInfos).forEach(([buttonId, message]) => {
         const button = document.getElementById(buttonId);
         if (button && infoboxDiv) {
-            if (!firstButtonId) {
-                firstButtonId = buttonId;
-            }
-
             // Hover: only change button style
             button.addEventListener('mouseover', () => {
                 button.classList.add('hovered');
@@ -48,12 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', (event) => {
                 event.stopPropagation();
                 if (openButtonId === buttonId) {
-                    infoboxDiv.innerHTML = defaultInfoboxHTML;
-                    openButtonId = null;
-                    parameterInfoOpen = false;
+                    closeParameterInfo();
                 } else {
                     // Clicking a different button opens its text
                     infoboxDiv.innerHTML = message;
+                    infoboxDiv.hidden = false;
                     openButtonId = buttonId;
                     parameterInfoOpen = true;
                 }
@@ -61,16 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize with first button's info displayed
-    if (firstButtonId && parameterInfos[firstButtonId]) {
-    }
-
     document.addEventListener('click', (event) => {
         const clickedParameterButton = event.target.closest('.parameter-info-button');
         if (parameterInfoOpen && !clickedParameterButton && !(view && view.annotationHandler && view.annotationHandler.annotationOpen)) {
-            infoboxDiv.innerHTML = defaultInfoboxHTML;
-            openButtonId = null;
-            parameterInfoOpen = false;
+            closeParameterInfo();
         }
     });
 });
@@ -225,14 +219,18 @@ class View {
 
         const infoboxDiv = document.getElementById('infobox');
         let infoBoxTextBackup;
+        let infoBoxHiddenBackup;
         this.annotationHandler = new AnnotationHandler(
             this.canvas, this.camera, this.scene, annotation=>{
                 // On annotation selected
-                infoBoxTextBackup = infoboxDiv.innerHTML
+                infoBoxTextBackup = infoboxDiv.innerHTML;
+                infoBoxHiddenBackup = infoboxDiv.hidden;
                 infoboxDiv.innerHTML = annotation.infoBoxText;
+                infoboxDiv.hidden = false;
             }, ()=>{
                 // On annotation closed
                 infoboxDiv.innerHTML = infoBoxTextBackup;
+                infoboxDiv.hidden = infoBoxHiddenBackup;
             }
         );
 

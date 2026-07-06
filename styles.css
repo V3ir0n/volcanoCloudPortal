@@ -6,13 +6,21 @@ body {
   margin: 0;
 }
 header {
-  background: var(--color-paper-raised);
-  box-shadow: 0 1px 0 rgba(43, 43, 43, 0.08);
-  padding: 0.6rem 1.25rem;
+  height: var(--topbar-h);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0 1.25rem;
   color: var(--color-gold);
 }
-header h1 { color: var(--color-gold); margin: 0; font-size: 1.3rem; font-family: var(--font-brand); }
-header p  { color: var(--color-ink-soft); margin: 0; font-size: var(--text-sm); }
+header img { max-height: calc(var(--topbar-h) - 20px); display: block; }
+header h1 { color: var(--color-gold); margin: 0; font-size: 1.3rem; line-height: 1.15; font-family: var(--font-brand); }
+header p  { color: var(--color-ink-soft); margin: 0; font-size: var(--text-sm); line-height: 1.15; }
 .nav-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

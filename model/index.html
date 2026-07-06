@@ -42,40 +42,43 @@
     <audio id="mild_eruption_sfx" src="resources/mild_eruption_sfx.mp3" volume="0.5" loop></audio>
     <div id="annotationLabel" class="annotation"></div>
     <canvas id="threeCanvas"></canvas>
-    <article class="parameters">
-        <details open>
-            <summary>Parameters</summary>
-            <div class="parameter-row">
-                <div class="parameter-header">
-                    <label for="gasDensitySlider">Magma gas content (<span id="gasDensityIndicator"></span> wt%)</label>
-                    <button id="gasDensityInfo" type="button" class="btn btn--icon btn--icon-sm btn--outline info-btn parameter-info-button" aria-label="Gas density info">ℹ</button>
+    <div class="parameters-panel">
+        <article id="parametersHint">
+            Choose different parameters and see what happens to the volcano.
+        </article>
+        <article class="parameters">
+            <details open>
+                <summary>Parameters</summary>
+                <div class="parameter-row">
+                    <div class="parameter-header">
+                        <label for="gasDensitySlider">Magma gas content (<span id="gasDensityIndicator"></span> wt%)</label>
+                        <button id="gasDensityInfo" type="button" class="btn btn--icon btn--icon-sm btn--outline info-btn parameter-info-button" aria-label="Gas density info">ℹ</button>
+                    </div>
+                    <input type="range" id="gasDensitySlider" min="0" max="6" value="1" step="1">
                 </div>
-                <input type="range" id="gasDensitySlider" min="0" max="6" value="1" step="1">
-            </div>
-            <div class="parameter-row">
-                <div class="parameter-header">
-                    <label for="depthSlider">Chamber depth (<span id="depthIndicator"></span> km)</label>
-                    <button id="depthInfo" type="button" class="btn btn--icon btn--icon-sm btn--outline info-btn parameter-info-button" aria-label="Depth info">ℹ</button>
+                <div class="parameter-row">
+                    <div class="parameter-header">
+                        <label for="depthSlider">Chamber depth (<span id="depthIndicator"></span> km)</label>
+                        <button id="depthInfo" type="button" class="btn btn--icon btn--icon-sm btn--outline info-btn parameter-info-button" aria-label="Depth info">ℹ</button>
+                    </div>
+                    <input type="range" id="depthSlider" min="2.5" max="10" value="5" step="2.5">
                 </div>
-                <input type="range" id="depthSlider" min="2.5" max="10" value="5" step="2.5">
-            </div>
-            <div class="parameter-row">
-                <div class="parameter-header">
-                    <label for="windSpeedSlider">Wind speed (<span id="windSpeedIndicator"></span> m/s)</label>
-                    <button id="windSpeedInfo" type="button" class="btn btn--icon btn--icon-sm btn--outline info-btn parameter-info-button" aria-label="Wind speed info">ℹ</button>
+                <div class="parameter-row">
+                    <div class="parameter-header">
+                        <label for="windSpeedSlider">Wind speed (<span id="windSpeedIndicator"></span> m/s)</label>
+                        <button id="windSpeedInfo" type="button" class="btn btn--icon btn--icon-sm btn--outline info-btn parameter-info-button" aria-label="Wind speed info">ℹ</button>
+                    </div>
+                    <input type="range" id="windSpeedSlider" min="0" max="20" value="10" step="10">
                 </div>
-                <input type="range" id="windSpeedSlider" min="0" max="20" value="10" step="10">
-            </div>
-        </details>
-        <hr/>
-        <details open>
-            <summary>Settings</summary>
-            <label><input id="audioToggle" type="checkbox" role="switch"/>Audio</label>
-        </details>
-    </article>
-    <article id="infobox">
-        Change parameters to a valid configuration, then trigger an eruption.
-    </article>
+            </details>
+            <hr/>
+            <details open>
+                <summary>Settings</summary>
+                <label><input id="audioToggle" type="checkbox" role="switch"/>Audio</label>
+            </details>
+        </article>
+    </div>
+    <article id="infobox" hidden></article>
     <script type="module" src="./src/main.js"></script>
 </body>
 </html>

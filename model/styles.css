@@ -35,6 +35,36 @@ body {
     font-family: var(--font-body);
 }
 
+/* Swap Pico's default round slider thumb for a little volcano-shaped
+   triangle, on brand for a page full of volcano parameters. Sizes are
+   fixed (rather than left to Pico) so the clip-path coordinates below,
+   which round each corner of the triangle, line up with the box. */
+input[type="range"]::-webkit-slider-thumb {
+    width: 18px;
+    height: 16px;
+    border-radius: 0;
+    clip-path: path("M1.99,13.26 L8.01,2.74 Q9,1 9.99,2.74 L16.01,13.26 Q17,15 15,15 L3,15 Q1,15 1.99,13.26 Z");
+    background: radial-gradient(circle at 50% 4px, #FF6B35 0px, #FF6B35 2.5px, var(--pico-secondary-background) 8px);
+}
+
+input[type="range"]:active::-webkit-slider-thumb,
+input[type="range"]:hover::-webkit-slider-thumb {
+    background: radial-gradient(circle at 50% 4px, #FF6B35 0px, #FF6B35 2.5px, var(--pico-secondary-hover-background) 8px);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 16px;
+    border-radius: 0;
+    clip-path: path("M1.99,13.26 L8.01,2.74 Q9,1 9.99,2.74 L16.01,13.26 Q17,15 15,15 L3,15 Q1,15 1.99,13.26 Z");
+    background: radial-gradient(circle at 50% 4px, #FF6B35 0px, #FF6B35 2.5px, var(--pico-secondary-background) 8px);
+}
+
+input[type="range"]:active::-moz-range-thumb,
+input[type="range"]:hover::-moz-range-thumb {
+    background: radial-gradient(circle at 50% 4px, #FF6B35 0px, #FF6B35 2.5px, var(--pico-secondary-hover-background) 8px);
+}
+
 .transparentBg {
     background-color: rgb(from var(--pico-background-color) r g b / 0.5);
 }
@@ -51,7 +81,7 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    background: var(--glass-bg);
+    background: var(--topbar-bg);
     border-bottom: 1px solid var(--glass-border);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -90,14 +120,33 @@ body {
     opacity: 1 !important;
 }
 
-.parameters {
+.parameters-panel {
     position: absolute;
     top: calc(var(--topbar-h) + 10px);
     right: 10px;
     width: 260px;
     max-height: calc(98% - var(--topbar-h));
-    overflow-y: scroll;
     z-index: 101;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#parametersHint {
+    flex-shrink: 0;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-ink);
+}
+
+.parameters {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: scroll;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));

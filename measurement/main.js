@@ -29,11 +29,11 @@ function getStoredConeColor(defaultColor = DEFAULT_CONE_COLOR) {
 // the currently picked color, standing in for the plain browser swatch.
 function createConeColorPicker(onChange) {
     const wrap = document.createElement('div');
-    wrap.title = 'Scan cone color';
-    wrap.className = 'cone-color-picker';
+    wrap.title = 'Beam cone color';
+    wrap.className = 'cone-color-picker btn btn--pill btn--outline';
 
     const label = document.createElement('span');
-    label.textContent = 'Scan color';
+    label.textContent = 'Beam color';
     wrap.appendChild(label);
 
     const NS = 'http://www.w3.org/2000/svg';
@@ -62,8 +62,8 @@ function createConeColorPicker(onChange) {
     const dot = document.createElementNS(NS, 'circle');
     dot.setAttribute('cx', '16');
     dot.setAttribute('cy', '22');
-    dot.setAttribute('r', '2');
-    dot.setAttribute('fill', '#2b2b2b');
+    dot.setAttribute('r', '3');
+    dot.setAttribute('fill', '#FF6B35');
     icon.appendChild(dot);
     wrap.appendChild(icon);
 
@@ -135,7 +135,7 @@ function cdColorCss(cd) {
     return `#${cdColor(cd).getHexString()}`;
 }
 
-// ── SO2 transmittance spectrum (loaded from CSV, keyed by column density) ────
+// ── SO2 transmittance spectrum ─────────────────────────────────────────────────
 // SO2_transmission.csv columns are the modelled transmittance at each
 // wavelength for a set of column densities (ppm·m); it ramps CD_0..CD_1000
 // then mirrors back down, so only the first ascending half is unique.

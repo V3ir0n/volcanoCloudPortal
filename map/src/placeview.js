@@ -21,13 +21,13 @@ function getStoredConeColor(defaultColor = DEFAULT_CONE_COLOR) {
 // Builds a scan-cone-shaped swatch button: a hidden native <input type="color">
 // (so the OS picker still works) overlaid with an SVG fan icon that renders in
 // the currently picked color, standing in for the plain browser swatch.
-function createConeColorPicker(onChange) {
+export function createConeColorPicker(onChange) {
   const wrap = document.createElement("div");
-  wrap.className = "cone-color-swatch";
-  wrap.title = "Scan cone color";
+  wrap.className = "cone-color-swatch btn btn--pill btn--outline";
+  wrap.title = "Beam cone color";
 
   const label = document.createElement("span");
-  label.textContent = "Scan color";
+  label.textContent = "Beam color";
   wrap.appendChild(label);
 
   const NS = "http://www.w3.org/2000/svg";
@@ -57,8 +57,8 @@ function createConeColorPicker(onChange) {
   const dot = document.createElementNS(NS, "circle");
   dot.setAttribute("cx", "16");
   dot.setAttribute("cy", "22");
-  dot.setAttribute("r", "2");
-  dot.setAttribute("fill", "#2b2b2b");
+  dot.setAttribute("r", "3");
+  dot.setAttribute("fill", "#FF6B35");
   icon.appendChild(dot);
   wrap.appendChild(icon);
 
@@ -109,17 +109,11 @@ export function renderPlaceView(container, place, latLng) {
   `;
   container.appendChild(infoEl);
 
-  // Scan cone color picker
-  const colorRow = document.createElement("div");
-  colorRow.className = "cone-color-row";
-
   // THREE canvas
   const canvas = document.createElement("canvas");
-  container.appendChild(colorRow);
   container.appendChild(canvas);
 
-  const view = new VolcanoView(canvas, place, latLng);
-  colorRow.appendChild(createConeColorPicker(hex => view.setConeColor(hex)));
+  return new VolcanoView(canvas, place, latLng);
 }
 
 class VolcanoView {
