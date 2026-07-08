@@ -42,7 +42,9 @@
         "country": "Chile",
         "meshRadiusKm": 14,
         "source": "satellite",
-        "xls_name": "Villarrica"
+        "xls_name": "Villarrica",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357120",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -86,7 +88,9 @@
         "country": "New Zealand",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=241100",
+        "observatory_url": "https://www.earthsciences.nz/"
       }
     },
     {
@@ -130,7 +134,9 @@
         "country": "New Zealand",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=241080",
+        "observatory_url": "https://www.earthsciences.nz/"
       }
     },
     {
@@ -174,7 +180,9 @@
         "country": "Chile",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357110",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -218,7 +226,9 @@
         "country": "Chile/Argentina",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Copahue"
+        "xls_name": "Copahue",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357090",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -262,7 +272,9 @@
         "country": "Chile",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357070",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -306,7 +318,9 @@
         "country": "Chile",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357040",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -350,7 +364,9 @@
         "country": "Chile",
         "meshRadiusKm": 21,
         "source": "satellite",
-        "xls_name": "Lascar"
+        "xls_name": "Lascar",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=355100",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -394,7 +410,9 @@
         "country": "France",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=233020",
+        "observatory_url": "https://www.ipgp.fr/en/"
       }
     },
     {
@@ -438,7 +456,9 @@
         "country": "Chile",
         "meshRadiusKm": 12,
         "source": "satellite",
-        "xls_name": "Isluga"
+        "xls_name": "Isluga",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=355030",
+        "observatory_url": "https://www.sernageomin.cl/"
       }
     },
     {
@@ -477,12 +497,14 @@
         "lat_deg": -16.749454,
         "lon_deg": -70.633172,
         "alt_masl": 5382,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico",
         "obs_acronym": "INGEMMET",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354031",
+        "observatory_url": "https://portal.ingemmet.gob.pe/"
       }
     },
     {
@@ -521,12 +543,14 @@
         "lat_deg": -16.3434,
         "lon_deg": -70.8972,
         "alt_masl": 5672,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico",
         "obs_acronym": "INGEMMET",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Ubinas"
+        "xls_name": "Ubinas",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354020",
+        "observatory_url": "https://portal.ingemmet.gob.pe/"
       }
     },
     {
@@ -565,12 +589,14 @@
         "lat_deg": -16.294,
         "lon_deg": -71.409,
         "alt_masl": 5822,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico\"",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico",
         "obs_acronym": "INGEMMET",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354010",
+        "observatory_url": "https://portal.ingemmet.gob.pe/"
       }
     },
     {
@@ -609,12 +635,14 @@
         "lat_deg": -15.788,
         "lon_deg": -71.8559,
         "alt_masl": 5967,
-        "observatory": "\"Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú\"",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú",
         "obs_acronym": "INGEMMET/IGP",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Sabancaya"
+        "xls_name": "Sabancaya",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354006",
+        "observatory_url": "https://portal.ingemmet.gob.pe/"
       }
     },
     {
@@ -658,7 +686,9 @@
         "country": "Papua New Guinea",
         "meshRadiusKm": 15,
         "source": "satellite",
-        "xls_name": "Ulawun"
+        "xls_name": "Ulawun",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=252120",
+        "observatory_url": null
       }
     },
     {
@@ -702,7 +732,9 @@
         "country": "Papua New Guinea",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=252140",
+        "observatory_url": null
       }
     },
     {
@@ -746,7 +778,9 @@
         "country": "Papua New Guinea",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Manam"
+        "xls_name": "Manam",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=251020",
+        "observatory_url": null
       }
     },
     {
@@ -785,12 +819,14 @@
         "lat_deg": -2.0056,
         "lon_deg": -78.3408,
         "alt_masl": 5286,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
         "meshRadiusKm": 36,
         "source": "satellite",
-        "xls_name": "Sangay"
+        "xls_name": "Sangay",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=352090",
+        "observatory_url": "https://www.igepn.edu.ec/"
       }
     },
     {
@@ -834,7 +870,9 @@
         "country": "Democratic Republic of Congo",
         "meshRadiusKm": 27,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=223030",
+        "observatory_url": null
       }
     },
     {
@@ -873,12 +911,14 @@
         "lat_deg": -1.4685,
         "lon_deg": -78.4473,
         "alt_masl": 5023,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
         "meshRadiusKm": 16,
         "source": "satellite",
-        "xls_name": "Tungurahua"
+        "xls_name": "Tungurahua",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=352080",
+        "observatory_url": "https://www.igepn.edu.ec/"
       }
     },
     {
@@ -917,12 +957,14 @@
         "lat_deg": -0.8302,
         "lon_deg": -91.1445,
         "alt_masl": 990,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Sierra Negra"
+        "xls_name": "Sierra Negra",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=353050",
+        "observatory_url": "https://www.igepn.edu.ec/"
       }
     },
     {
@@ -961,12 +1003,14 @@
         "lat_deg": -0.6845,
         "lon_deg": -78.437,
         "alt_masl": 5800,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
         "meshRadiusKm": 21,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=352050",
+        "observatory_url": "https://www.igepn.edu.ec/"
       }
     },
     {
@@ -1005,12 +1049,14 @@
         "lat_deg": -0.081,
         "lon_deg": -77.6584,
         "alt_masl": 3510,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Reventador"
+        "xls_name": "Reventador",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=352010",
+        "observatory_url": "https://www.igepn.edu.ec/"
       }
     },
     {
@@ -1049,12 +1095,14 @@
         "lat_deg": 0.025,
         "lon_deg": -77.9892,
         "alt_masl": 5790,
-        "observatory": "\"Instituto Geofísico, Escuela Politécnica Nacional\"",
+        "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=352006",
+        "observatory_url": "https://www.igepn.edu.ec/"
       }
     },
     {
@@ -1098,7 +1146,9 @@
         "country": "Indonesia",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=268060",
+        "observatory_url": "https://geologi.esdm.go.id/pvmbg"
       }
     },
     {
@@ -1142,7 +1192,9 @@
         "country": "Colombia",
         "meshRadiusKm": 18,
         "source": "satellite",
-        "xls_name": "Galeras"
+        "xls_name": "Galeras",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=351080",
+        "observatory_url": "https://www.sgc.gov.co/"
       }
     },
     {
@@ -1186,7 +1238,9 @@
         "country": "Colombia",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=351060",
+        "observatory_url": "https://www.sgc.gov.co/"
       }
     },
     {
@@ -1230,7 +1284,9 @@
         "country": "Indonesia",
         "meshRadiusKm": 12,
         "source": "satellite",
-        "xls_name": "Sinabung"
+        "xls_name": "Sinabung",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=261080",
+        "observatory_url": "https://geologi.esdm.go.id/pvmbg"
       }
     },
     {
@@ -1274,7 +1330,9 @@
         "country": "Colombia",
         "meshRadiusKm": 13,
         "source": "satellite",
-        "xls_name": "Nevado del Ruiz"
+        "xls_name": "Nevado del Ruiz",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=351020",
+        "observatory_url": "https://www.sgc.gov.co/"
       }
     },
     {
@@ -1318,7 +1376,9 @@
         "country": "Costa Rica",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Turrialba"
+        "xls_name": "Turrialba",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=345070",
+        "observatory_url": "https://www.ovsicori.una.ac.cr/"
       }
     },
     {
@@ -1362,7 +1422,9 @@
         "country": "Costa Rica",
         "meshRadiusKm": 13,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=345040",
+        "observatory_url": "https://www.ovsicori.una.ac.cr/"
       }
     },
     {
@@ -1406,7 +1468,9 @@
         "country": "Philippines",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Kanlaon"
+        "xls_name": "Kanlaon",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=272020",
+        "observatory_url": "https://www.phivolcs.dost.gov.ph/"
       }
     },
     {
@@ -1450,7 +1514,9 @@
         "country": "Costa Rica",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Arenal"
+        "xls_name": "Arenal",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=345033",
+        "observatory_url": "https://www.ovsicori.una.ac.cr/"
       }
     },
     {
@@ -1494,7 +1560,9 @@
         "country": "Costa Rica",
         "meshRadiusKm": 13,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=345020",
+        "observatory_url": "https://www.ovsicori.una.ac.cr/"
       }
     },
     {
@@ -1538,7 +1606,9 @@
         "country": "Guatemala",
         "meshRadiusKm": 11,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=344120",
+        "observatory_url": "https://www.ineter.gob.ni/"
       }
     },
     {
@@ -1582,7 +1652,9 @@
         "country": "Guatemala",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Masaya"
+        "xls_name": "Masaya",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=344100",
+        "observatory_url": "https://www.ineter.gob.ni/"
       }
     },
     {
@@ -1626,7 +1698,9 @@
         "country": "Guatemala",
         "meshRadiusKm": 13,
         "source": "satellite",
-        "xls_name": "Momotombo"
+        "xls_name": "Momotombo",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=344090",
+        "observatory_url": "https://www.ineter.gob.ni/"
       }
     },
     {
@@ -1670,7 +1744,9 @@
         "country": "Guatemala",
         "meshRadiusKm": 11,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=344040",
+        "observatory_url": "https://www.ineter.gob.ni/"
       }
     },
     {
@@ -1714,7 +1790,9 @@
         "country": "Guatemala",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "San Cristobal"
+        "xls_name": "San Cristobal",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=344020",
+        "observatory_url": "https://www.ineter.gob.ni/"
       }
     },
     {
@@ -1758,7 +1836,9 @@
         "country": "Philippines",
         "meshRadiusKm": 13,
         "source": "satellite",
-        "xls_name": "Mayon"
+        "xls_name": "Mayon",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=273030",
+        "observatory_url": "https://www.phivolcs.dost.gov.ph/"
       }
     },
     {
@@ -1802,7 +1882,9 @@
         "country": "El Salvador",
         "meshRadiusKm": 12,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=343100",
+        "observatory_url": "https://www.marn.gob.sv/"
       }
     },
     {
@@ -1846,7 +1928,9 @@
         "country": "El Salvador",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Santa Ana"
+        "xls_name": "Santa Ana",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=343020",
+        "observatory_url": "https://www.marn.gob.sv/"
       }
     },
     {
@@ -1885,12 +1969,14 @@
         "lat_deg": 14.4742,
         "lon_deg": -90.8806,
         "alt_masl": 3763,
-        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
+        "observatory": "Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología",
         "obs_acronym": "INSIVUMEH",
         "country": "Guatemala",
         "meshRadiusKm": 12,
         "source": "satellite",
-        "xls_name": "Fuego"
+        "xls_name": "Fuego",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=342090",
+        "observatory_url": "https://insivumeh.gob.gt/"
       }
     },
     {
@@ -1929,12 +2015,14 @@
         "lat_deg": 14.7383,
         "lon_deg": -91.5681,
         "alt_masl": 2500,
-        "observatory": "\"Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\"",
+        "observatory": "Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología",
         "obs_acronym": "INSIVUMEH",
         "country": "Guatemala",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=342030",
+        "observatory_url": "https://insivumeh.gob.gt/"
       }
     },
     {
@@ -1978,7 +2066,9 @@
         "country": "Montserrat",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Soufriere Hills"
+        "xls_name": "Soufriere Hills",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=360050",
+        "observatory_url": "https://www.mvo.ms/"
       }
     },
     {
@@ -2022,7 +2112,9 @@
         "country": "Mexico",
         "meshRadiusKm": 12,
         "source": "satellite",
-        "xls_name": "Popocatepetl"
+        "xls_name": "Popocatepetl",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=341090",
+        "observatory_url": "https://www.geofisica.unam.mx/"
       }
     },
     {
@@ -2066,7 +2158,9 @@
         "country": "Mexico",
         "meshRadiusKm": 12,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=341040",
+        "observatory_url": "https://www.geofisica.unam.mx/"
       }
     },
     {
@@ -2110,7 +2204,9 @@
         "country": "Italy",
         "meshRadiusKm": 21,
         "source": "satellite",
-        "xls_name": "Etna"
+        "xls_name": "Etna",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=211060",
+        "observatory_url": "https://www.ingv.it/en/"
       }
     },
     {
@@ -2154,7 +2250,9 @@
         "country": "Italy",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=211050",
+        "observatory_url": "https://www.ingv.it/en/"
       }
     },
     {
@@ -2198,7 +2296,9 @@
         "country": "Italy",
         "meshRadiusKm": 10,
         "source": "satellite",
-        "xls_name": "Stromboli"
+        "xls_name": "Stromboli",
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=211040",
+        "observatory_url": "https://www.ingv.it/en/"
       }
     },
     {
@@ -2242,7 +2342,9 @@
         "country": "United States",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=321050",
+        "observatory_url": "https://www.usgs.gov/programs/VHP"
       }
     },
     {
@@ -2286,7 +2388,9 @@
         "country": "United States",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=311240",
+        "observatory_url": "https://www.usgs.gov/programs/VHP"
       }
     },
     {
@@ -2330,7 +2434,9 @@
         "country": "Iceland",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=372020",
+        "observatory_url": "https://en.vedur.is/"
       }
     },
     {
@@ -2374,7 +2480,9 @@
         "country": "Iceland",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=372030",
+        "observatory_url": "https://en.vedur.is/"
       }
     },
     {
@@ -2418,7 +2526,9 @@
         "country": "Iceland",
         "meshRadiusKm": 10,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=371030",
+        "observatory_url": "https://en.vedur.is/"
       }
     },
     {
@@ -2462,7 +2572,9 @@
         "country": "Iceland",
         "meshRadiusKm": 11,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=372070",
+        "observatory_url": "https://en.vedur.is/"
       }
     },
     {
@@ -2501,12 +2613,14 @@
         "lat_deg": -7.526101,
         "lon_deg": 110.410743,
         "alt_masl": 1305.645,
-        "observatory": "Center for Volcanology and Geological Hazard Mitigation??",
+        "observatory": "Center for Volcanology and Geological Hazard Mitigation",
         "obs_acronym": "CVGHM??",
         "country": "Indonesia",
         "meshRadiusKm": 13,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=263250",
+        "observatory_url": "https://geologi.esdm.go.id/pvmbg"
       }
     },
     {
@@ -2550,7 +2664,9 @@
         "country": "Colombia",
         "meshRadiusKm": 79,
         "source": "ground_based",
-        "xls_name": null
+        "xls_name": null,
+        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=351050",
+        "observatory_url": "https://www.sgc.gov.co/"
       }
     }
   ]

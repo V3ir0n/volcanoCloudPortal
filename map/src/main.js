@@ -230,11 +230,15 @@ function stopTick() {
 function getPlaceFromFeature(feature) {
   const props = feature.properties || {};
   console.log(props);
-  const { name, display_name, country, observatory, alt_masl,} = props;
+  const { name, display_name, country, observatory, alt_masl, gvp_url, observatory_url } = props;
   return {
-    title: display_name +', ' + country ?? "Unknown place",
+    title: `${display_name}, ${country}`,
+    displayName: display_name || "Unknown place",
+    country: country || "",
+    gvpUrl: gvp_url || null,
     name: name,
     observatory: observatory ?? "Unknown observatory",
+    observatoryUrl: observatory_url || null,
     altitude: alt_masl ? `${alt_masl} m` : "Unknown altitude",
     raw: props
   };
@@ -456,10 +460,23 @@ function renderPlaceOverlay(place, latlng) {
   // Hide volcano select while overlay is open
   hideVolcanoControl(true);
 
-  // Title
+  // Title (volcano name links to its Global Volcanism Program page, when known)
   const titleEl = overlayEl.querySelector("#panel-title");
-  const titleText = (place.title || "").split("").map((c,i)=>i==0?c.toUpperCase():c).join("");
-  if (titleEl) titleEl.textContent = titleText || "Unknown place";
+  if (titleEl) {
+    titleEl.textContent = "";
+    const nameText = place.displayName.charAt(0).toUpperCase() + place.displayName.slice(1);
+    if (place.gvpUrl) {
+      const nameLink = document.createElement("a");
+      nameLink.href = place.gvpUrl;
+      nameLink.target = "_blank";
+      nameLink.rel = "noopener noreferrer";
+      nameLink.textContent = nameText;
+      titleEl.appendChild(nameLink);
+    } else {
+      titleEl.appendChild(document.createTextNode(nameText));
+    }
+    if (place.country) titleEl.appendChild(document.createTextNode(`, ${place.country}`));
+  }
 
   // Body via placeview.js
   const bodyEl = overlayEl.querySelector(".panel-body");

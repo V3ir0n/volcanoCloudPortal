@@ -66,6 +66,16 @@ body {
   font-family: var(--font-brand);
 }
 
+.panel-header h3 a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--color-gold-rgb), 0.4);
+}
+
+.panel-header h3 a:hover {
+  text-decoration-color: currentColor;
+}
+
 .panel-body {
   overflow-y: auto;
   font-size: var(--text-md);
@@ -246,6 +256,10 @@ body {
 
 .volcano-info p {
   margin: 4px 0;
+}
+
+.volcano-info a {
+  color: var(--color-gold);
 }
 
 .leaflet-bar.volcano-control {

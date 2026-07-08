@@ -103,10 +103,23 @@ export function renderPlaceView(container, place, latLng) {
   // Volcano info
   const infoEl = document.createElement("div");
   infoEl.className = "volcano-info";
-  infoEl.innerHTML = `
-    <p><strong>Altitude:</strong> ${place.altitude || "Unknown altitude"}</p>
-    <p><strong>Observatory:</strong> ${place.observatory || "Unknown observatory"}</p>
-  `;
+  infoEl.innerHTML = `<p><strong>Altitude:</strong> ${place.altitude || "Unknown altitude"}</p>`;
+
+  const obsP = document.createElement("p");
+  obsP.innerHTML = "<strong>Observatory:</strong> ";
+  const obsLabel = place.observatory || "Unknown observatory";
+  if (place.observatoryUrl) {
+    const obsLink = document.createElement("a");
+    obsLink.href = place.observatoryUrl;
+    obsLink.target = "_blank";
+    obsLink.rel = "noopener noreferrer";
+    obsLink.textContent = obsLabel;
+    obsP.appendChild(obsLink);
+  } else {
+    obsP.appendChild(document.createTextNode(obsLabel));
+  }
+  infoEl.appendChild(obsP);
+
   container.appendChild(infoEl);
 
   // THREE canvas
