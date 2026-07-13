@@ -589,14 +589,14 @@
         "lat_deg": -16.294,
         "lon_deg": -71.409,
         "alt_masl": 5822,
-        "observatory": "Instituto Geológico, Minero y Metalúrgico",
-        "obs_acronym": "INGEMMET",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico/Instituto Geofísico del Perú",
+        "obs_acronym": "INGEMMET/IGP",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354010",
-        "observatory_url": "https://portal.ingemmet.gob.pe/"
+        "observatory_url": "https://portal.ingemmet.gob.pe/|https://www.gob.pe/igp"
       }
     },
     {
@@ -2398,52 +2398,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -19.633,
-          63.633
-        ]
-      },
-      "properties": {
-        "2005": 0,
-        "2006": 0,
-        "2007": 0,
-        "2008": 0,
-        "2009": 0,
-        "2010": 0,
-        "2011": 0,
-        "2012": 0,
-        "2013": 0,
-        "2014": 0,
-        "2015": 0,
-        "2016": 0,
-        "2017": 0,
-        "2018": 0,
-        "2019": 0,
-        "2020": 0,
-        "2021": 0,
-        "2022": 0,
-        "2023": 0,
-        "2024": null,
-        "2025": null,
-        "name": "eyjafjallajokull",
-        "display_name": "Eyjafjallajokull",
-        "lat_deg": 63.633,
-        "lon_deg": -19.633,
-        "alt_masl": 1651,
-        "observatory": "Icelandic Meteorological Office",
-        "obs_acronym": "IMO",
-        "country": "Iceland",
-        "meshRadiusKm": 10,
-        "source": "ground_based",
-        "xls_name": null,
-        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=372020",
-        "observatory_url": "https://en.vedur.is/"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -19.1278,
           63.6383
         ]
@@ -2621,52 +2575,6 @@
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=263250",
         "observatory_url": "https://geologi.esdm.go.id/pvmbg"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -76.033,
-          2.917
-        ]
-      },
-      "properties": {
-        "2005": 0,
-        "2006": 0,
-        "2007": 0,
-        "2008": 0,
-        "2009": 0,
-        "2010": 0,
-        "2011": 0,
-        "2012": 0,
-        "2013": 0,
-        "2014": 0,
-        "2015": 0,
-        "2016": 0,
-        "2017": 0,
-        "2018": 0,
-        "2019": 0,
-        "2020": 0,
-        "2021": 0,
-        "2022": 0,
-        "2023": 0,
-        "2024": 0,
-        "2025": 0,
-        "name": "nevado_del_huila",
-        "display_name": "Nevado del Huila",
-        "lat_deg": 2.917,
-        "lon_deg": -76.033,
-        "alt_masl": 5364,
-        "observatory": "Servicio Geológico Colombiano",
-        "obs_acronym": "SGC",
-        "country": "Colombia",
-        "meshRadiusKm": 79,
-        "source": "ground_based",
-        "xls_name": null,
-        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=351050",
-        "observatory_url": "https://www.sgc.gov.co/"
       }
     }
   ]
