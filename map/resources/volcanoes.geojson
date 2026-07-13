@@ -228,7 +228,7 @@
         "source": "satellite",
         "xls_name": "Copahue",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357090",
-        "observatory_url": "https://www.sernageomin.cl/"
+        "observatory_url": "https://www.sernageomin.cl/|https://www.argentina.gob.ar/economia/segemar"
       }
     },
     {
@@ -313,14 +313,14 @@
         "lat_deg": -35.2859,
         "lon_deg": -70.5824,
         "alt_masl": 3642,
-        "observatory": "Servicio Nacional de Geología y Minería",
+        "observatory": "Servicio Nacional de Geología y Minería/Servicio Geológico Minero Argentino",
         "obs_acronym": "SERNAGEOMIN",
-        "country": "Chile",
+        "country": "Chile/Argentina",
         "meshRadiusKm": 10,
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=357040",
-        "observatory_url": "https://www.sernageomin.cl/"
+        "observatory_url": "https://www.sernageomin.cl/|https://www.argentina.gob.ar/economia/segemar"
       }
     },
     {
@@ -497,14 +497,14 @@
         "lat_deg": -16.749454,
         "lon_deg": -70.633172,
         "alt_masl": 5382,
-        "observatory": "Instituto Geológico, Minero y Metalúrgico",
-        "obs_acronym": "INGEMMET",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico/Instituto Geofísico del Perú",
+        "obs_acronym": "INGEMMET/IGP",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354031",
-        "observatory_url": "https://portal.ingemmet.gob.pe/"
+        "observatory_url": "https://www.gob.pe/ingemmet|https://www.gob.pe/igp"
       }
     },
     {
@@ -543,14 +543,14 @@
         "lat_deg": -16.3434,
         "lon_deg": -70.8972,
         "alt_masl": 5672,
-        "observatory": "Instituto Geológico, Minero y Metalúrgico",
-        "obs_acronym": "INGEMMET",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico/Instituto Geofísico del Perú",
+        "obs_acronym": "INGEMMET/IGP",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "satellite",
         "xls_name": "Ubinas",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354020",
-        "observatory_url": "https://portal.ingemmet.gob.pe/"
+        "observatory_url": "https://www.gob.pe/ingemmet|https://www.gob.pe/igp"
       }
     },
     {
@@ -635,14 +635,14 @@
         "lat_deg": -15.788,
         "lon_deg": -71.8559,
         "alt_masl": 5967,
-        "observatory": "Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú",
+        "observatory": "Instituto Geológico, Minero y Metalúrgico/Instituto Geofísico del Perú",
         "obs_acronym": "INGEMMET/IGP",
         "country": "Peru",
         "meshRadiusKm": 10,
         "source": "satellite",
         "xls_name": "Sabancaya",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=354006",
-        "observatory_url": "https://portal.ingemmet.gob.pe/"
+        "observatory_url": "https://www.gob.pe/ingemmet|https://www.gob.pe/igp"
       }
     },
     {
@@ -1831,14 +1831,14 @@
         "lat_deg": 13.2542,
         "lon_deg": 123.6862,
         "alt_masl": 2370,
-        "observatory": "Philippine Institute of Volcanology and Seismology",
-        "obs_acronym": "PHIVOLCS",
-        "country": "Philippines",
+        "observatory": "Philippine Institute of Volcanology and Seismology/Earth Observatory of Singapore",
+        "obs_acronym": "PHIVOLCS/EOS",
+        "country": "Philippines/Singapore",
         "meshRadiusKm": 13,
         "source": "satellite",
         "xls_name": "Mayon",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=273030",
-        "observatory_url": "https://www.phivolcs.dost.gov.ph/"
+        "observatory_url": "https://www.phivolcs.dost.gov.ph/|https://earthobservatory.sg/about-us/our-mission"
       }
     },
     {
@@ -1884,7 +1884,7 @@
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=343100",
-        "observatory_url": "https://www.marn.gob.sv/"
+        "observatory_url": "https://www.snet.gob.sv/informacion/?area=vulcanologia"
       }
     },
     {
@@ -1930,7 +1930,7 @@
         "source": "satellite",
         "xls_name": "Santa Ana",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=343020",
-        "observatory_url": "https://www.marn.gob.sv/"
+        "observatory_url": "https://www.snet.gob.sv/informacion/?area=vulcanologia"
       }
     },
     {
@@ -2107,14 +2107,14 @@
         "lat_deg": 19.0233,
         "lon_deg": -98.6224,
         "alt_masl": 5070,
-        "observatory": "Universidad Nacional Autónoma de México",
-        "obs_acronym": "UNAM",
+        "observatory": "Centro Nacional de Prevención de Desastres/Universidad Nacional Autónoma de México",
+        "obs_acronym": "CENAPRED/UNAM",
         "country": "Mexico",
         "meshRadiusKm": 12,
         "source": "satellite",
         "xls_name": "Popocatepetl",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=341090",
-        "observatory_url": "https://www.geofisica.unam.mx/"
+        "observatory_url": "https://www.gob.mx/cenapred|https://www.geofisica.unam.mx/"
       }
     },
     {
@@ -2153,14 +2153,14 @@
         "lat_deg": 19.5117,
         "lon_deg": -103.6167,
         "alt_masl": 3850,
-        "observatory": "Universidad Nacional Autónoma de México",
-        "obs_acronym": "UNAM",
+        "observatory": "Centro Nacional de Prevención de Desastres/Universidad de Colima-Centro Universitario de Estudios Vulcanológicos",
+        "obs_acronym": "CENAPRED/CUEIV",
         "country": "Mexico",
         "meshRadiusKm": 12,
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=341040",
-        "observatory_url": "https://www.geofisica.unam.mx/"
+        "observatory_url": "https://www.gob.mx/cenapred|https://portal.ucol.mx/cueiv/"
       }
     },
     {

@@ -107,17 +107,24 @@ export function renderPlaceView(container, place, latLng) {
 
   const obsP = document.createElement("p");
   obsP.innerHTML = "<strong>Observatory:</strong> ";
-  const obsLabel = place.observatory || "Unknown observatory";
-  if (place.observatoryUrl) {
-    const obsLink = document.createElement("a");
-    obsLink.href = place.observatoryUrl;
-    obsLink.target = "_blank";
-    obsLink.rel = "noopener noreferrer";
-    obsLink.textContent = obsLabel;
-    obsP.appendChild(obsLink);
-  } else {
-    obsP.appendChild(document.createTextNode(obsLabel));
-  }
+  // Joint observatories are stored as "Name A/Name B" with matching
+  // "urlA|urlB" so each name can link to its own observatory.
+  const obsNames = (place.observatory || "Unknown observatory").split("/");
+  const obsUrls = place.observatoryUrl ? place.observatoryUrl.split("|") : [];
+  obsNames.forEach((obsName, i) => {
+    if (i > 0) obsP.appendChild(document.createTextNode(" / "));
+    const url = obsUrls[i];
+    if (url) {
+      const obsLink = document.createElement("a");
+      obsLink.href = url;
+      obsLink.target = "_blank";
+      obsLink.rel = "noopener noreferrer";
+      obsLink.textContent = obsName;
+      obsP.appendChild(obsLink);
+    } else {
+      obsP.appendChild(document.createTextNode(obsName));
+    }
+  });
   infoEl.appendChild(obsP);
 
   container.appendChild(infoEl);
