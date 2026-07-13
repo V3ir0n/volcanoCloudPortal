@@ -51,6 +51,10 @@ let map;
 let geoLayer;
 let overlayEl = null;
 let prevView = null;
+// True when this map is scoped via ?volcanoes=... (opened from the
+// Tomography button), in which case picking a volcano navigates straight
+// to its Tomography tool example instead of opening the usual place overlay.
+let isTomographyMap = false;
 
 function formatEmission(v) {
   if (v === 0) return "0";
@@ -156,6 +160,12 @@ function restorePrevView() {
 }
 
 function openVolcano(feature, layer) {
+  if (isTomographyMap) {
+    const name = feature.properties?.name;
+    if (name) window.location.href = `../measurement/Tomography/index.html?example=${name}`;
+    return;
+  }
+
   const place = getPlaceFromFeature(feature);
   selectedPlace = place;
 
@@ -534,6 +544,16 @@ function initMap() {
 fetch("resources/volcanoes.geojson")
   .then((r) => r.json())
   .then((data) => {
+    // Optional ?volcanoes=name1,name2,... query param restricts the map to a
+    // subset of volcanoes (matched against the geojson "name" property),
+    // e.g. for the Tomography button's map.
+    const volcanoFilter = new URLSearchParams(window.location.search).get("volcanoes");
+    if (volcanoFilter) {
+      const allowed = new Set(volcanoFilter.split(",").map(s => s.trim()).filter(Boolean));
+      data = { ...data, features: (data.features || []).filter(f => allowed.has(f.properties?.name)) };
+      isTomographyMap = true;
+    }
+
     const { min, max } = computeYearRange(data);
     minYear = min;
     maxYear = max;
