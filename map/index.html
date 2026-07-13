@@ -36,7 +36,6 @@
     <button class="back-btn" type="button" aria-haspopup="dialog" aria-controls="info-overlay">
       About this map
     </button>
-    <a class="btn btn--pill btn--outline" id="tomography-link" href="../measurement/Tomography/" target="_blank" rel="noopener" hidden>Tomography tool</a>
   </div>
   <div class="map-wrap">
     <div id="map"></div>
@@ -72,12 +71,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-  // Only show the Tomography tool link when this map was opened scoped to
-  // the Tomography example volcanoes (see ?volcanoes= handling in src/main.js).
-  if (new URLSearchParams(window.location.search).get("volcanoes")) {
-    document.getElementById("tomography-link")?.removeAttribute("hidden");
-  }
-
   const overlay = document.getElementById("info-overlay");
   const panel = overlay?.querySelector(".info-panel");
   const openBtn = document.querySelector('[aria-controls="info-overlay"]');
