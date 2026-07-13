@@ -11,6 +11,12 @@ from 'three/addons/exporters/GLTFExporter.js';
 
 const defaultRadiusKm = 10; // radius for fetching terrain data, can be adjusted if needed
 
+// Volcanoes with a preloaded example dataset in the Tomography tool
+// (matches the *Example button ids in measurement/Tomography/main.js).
+const TOMOGRAPHY_EXAMPLES = new Set([
+  "cleveland", "nevado_del_ruiz", "merapi", "turrialba", "sabancaya"
+]);
+
 // Scan cone color (user-selectable, shared with the measurement view via localStorage)
 const CONE_COLOR_KEY = "scanConeColor";
 const DEFAULT_CONE_COLOR = "#808080";
@@ -126,6 +132,29 @@ export function renderPlaceView(container, place, latLng) {
     }
   });
   infoEl.appendChild(obsP);
+
+  if (TOMOGRAPHY_EXAMPLES.has(place.name)) {
+    const tomoP = document.createElement("p");
+    tomoP.innerHTML = "<strong>Tomography:</strong> ";
+
+    const viewLink = document.createElement("a");
+    viewLink.href = `../measurement/Tomography/index.html?example=${place.name}`;
+    viewLink.target = "_blank";
+    viewLink.rel = "noopener noreferrer";
+    viewLink.textContent = "View loaded data";
+    tomoP.appendChild(viewLink);
+
+    tomoP.appendChild(document.createTextNode(" · "));
+
+    const uploadLink = document.createElement("a");
+    uploadLink.href = "../measurement/Tomography/index.html";
+    uploadLink.target = "_blank";
+    uploadLink.rel = "noopener noreferrer";
+    uploadLink.textContent = "Upload evaluation log files";
+    tomoP.appendChild(uploadLink);
+
+    infoEl.appendChild(tomoP);
+  }
 
   container.appendChild(infoEl);
 
