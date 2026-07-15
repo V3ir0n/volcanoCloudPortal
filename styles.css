@@ -103,22 +103,6 @@ header p  { color: var(--color-ink-soft); margin: 0; font-size: var(--text-sm); 
   line-height: 1.4;
   font-weight: 400;
 }
-footer {
-  background: var(--color-paper-raised);
-  border-top: 1px solid var(--color-line);
-  color: var(--color-ink-soft);
-  margin-top: 1.5rem;
-  font-size: var(--text-sm);
-  display: block;
-  text-align: center;
-}
-footer .container {
-  padding-top: 1rem;
-}
-
-footer strong { color: var(--color-ink); }
-footer hr { border-color: var(--color-line); }
-footer small, footer a { color: var(--color-ink-soft); }
 @media (max-width: 560px) {
   .nav-grid {
     grid-template-columns: 1fr;

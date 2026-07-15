@@ -125,15 +125,15 @@ export const annotations = [
 export const parameterInfos = {
     depthInfo: `
         <h2>Chamber Depth</h2>
-        <p>Depth changes the subsurface vent depth. Deeper vents alter eruption style, model stretching, and plume behavior.</p>
+        <p>Magma, the mixture of molten rock, crystals and volatiles is accumulated in chambers or reservoirs at different depths. The deeper the chamber, the higher the pressure, keeping gases trapped. On the other hand, rising magma has longer time to accelerate in the conduit and reach high velocities at the vent, when a full eruption is developed.</p>
     `,
     gasDensityInfo: `
         <h2>Magma gas Content</h2>
-        <p>The more gas that is dissolved in the magma the more eruptive gas is released into the plume. Higher values make the eruption plume denser and more visible.</p>
+        <p>Gases such as H₂O, CO₂ or SO₂ are released from magma when pressure drops as magma moves up. If gas has time to escape before high pressure is built up, the surface activity will be gentle, otherwise it may be explosive. The interplay of magma rise and gas escape is very dynamic making eruption prediction very challenging.</p>
     `,
     windSpeedInfo: `
         <h2>Wind Speed</h2>
-        <p>Wind speed affects plume shape and drift. Higher wind values stretch the plume more horizontally.</p>
+        <p>Wind fields at the vent will try to bend the eruptive column and form a wind-driven plume. The higher the wind, the stronger the bending effect, reducing the height of the plume. Stronger winds will produce narrower, but more concentrated plumes.</p>
     `
 };
 

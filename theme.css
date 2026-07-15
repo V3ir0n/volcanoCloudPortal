@@ -109,3 +109,21 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+/* ---- Shared site footer (credits) ---- */
+footer {
+  background: var(--color-paper-raised);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-ink-soft);
+  margin-top: 1.5rem;
+  font-size: var(--text-sm);
+  display: block;
+  text-align: center;
+}
+footer .container {
+  padding-top: 1rem;
+}
+
+footer strong { color: var(--color-ink); }
+footer hr { border-color: var(--color-line); }
+footer small, footer a { color: var(--color-ink-soft); }

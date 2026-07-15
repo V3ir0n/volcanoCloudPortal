@@ -130,13 +130,3 @@ h1, h2, .brand-font { font-family: var(--font-brand); }
 .closing p { font-size: var(--text-lg); color: var(--color-ink-soft); }
 .closing .brand-font { font-size: 1.7rem; color: var(--color-gold); display: block; margin-bottom: 0.5rem; }
 
-/* ── Footer ── */
-.site-footer {
-  border-top: 2px solid var(--color-ink);
-  padding: 2rem 1.5rem;
-  text-align: center;
-  color: var(--color-ink-soft);
-  font-size: var(--text-md);
-}
-.site-footer a { color: var(--color-ink-soft); }
-.site-footer a:hover { color: var(--color-gold); }
