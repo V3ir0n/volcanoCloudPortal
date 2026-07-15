@@ -130,3 +130,9 @@ h1, h2, .brand-font { font-family: var(--font-brand); }
 .closing p { font-size: var(--text-lg); color: var(--color-ink-soft); }
 .closing .brand-font { font-size: 1.7rem; color: var(--color-gold); display: block; margin-bottom: 0.5rem; }
 
+/* The main page loads Pico CSS, which scales the root font size up
+   responsively on wider screens, so its footer (same --text-sm token)
+   renders larger there than here. Approximate that size directly since
+   loading Pico here would affect other styling too. */
+footer { font-size: var(--text-md); }
+

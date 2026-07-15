@@ -480,7 +480,10 @@ class MeasurementView {
 
         svg.appendChild(g);
         panel.appendChild(svg);
-        document.body.appendChild(panel);
+        // Anchored inside .scan-viewport (not fixed to the viewport) so it
+        // scrolls away with the scanning view instead of staying pinned
+        // over the footer/credits below.
+        document.querySelector('.scan-viewport').appendChild(panel);
         this.chartPanel = panel;
     }
 
@@ -577,7 +580,10 @@ class MeasurementView {
 
         svg.appendChild(g);
         panel.appendChild(svg);
-        document.body.appendChild(panel);
+        // Anchored inside .scan-viewport (not fixed to the viewport) so it
+        // scrolls away with the scanning view instead of staying pinned
+        // over the footer/credits below.
+        document.querySelector('.scan-viewport').appendChild(panel);
         this.transChartPanel = panel;
     }
 
@@ -615,12 +621,18 @@ class MeasurementView {
             if (this.coneWireMat) this.coneWireMat.color.set(hex);
         }));
 
-        document.body.appendChild(ui);
+        // Anchored inside .scan-viewport (not fixed to the viewport) so it
+        // scrolls away with the scanning view instead of staying pinned
+        // over the footer/credits below.
+        document.querySelector('.scan-viewport').appendChild(ui);
 
         const hint = document.createElement('div');
         hint.className = 'scan-hint';
         hint.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume.';
-        document.body.appendChild(hint);
+        // Anchored inside .scan-viewport (not fixed to the viewport) so it
+        // scrolls away with the scanning view instead of staying pinned
+        // over the footer/credits below.
+        document.querySelector('.scan-viewport').appendChild(hint);
     }
 
     // ── Animation ────────────────────────────────────────────────────────────

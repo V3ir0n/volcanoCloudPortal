@@ -466,3 +466,6 @@ body {
   z-index: 10;
   white-space: nowrap;
 }
+
+/* Larger than the shared footer default (theme.css) for this page. */
+footer { font-size: var(--text-md); }

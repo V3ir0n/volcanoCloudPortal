@@ -321,7 +321,7 @@ function renderPlaceOverlay(place, latlng) {
     header.appendChild(createConeColorPicker(hex => view.setConeColor(hex)));
   }
   header.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
-    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
+    showInfoTooltip(e.currentTarget, "Annual SO₂ emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO₂ Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
   });
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -709,7 +709,7 @@ function createStaticLegend(legendValues) {
 
       div.querySelector(".diagram-info-btn").addEventListener("click", (e) => {
         L.DomEvent.stopPropagation(e);
-        showInfoTooltip(e.currentTarget, "Circle size and color each fall into one of a fixed set of levels based on annual SO₂ emissions — larger, darker-red circles mean higher emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO2 Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
+        showInfoTooltip(e.currentTarget, "Circle size and color each fall into one of a fixed set of levels based on annual SO₂ emissions — larger, darker-red circles mean higher emissions. Data is preliminary and zero emission may correspond to data that is not evaluated. For completeness we use data from [NASA SO₂ Climatology](https://so2.gsfc.nasa.gov/measures.html) together with public [NOVAC](https://novac.chalmers.se/) data.");
       });
 
       return div;
