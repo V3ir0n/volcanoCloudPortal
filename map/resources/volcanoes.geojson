@@ -2444,52 +2444,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -22.067,
-          63.917
-        ]
-      },
-      "properties": {
-        "2005": 0,
-        "2006": 0,
-        "2007": 0,
-        "2008": 0,
-        "2009": 0,
-        "2010": 0,
-        "2011": 0,
-        "2012": 0,
-        "2013": 0,
-        "2014": 0,
-        "2015": 0,
-        "2016": 0,
-        "2017": 0,
-        "2018": 0,
-        "2019": 0,
-        "2020": 0,
-        "2021": 0,
-        "2022": 0,
-        "2023": 0,
-        "2024": null,
-        "2025": null,
-        "name": "krysuvik",
-        "display_name": "Krysuvik",
-        "lat_deg": 63.917,
-        "lon_deg": -22.067,
-        "alt_masl": 360,
-        "observatory": "Icelandic Meteorological Office",
-        "obs_acronym": "IMO",
-        "country": "Iceland",
-        "meshRadiusKm": 10,
-        "source": "ground_based",
-        "xls_name": null,
-        "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=371030",
-        "observatory_url": "https://en.vedur.is/"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -19.6634,
           63.9895
         ]
