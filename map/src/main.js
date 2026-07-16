@@ -664,6 +664,11 @@ fetch("resources/volcanoes.geojson")
           openVolcano(entry.feature, entry.layer);
         });
 
+        if (isTomographyMap) {
+          const hint = L.DomUtil.create("p", "volcano-control-hint", container);
+          hint.textContent = "Select a volcano on the map to see a plume tomography from real measurements. Use keyboard arrows to show the plume evolution over time.";
+        }
+
         return container;
       }
     });
