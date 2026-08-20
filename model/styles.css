@@ -92,10 +92,23 @@ input[type="range"]:hover::-moz-range-thumb {
     max-height: 50px;
 }
 
+.back-btn {
+    font-size: 1.1rem;
+    border-width: 2px;
+}
+
+.parameters details:first-of-type summary,
+.parameters details:first-of-type summary:hover,
+.parameters details:first-of-type summary:focus,
+.parameters details:first-of-type summary:active {
+    color: #b8560a !important;
+}
+
 .topbar .btn--pill {
     margin-left: 0;
     color: #b8560a;
     border-color: #b8560a;
+    font-size: 1.1rem;
 }
 .doc-btn {
     width: 56px;

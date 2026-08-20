@@ -19,6 +19,10 @@ body {
   box-shadow: none;
 }
 
+.topbar img {
+  max-height: 50px;
+}
+
 .cone-color-picker {
   position: relative;
 }
@@ -39,7 +43,7 @@ body {
   position: absolute;
   right: 20px;
   width: 292px;
-  background: var(--glass-bg);
+  background: rgba(251, 248, 240, 0.65);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   padding: 12px;
@@ -54,10 +58,51 @@ body {
 .chart-panel--trans { bottom: 300px; }
 
 .chart-panel__title {
-  color: var(--color-ink-soft);
+  color: var(--color-ink);
+  font-weight: 600;
   font-size: var(--text-xs);
   font-family: var(--font-scientific);
   margin-bottom: 6px;
+}
+
+.chart-panel__info-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  pointer-events: auto;
+}
+
+.back-btn,
+.doc-btn,
+.btn {
+  border-width: 2px;
+}
+
+.chart-info-dialog {
+  position: relative;
+  max-width: 560px;
+  width: 90vw;
+  padding: 3rem 2rem 2rem;
+  border: none;
+  border-radius: var(--radius-lg, 12px);
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+.chart-info-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+.chart-info-dialog p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+.chart-info-dialog__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  border-width: 2px;
+  font-weight: 900;
+  font-size: 1.1rem;
 }
 
 .scan-controls {
@@ -73,6 +118,39 @@ body {
 .scan-play-btn:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+.scan-mode-panel {
+  position: absolute;
+  top: 90px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.scan-mode-panel__label {
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  font-family: var(--font-scientific);
+}
+
+.scan-mode-panel__options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scan-mode-btn.is-active {
+  background: var(--btn-hover-bg);
 }
 
 /* Contains the canvas and the scan-hint text, so the hint can be anchored

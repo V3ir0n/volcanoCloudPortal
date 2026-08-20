@@ -5,14 +5,38 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // ── Scan parameters ───────────────────────────────────────────────────────────
 const N = 25;
-const CD_MAX = 150;          // ppm·m, peak column density
-const PLUME_T = 0.45;        // plume centre as fraction of scan (0=right, 1=left)
-const PLUME_SIG = 0.10;      // Gaussian half-width as fraction of full scan
+const CD_MAX = 300;          // ppm·m, fixed chart axis scale shared by both scan modes
 const STEP_MS = 420;         // ms between each revealed slice
+
+// Per-mode plume profile: a conical scanner's cone sweeps through the plume's
+// core (narrow, high peak); a flat scanner's single vertical plane crosses a
+// broader swath of it (wider, lower peak, tapering close to zero out toward
+// the horizon-end scan angles).
+//
+// The flat peak is derived from the conical one via the standard slant-to-
+// vertical column density relationship, VCD = SCD·cos(θ): the conical scan's
+// peak sits almost exactly at the top of its arc (φ≈90°), where — because the
+// cone's axis is horizontal with a 60° half-angle — the ray's angle from
+// vertical is exactly 30°. So the conical peak is a slant column density (SCD)
+// measured at 30° off vertical, and the flat scan (which crosses the plume
+// near-vertically) reads close to the true vertical column density (VCD):
+// VCD = SCD·cos(30°). The spread stays ~2.2x wider, matching a single flat
+// plane crossing a broader swath of the plume than the cone's core.
+const CONICAL_HALF_DEG = 60;
+const FLAT_ANGLE_FROM_VERTICAL_DEG = 90 - CONICAL_HALF_DEG; // 30°
+const CONICAL_PROFILE = { t: 0.45, sig: 0.06, peak: 300 };
+const SCAN_PROFILES = {
+    conical: CONICAL_PROFILE,
+    flat: {
+        t: CONICAL_PROFILE.t,
+        sig: CONICAL_PROFILE.sig * 2.2,
+        peak: CONICAL_PROFILE.peak * Math.cos(FLAT_ANGLE_FROM_VERTICAL_DEG * Math.PI / 180),
+    },
+};
 
 // 60° half-cone opening toward +Z (volcano): tip at origin, arc sweeps upper semicircle.
 // Matches placeview.js createStationMarker(60) — 3D shape, visible from all angles.
-const CONE_HALF_RAD = 60 * Math.PI / 180;   // half-angle 60° → tan(60°) = 1.732
+const CONE_HALF_RAD = CONICAL_HALF_DEG * Math.PI / 180;   // half-angle 60° → tan(60°) = 1.732
 
 // World-space direction the plume drifts in, roughly horizontal.
 const WIND_DIR = new THREE.Vector3(1, 0, 3).normalize();
@@ -97,11 +121,6 @@ function createConeColorPicker(onChange) {
 }
 
 // ── Slice math (per-slice column density & scan angle) ────────────────────────
-function sliceCD(i) {
-    const t = (i + 0.5) / N;
-    return CD_MAX * Math.exp(-((t - PLUME_T) ** 2) / (2 * PLUME_SIG ** 2));
-}
-
 // φ=0 (left, +X local) → −90°; φ=π (right, −X local) → +90°
 // (forward = local +Z toward the volcano, up = +Y ⇒ right = forward×up = local −X)
 function sliceScanAngle(i) {
@@ -202,6 +221,7 @@ class MeasurementView {
         this.currentSlice = 0;
         this.animating = false;
         this.ready = false;
+        this.scanMode = 'conical';
 
         this.spectrum = null;
 
@@ -210,12 +230,20 @@ class MeasurementView {
         this._initChart();
         this._initTransmittanceChart();
         this._initUI();
+        this._initScanModeUI();
         this._loadTerrain();
         this._loadSpectrum();
 
         this.renderer.setAnimationLoop(() => {
             this.renderer.render(this.scene, this.camera);
         });
+    }
+
+    // Column density for slice i under the current scan mode's plume profile.
+    _sliceCD(i) {
+        const p = SCAN_PROFILES[this.scanMode];
+        const t = (i + 0.5) / N;
+        return p.peak * Math.exp(-((t - p.t) ** 2) / (2 * p.sig ** 2));
     }
 
     // ── Renderer setup ──────────────────────────────────────────────────────
@@ -323,6 +351,7 @@ class MeasurementView {
         const distToSummit = Math.sqrt(horizDist ** 2 + (this.summit.y - sy) ** 2);
         const coneLen = distToSummit * 0.6;
         const r = coneLen * Math.tan(CONE_HALF_RAD);  // base radius at tip of cone
+        const R = Math.sqrt(r * r + coneLen * coneLen); // distance from tip to rim, either mode
 
         // Small instrument body
         const bs = extent * 0.018;
@@ -331,19 +360,60 @@ class MeasurementView {
             new THREE.MeshStandardMaterial({ color: 0xdddddd })
         ));
 
-        // 3D half-cone slices: tip at origin, arc in local XY plane at z=coneLen.
-        // φ sweeps [0, π] (right → top → left) matching placeview.js createStationMarker(60).
-        // Vertex arc: (r·cos φ, r·sin φ, coneLen) — upper half of cone, visible from all angles.
+        this._fanGroup = group;
+        this._fanParams = { r, coneLen, R };
+        this._buildFan();
+
+        this.scene.add(group);
+    }
+
+    // Rim point for the current scan mode, φ sweeping [0, π] (right → top → left).
+    // Conical: rim traces a flat circle at z=coneLen, so tip+rim form a true cone
+    // (matches placeview.js createStationMarker(60), same 60° half-angle).
+    // Flat: rim traces a semicircle of the same tip-to-rim distance R, but at
+    // z=0 — the local x-y (up/right) plane, whose normal is the local z (forward)
+    // axis. Forward already points upwind toward the summit (see downwindDist in
+    // _buildStation), so this plane sits perpendicular to the plume's drift path,
+    // the real setup for a flat-scanning instrument: the plume crosses the fixed
+    // plane rather than the plane sweeping around to track it.
+    _fanPoint(phi, r, coneLen, R) {
+        if (this.scanMode === 'flat') {
+            return [R * Math.cos(phi), R * Math.sin(phi), 0];
+        }
+        return [r * Math.cos(phi), r * Math.sin(phi), coneLen];
+    }
+
+    // (Re)builds the slice meshes + wireframe for the current scan mode, reusing
+    // the station's existing group/position so this can be called again on a
+    // mode switch without re-running the terrain raycast.
+    _buildFan() {
+        const { r, coneLen, R } = this._fanParams;
+        const group = this._fanGroup;
+
+        this.sliceMeshes.forEach(m => {
+            group.remove(m);
+            m.geometry.dispose();
+            m.material.dispose();
+        });
+        this.sliceMeshes = [];
+        if (this._wireSegments) {
+            group.remove(this._wireSegments);
+            this._wireSegments.geometry.dispose();
+        }
+
+        // Slices: tip at origin, arc per _fanPoint. Upper half only, visible from all angles.
         for (let i = 0; i < N; i++) {
             const phi1 = (i / N) * Math.PI;
             const phi2 = ((i + 1) / N) * Math.PI;
-            const cd = sliceCD(i);
+            const cd = this._sliceCD(i);
+            const p1 = this._fanPoint(phi1, r, coneLen, R);
+            const p2 = this._fanPoint(phi2, r, coneLen, R);
 
             const geom = new THREE.BufferGeometry();
             geom.setAttribute('position', new THREE.Float32BufferAttribute([
                 0, 0, 0,
-                r * Math.cos(phi1), r * Math.sin(phi1), coneLen,
-                r * Math.cos(phi2), r * Math.sin(phi2), coneLen,
+                ...p1,
+                ...p2,
             ], 3));
 
             const mat = new THREE.MeshBasicMaterial({
@@ -363,24 +433,25 @@ class MeasurementView {
         const wv = [];
         for (let i = 0; i <= N; i++) {
             const phi = (i / N) * Math.PI;
-            wv.push(0, 0, 0,  r * Math.cos(phi), r * Math.sin(phi), coneLen);
+            wv.push(0, 0, 0, ...this._fanPoint(phi, r, coneLen, R));
         }
         for (let i = 0; i < N; i++) {
             const phi1 = (i / N) * Math.PI;
             const phi2 = ((i + 1) / N) * Math.PI;
             wv.push(
-                r * Math.cos(phi1), r * Math.sin(phi1), coneLen,
-                r * Math.cos(phi2), r * Math.sin(phi2), coneLen
+                ...this._fanPoint(phi1, r, coneLen, R),
+                ...this._fanPoint(phi2, r, coneLen, R)
             );
         }
         const wGeom = new THREE.BufferGeometry();
         wGeom.setAttribute('position', new THREE.Float32BufferAttribute(wv, 3));
-        this.coneWireMat = new THREE.LineBasicMaterial({
-            color: getStoredConeColor(), transparent: true, opacity: 0.4
-        });
-        group.add(new THREE.LineSegments(wGeom, this.coneWireMat));
-
-        this.scene.add(group);
+        if (!this.coneWireMat) {
+            this.coneWireMat = new THREE.LineBasicMaterial({
+                color: getStoredConeColor(), transparent: true, opacity: 0.4
+            });
+        }
+        this._wireSegments = new THREE.LineSegments(wGeom, this.coneWireMat);
+        group.add(this._wireSegments);
     }
 
     // ── Bar chart SO2─────────────────────────────────────────────────────────────
@@ -398,6 +469,32 @@ class MeasurementView {
         title.textContent = 'SO₂ column density / ppm·m';
         title.className = 'chart-panel__title';
         panel.appendChild(title);
+
+        const infoBtn = document.createElement('button');
+        infoBtn.type = 'button';
+        infoBtn.className = 'btn btn--icon btn--icon-sm btn--outline info-btn chart-panel__info-btn';
+        infoBtn.setAttribute('aria-label', 'Column density info');
+        infoBtn.textContent = 'ℹ';
+        panel.appendChild(infoBtn);
+
+        const infoDialog = document.createElement('dialog');
+        infoDialog.className = 'chart-info-dialog';
+        const infoCloseBtn = document.createElement('button');
+        infoCloseBtn.type = 'button';
+        infoCloseBtn.className = 'btn btn--icon btn--outline chart-info-dialog__close';
+        infoCloseBtn.setAttribute('aria-label', 'Close');
+        infoCloseBtn.textContent = '✕';
+        const infoText = document.createElement('p');
+        infoText.textContent = 'In atmospheric physics and remote sensing, the ppm⋅m (parts per million-meter) is a widely used unit for Slant Column Density (SCD). It represents the integrated concentration of sulfur dioxide (SO₂) along an optical path.';
+        infoDialog.appendChild(infoCloseBtn);
+        infoDialog.appendChild(infoText);
+        document.body.appendChild(infoDialog);
+
+        infoBtn.addEventListener('click', () => infoDialog.showModal());
+        infoCloseBtn.addEventListener('click', () => infoDialog.close());
+        infoDialog.addEventListener('click', (e) => {
+            if (e.target === infoDialog) infoDialog.close();
+        });
 
         const svg = document.createElementNS(NS, 'svg');
         svg.setAttribute('width', W);
@@ -418,7 +515,7 @@ class MeasurementView {
         g.appendChild(mkLine(0, 0, 0, iH));     // y-axis
 
         // Horizontal grid lines
-        [50, 100, 150].forEach(v => {
+        [100, 200, 300].forEach(v => {
             const y = iH - (v / CD_MAX) * iH;
             g.appendChild(mkLine(0, y, iW, y, '#cfc9b8'));
         });
@@ -431,7 +528,7 @@ class MeasurementView {
             lbl.setAttribute('x', x); lbl.setAttribute('y', iH + 14);
             lbl.setAttribute('text-anchor', 'middle');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#555555');
+            lbl.setAttribute('fill', '#2b2b2b');
             lbl.textContent = a;
             g.appendChild(lbl);
         });
@@ -441,28 +538,29 @@ class MeasurementView {
         xLbl.setAttribute('x', iW / 2); xLbl.setAttribute('y', H - M.t - 3);
         xLbl.setAttribute('text-anchor', 'middle');
         xLbl.setAttribute('font-size', 9);
-        xLbl.setAttribute('fill', '#555555');
+        xLbl.setAttribute('fill', '#2b2b2b');
         xLbl.textContent = 'scan angle / deg';
         g.appendChild(xLbl);
 
         // Y ticks
-        [0, 50, 100, 150].forEach(v => {
+        [0, 100, 200, 300].forEach(v => {
             const y = iH - (v / CD_MAX) * iH;
             g.appendChild(mkLine(-4, y, 0, y));
             const lbl = document.createElementNS(NS, 'text');
             lbl.setAttribute('x', -7); lbl.setAttribute('y', y + 3);
             lbl.setAttribute('text-anchor', 'end');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#555555');
+            lbl.setAttribute('fill', '#2b2b2b');
             lbl.textContent = v;
             g.appendChild(lbl);
         });
 
         // Pre-create bars (invisible), one per slice
+        this._chartIH = iH;
         const bw = (iW / N) * 0.82;
         this.barEls = [];
         for (let i = 0; i < N; i++) {
-            const cd = sliceCD(i);
+            const cd = this._sliceCD(i);
             const angle = sliceScanAngle(i);
             const bx = (angle + 90) / 180 * iW - bw / 2;
             const bh = Math.max(0, (cd / CD_MAX) * iH);
@@ -511,6 +609,32 @@ class MeasurementView {
         title.className = 'chart-panel__title';
         panel.appendChild(title);
 
+        const infoBtn = document.createElement('button');
+        infoBtn.type = 'button';
+        infoBtn.className = 'btn btn--icon btn--icon-sm btn--outline info-btn chart-panel__info-btn';
+        infoBtn.setAttribute('aria-label', 'Transmittance info');
+        infoBtn.textContent = 'ℹ';
+        panel.appendChild(infoBtn);
+
+        const infoDialog = document.createElement('dialog');
+        infoDialog.className = 'chart-info-dialog';
+        const infoCloseBtn = document.createElement('button');
+        infoCloseBtn.type = 'button';
+        infoCloseBtn.className = 'btn btn--icon btn--outline chart-info-dialog__close';
+        infoCloseBtn.setAttribute('aria-label', 'Close');
+        infoCloseBtn.textContent = '✕';
+        const infoText = document.createElement('p');
+        infoText.textContent = 'Transmittance is the capacity of a material to allow light or other electromagnetic radiation to pass through it. It is calculated as the ratio of transmitted light intensity (I) to the incident light intensity (I₀) that enters the substance, often expressed as a fraction or a percentage. It changes with wavelength because materials absorb, reflect, or scatter specific colors or frequencies of light differently. This spectral variation defines a substance\'s unique optical and color properties.';
+        infoDialog.appendChild(infoCloseBtn);
+        infoDialog.appendChild(infoText);
+        document.body.appendChild(infoDialog);
+
+        infoBtn.addEventListener('click', () => infoDialog.showModal());
+        infoCloseBtn.addEventListener('click', () => infoDialog.close());
+        infoDialog.addEventListener('click', (e) => {
+            if (e.target === infoDialog) infoDialog.close();
+        });
+
         const svg = document.createElementNS(NS, 'svg');
         svg.setAttribute('width', W);
         svg.setAttribute('height', H);
@@ -543,7 +667,7 @@ class MeasurementView {
             lbl.setAttribute('x', -7); lbl.setAttribute('y', y + 3);
             lbl.setAttribute('text-anchor', 'end');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#555555');
+            lbl.setAttribute('fill', '#2b2b2b');
             lbl.textContent = v;
             g.appendChild(lbl);
         });
@@ -556,7 +680,7 @@ class MeasurementView {
             lbl.setAttribute('x', x); lbl.setAttribute('y', iH + 14);
             lbl.setAttribute('text-anchor', 'middle');
             lbl.setAttribute('font-size', 9);
-            lbl.setAttribute('fill', '#555555');
+            lbl.setAttribute('fill', '#2b2b2b');
             lbl.textContent = w;
             g.appendChild(lbl);
         });
@@ -566,7 +690,7 @@ class MeasurementView {
         xLbl.setAttribute('x', iW / 2); xLbl.setAttribute('y', H - M.t - 3);
         xLbl.setAttribute('text-anchor', 'middle');
         xLbl.setAttribute('font-size', 9);
-        xLbl.setAttribute('fill', '#555555');
+        xLbl.setAttribute('fill', '#2b2b2b');
         xLbl.textContent = 'wavelength / nm';
         g.appendChild(xLbl);
 
@@ -628,11 +752,43 @@ class MeasurementView {
 
         const hint = document.createElement('div');
         hint.className = 'scan-hint';
-        hint.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume.';
+        hint.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume';
         // Anchored inside .scan-viewport (not fixed to the viewport) so it
         // scrolls away with the scanning view instead of staying pinned
         // over the footer/credits below.
         document.querySelector('.scan-viewport').appendChild(hint);
+    }
+
+    // ── Scanning geometry toggle (left side) ────────────────────────────────
+    _initScanModeUI() {
+        const panel = document.createElement('div');
+        panel.className = 'scan-mode-panel';
+
+        const label = document.createElement('div');
+        label.className = 'scan-mode-panel__label';
+        label.textContent = 'Scanning geometry';
+        panel.appendChild(label);
+
+        const options = document.createElement('div');
+        options.className = 'scan-mode-panel__options';
+
+        this.scanModeBtns = ['conical', 'flat'].map(mode => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn btn--pill btn--outline scan-mode-btn';
+            btn.textContent = mode === 'conical' ? 'Conical' : 'Flat';
+            btn.dataset.mode = mode;
+            const active = mode === this.scanMode;
+            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            if (active) btn.classList.add('is-active');
+            btn.addEventListener('click', () => this._setScanMode(mode));
+            options.appendChild(btn);
+            return btn;
+        });
+        panel.appendChild(options);
+
+        document.querySelector('.scan-viewport').appendChild(panel);
+        this.scanModePanel = panel;
     }
 
     // ── Animation ────────────────────────────────────────────────────────────
@@ -660,7 +816,7 @@ class MeasurementView {
 
         if (this.sliceMeshes[i]) this.sliceMeshes[i].material.visible = true;
         if (this.barEls[i]) this.barEls[i].setAttribute('opacity', 0.88);
-        this._updateTransmittance(sliceCD(i));
+        this._updateTransmittance(this._sliceCD(i));
 
         setTimeout(() => this._step(), STEP_MS);
     }
@@ -672,6 +828,35 @@ class MeasurementView {
         this.chartPanel.style.opacity = '0';
         this.transChartPanel.style.opacity = '0';
         if (this.transPath) this.transPath.setAttribute('d', '');
+    }
+
+    // Re-heights/re-colors the pre-built bars for the current scan mode's plume
+    // profile (bar x-position/width is angle-based only, so that stays put).
+    _updateChartBars() {
+        for (let i = 0; i < N; i++) {
+            const rect = this.barEls[i];
+            if (!rect) continue;
+            const cd = this._sliceCD(i);
+            const bh = Math.max(0, (cd / CD_MAX) * this._chartIH);
+            rect.setAttribute('y', this._chartIH - bh);
+            rect.setAttribute('height', bh);
+            rect.setAttribute('fill', cdColorCss(cd));
+        }
+    }
+
+    _setScanMode(mode) {
+        if (this.scanMode === mode || this.animating) return;
+        this.scanMode = mode;
+        this._reset();
+        if (this._fanGroup) this._buildFan();
+        this._updateChartBars();
+        if (this.scanModeBtns) {
+            this.scanModeBtns.forEach(b => {
+                const active = b.dataset.mode === mode;
+                b.setAttribute('aria-pressed', active ? 'true' : 'false');
+                b.classList.toggle('is-active', active);
+            });
+        }
     }
 
     // ── Plume ─────────────────────────────────────────────────────────────────
