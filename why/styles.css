@@ -19,6 +19,7 @@ h1, h2, .brand-font { font-family: var(--font-brand); }
   box-shadow: none;
 }
 .topbar-title { flex: 1; text-align: center; font-family: var(--font-brand); font-size: 1.4rem; font-weight: 700; }
+.topbar img { max-height: 50px; }
 
 /* ── Hero ── */
 .hero {
@@ -128,7 +129,7 @@ h1, h2, .brand-font { font-family: var(--font-brand); }
   text-align: center;
 }
 .closing p { font-size: var(--text-lg); color: var(--color-ink-soft); }
-.closing .brand-font { font-size: 1.7rem; color: var(--color-gold); display: block; margin-bottom: 0.5rem; }
+.closing .brand-font { font-size: 2.2rem; color: var(--color-gold); display: block; margin-bottom: 0.5rem; }
 
 /* The main page loads Pico CSS, which scales the root font size up
    responsively on wider screens, so its footer (same --text-sm token)

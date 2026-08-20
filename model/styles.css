@@ -88,6 +88,26 @@ input[type="range"]:hover::-moz-range-thumb {
     box-shadow: none;
 }
 
+.topbar img {
+    max-height: 50px;
+}
+
+.topbar .btn--pill {
+    margin-left: 0;
+    color: #b8560a;
+    border-color: #b8560a;
+}
+.doc-btn {
+    width: 56px;
+    height: 56px;
+    margin-left: auto;
+    border-width: 2.5px;
+}
+.doc-btn svg {
+    width: 30px;
+    height: 30px;
+}
+
 #infobox {
     position: absolute;
     top: 50%;
