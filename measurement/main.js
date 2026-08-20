@@ -246,6 +246,7 @@ class MeasurementView {
         return p.peak * Math.exp(-((t - p.t) ** 2) / (2 * p.sig ** 2));
     }
 
+
     // ── Renderer setup ──────────────────────────────────────────────────────
     _initRenderer() {
         this.canvas = document.getElementById('threeCanvas');
@@ -362,6 +363,10 @@ class MeasurementView {
 
         this._fanGroup = group;
         this._fanParams = { r, coneLen, R };
+        // group isn't in the scene graph yet, so its matrixWorld (needed by
+        // _sliceIntersectsPlume's localToWorld calls inside _buildFan) hasn't
+        // been computed automatically — force it before the first build.
+        group.updateMatrixWorld(true);
         this._buildFan();
 
         this.scene.add(group);
@@ -417,7 +422,7 @@ class MeasurementView {
             ], 3));
 
             const mat = new THREE.MeshBasicMaterial({
-                color: cdColor(cd),
+                color: this._sliceIntersectsPlume(i) ? cdColor(cd) : 0xffffff,
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.6,
@@ -904,7 +909,54 @@ class MeasurementView {
         }
 
         this._plumePoints = group;
+        this._plumeHeight = plumeHeight;
         this.scene.add(group);
+
+        // Invisible proxy (a chain of overlapping spheres along the same
+        // centerline, no jitter) so scan rays can be raycast against the
+        // plume's actual shape with Three.js's own ray/sphere math, rather
+        // than an approximate one built by hand.
+        const proxyMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+        const proxyGroup = new THREE.Group();
+        const PROXY_STEPS = 40;
+        for (let k = 0; k <= PROXY_STEPS; k++) {
+            const t = k / PROXY_STEPS;
+            const rise   = plumeHeight * (0.05 + 0.35 * Math.sqrt(t));
+            const drift  = plumeHeight * 2.0 * t;
+            const spread = plumeHeight * (0.05 + 0.20 * t);
+            const c = summit.clone().addScaledVector(WIND_DIR, drift);
+            c.y += rise;
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(spread, 8, 6), proxyMat);
+            sphere.position.copy(c);
+            proxyGroup.add(sphere);
+        }
+        this._plumeProxy = proxyGroup;
+        this.scene.add(proxyGroup);
+        // _buildStation (called right after this, synchronously) raycasts
+        // against this proxy before the first render pass would otherwise
+        // refresh its matrices — force it now.
+        proxyGroup.updateMatrixWorld(true);
+    }
+
+    // Whether the ray toward slice i's rim point (station → arc midpoint)
+    // actually hits the plume's invisible proxy shape, via a real raycast
+    // rather than hand-rolled geometry math.
+    _sliceIntersectsPlume(i) {
+        if (!this._plumeProxy || !this._fanGroup || !this._fanParams) return false;
+        const { r, coneLen, R } = this._fanParams;
+        const phiMid = ((i + 0.5) / N) * Math.PI;
+        const localPoint = new THREE.Vector3(...this._fanPoint(phiMid, r, coneLen, R));
+        const worldPoint = this._fanGroup.localToWorld(localPoint.clone());
+        const origin = this._fanGroup.getWorldPosition(new THREE.Vector3());
+
+        const dir = worldPoint.clone().sub(origin);
+        const dist = dir.length();
+        dir.normalize();
+
+        if (!this._plumeRaycaster) this._plumeRaycaster = new THREE.Raycaster();
+        this._plumeRaycaster.far = dist;
+        this._plumeRaycaster.set(origin, dir);
+        return this._plumeRaycaster.intersectObject(this._plumeProxy, true).length > 0;
     }
 }
 
