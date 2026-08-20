@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./theme.css" />
+    <link rel="stylesheet" href="./buttons.css" />
     <link rel="stylesheet" href="./styles.css" />
 
     <!-- Header -->
@@ -27,7 +28,37 @@
         <h1>NOVAC Open Academy</h1>
         <p>Learn about volcanic gases, eruptions and spectroscopy</p>
       </hgroup>
+      <button class="btn btn--pill btn--outline" id="creditsBtn" type="button" style="margin-left:auto;">Credits</button>
     </header>
+
+    <dialog id="creditsDialog">
+      <button class="btn btn--icon btn--outline" id="creditsCloseBtn" type="button" aria-label="Close">✕</button>
+      <div style="display: flex; flex-direction: column; gap: 0.75em;">
+
+        <section>
+          <small>
+            <strong>About NOVAC</strong><br>
+            About NOVAC: The Network for Observation of Volcanic and Atmospheric Change is a global collaboration between volcano observatories and research institutions that advances the monitoring and scientific understanding of volcanic emissions and their impacts.
+          </small>
+        </section>
+
+        <section>
+          <small>
+            <strong>Sustained by</strong><br>
+            The joint effort of volcano observatories, Chalmers University of Technology, and the Volcano Disaster Assistance Program of the United States Geological Survey. Established through funding from the European Commission, the International Geoscience Programme of UNESCO/IUGS, the Swedish Space Agency, the Swedish Research Council and other funding sources over the years.
+          </small>
+        </section>
+
+        <section>
+          <small>
+            <strong>Credits</strong><br>
+            This page is funded by Chalmers University of Technology and developed within an     <a href="https://infravis.se" target="_blank" rel="noopener">InfraVis</a>/Chalmers project including the following people: Santiago Arellano, Malin Lindgren and Bo Galle (Chalmers),
+Joakim Bohlin, Kristin Åkerlund, Jessica Cistakova, Tristan Bridge and Matteo Tomasini (InfraVis), and Claudia Inés Rivera Cárdenas (UNAM).
+          </small>
+        </section>
+
+      </div>
+    </dialog>
 
     <!-- Grid with links to sections -->
     <main>
@@ -71,10 +102,32 @@
 
         <!-- Why (clustered center, enlarged) -->
         <a href="./why/index.html" class="nav-card nav-card-why">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 21.6 Q5.6 17.6 8.8 14.4 Q12 11.2 8.8 8 Q6.4 5.6 8.8 2.4"/>
-            <path d="M12.8 21.6 Q10.4 17.6 13.6 14.4 Q16.8 11.2 13.6 8 Q11.2 5.6 13.6 2.4" opacity="0.65"/>
-            <path d="M17.6 21.6 Q15.2 17.6 18.4 14.4 Q21.6 11.2 18.4 8" opacity="0.4"/>
+          <svg viewBox="-1 0 30 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.3 10 Q1.3 8.3 2.7 7.3 Q3.7 8.3 2.3 10" opacity="0.5"/>
+            <path d="M0.2 17 L3 10 L6 17" opacity="0.5"/>
+            <line x1="-0.6" y1="17" x2="28.6" y2="17"/>
+            <g stroke-width="0.5">
+              <path d="M13.3 17 L13.3 11 L17.3 6 L21.3 11 L21.3 17"/>
+              <path d="M16.5 17 L16.5 14.2 L18.1 14.2 L18.1 17"/>
+              <g stroke-width="0.3">
+                <circle cx="19.7" cy="16.3" r="0.65"/>
+                <circle cx="20.4" cy="15.75" r="0.35"/>
+                <path d="M23.2 17 L23 16.2 M23.2 17 L23.4 16.2"/>
+                <line x1="25.3" y1="17" x2="25.3" y2="16.3"/>
+                <circle cx="25.3" cy="16" r="0.3"/>
+                <line x1="26" y1="17" x2="26" y2="16.4"/>
+                <circle cx="26" cy="16.1" r="0.3"/>
+              </g>
+              <circle cx="24.3" cy="12.3" r="2.2"/>
+              <line x1="24.3" y1="14.5" x2="24.3" y2="17"/>
+              <circle cx="7.5" cy="14.6" r="0.7"/>
+              <line x1="7.5" y1="15.3" x2="7.5" y2="17"/>
+              <circle cx="9.2" cy="13.8" r="1"/>
+              <line x1="9.2" y1="14.8" x2="9.2" y2="17"/>
+              <circle cx="11.4" cy="13.8" r="1"/>
+              <line x1="11.4" y1="14.8" x2="11.4" y2="17"/>
+              <line x1="7.5" y1="15.4" x2="11.4" y2="15.4"/>
+            </g>
           </svg>
           <h2>Our mission</h2>
           <p>Why we should care about volcanic gas emissions</p>
@@ -83,42 +136,14 @@
       </div>
     </main>
 
-    <footer>
-  <div class="container">
-  <!-- Stack with partner info, credits -->
-  <div style="display: flex; flex-direction: column; gap: 0.75em;">
-
-    <!-- Section 1: What is NOVAC -->
-    <section>
-      <small>
-        <strong>About NOVAC</strong><br>
-        "About NOVAC: The Network for Observation of Volcanic and Atmospheric Change is a global collaboration between volcano observatories and research institutions that advances the monitoring and scientific understanding of volcanic emissions and their impacts."
-      </small>
-    </section>
-
-    <!-- Section 2: Sustaining Organizations -->
-    <section>
-      <small>
-        <strong>Sustained By</strong><br>
-        "The joint effort of volcano observatories, Chalmers University of Technology, and the Volcano Disaster Assistance Program of the United States Geological Survey. Established through funding from the European Commission, the International Geoscience Programme of UNESCO/IUGS, the Swedish Space Agency, the Swedish Research Council and other funding sources over the years."
-      </small>
-    </section>
-
-    <!-- Section 3: Credits -->
-    <section>
-      <small>
-        <strong>Credits</strong><br>
-        This page is funded by Chalmers University of Technology and developed within an     <a href="https://infravis.se" target="_blank" rel="noopener">InfraVis</a>
-/Chalmers project including the following people: Santiago Arellano, Malin Lindgren and Bo Galle (Chalmers),
-Joakim Bohlin, Kristin Åkerlund, Jessica Cistakova, Tristan Bridge, Matteo Tomasini (InfraVis)
-        <!--© 2026 InfraVis · Built for NOVAC · -->
-      </small>
-    </section>
-
-  </div>
-  </div>
-</footer>
-   
+    <script>
+      const creditsDialog = document.getElementById('creditsDialog');
+      document.getElementById('creditsBtn').addEventListener('click', () => creditsDialog.showModal());
+      document.getElementById('creditsCloseBtn').addEventListener('click', () => creditsDialog.close());
+      creditsDialog.addEventListener('click', (e) => {
+        if (e.target === creditsDialog) creditsDialog.close();
+      });
+    </script>
 </body>
 
 </html>
