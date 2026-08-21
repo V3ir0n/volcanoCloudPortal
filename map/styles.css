@@ -21,8 +21,21 @@ body {
   padding: 2px 8px;
   box-shadow: 0 2px 6px rgba(43, 43, 43, 0.25);
 }
-.volcano-label::before {
+/* Leaflet colors the tooltip arrow via a different border-*-color property
+   per direction (only the side facing the anchor is opaque); matching only
+   border-top-color left the right/bottom-direction labels' arrows in
+   Leaflet's default white, which read as "different" from the gold ones. */
+.volcano-label.leaflet-tooltip-top::before {
   border-top-color: var(--color-gold) !important;
+}
+.volcano-label.leaflet-tooltip-bottom::before {
+  border-bottom-color: var(--color-gold) !important;
+}
+.volcano-label.leaflet-tooltip-left::before {
+  border-left-color: var(--color-gold) !important;
+}
+.volcano-label.leaflet-tooltip-right::before {
+  border-right-color: var(--color-gold) !important;
 }
 
 .map-wrap {

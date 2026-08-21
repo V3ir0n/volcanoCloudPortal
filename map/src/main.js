@@ -164,7 +164,11 @@ function restorePrevView() {
 function openVolcano(feature, layer) {
   if (isTomographyMap) {
     const name = feature.properties?.name;
-    if (name) window.location.href = `../measurement/Tomography/index.html?example=${name}`;
+    // tomography-models/ is a self-contained copy of the Tomography submodule's
+    // viewer (trimmed to these 5 volcanoes' data) — used instead of linking into
+    // measurement/Tomography/ directly, since that submodule isn't guaranteed to
+    // be checked out/deployed wherever this site is served from.
+    if (name) window.location.href = `../measurement/tomography-models/index.html?example=${name}`;
     return;
   }
 
@@ -661,7 +665,12 @@ fetch("resources/volcanoes.geojson")
       }
     });
 
-    map.addControl(new YearControl({ position: "bottomleft" }));
+    // The year slider (emission-over-time) doesn't apply to the Tomography
+    // button's filtered map — it's just picking a volcano, not exploring
+    // emission history.
+    if (!isTomographyMap) {
+      map.addControl(new YearControl({ position: "bottomleft" }));
+    }
 
     const baseStyle = {
       color: "#000",
@@ -671,15 +680,44 @@ fetch("resources/volcanoes.geojson")
     };
 
     // Adds circle markers that are used in main to create the emission circlesfor each volcano
+    // Hand-tuned per volcano (by its geojson "name") for the Tomography
+    // map's 5 always-visible name labels, since it's a small fixed list —
+    // Nevado del Ruiz and Sabancaya specifically were confirmed to overlap
+    // with the earlier generic index-cycled offsets, so they're pushed
+    // further apart (opposite sides) here explicitly.
+    const tomographyLabelByName = {
+      // Purely horizontal offset (no vertical component) so the default
+      // arrow — vertically centered on the box — points straight at the
+      // circle with no diagonal skew.
+      nevado_del_ruiz: { direction: "right", offset: [10, 0] },
+      sabancaya: { direction: "right", offset: [12, 0] },
+      cleveland: { direction: "top", offset: [0, -12] },
+      merapi: { direction: "bottom", offset: [0, 12] },
+      turrialba: { direction: "top", offset: [0, -10] }
+    };
+    // Purely single-axis, same as the hand-tuned entries above, so any
+    // volcano not explicitly listed still gets an untilted arrow.
+    const tomographyLabelVariants = [
+      { direction: "top", offset: [0, -12] },
+      { direction: "bottom", offset: [0, 12] },
+      { direction: "right", offset: [18, 0] },
+      { direction: "left", offset: [-18, 0] },
+      { direction: "left", offset: [-18, 0] }
+    ];
+    let tomographyLabelIndex = 0;
+
     geoLayer = L.geoJSON(data, {
       pointToLayer: (feature, latlng) => {
         const props = feature.properties || {};
         const raw = Number(props[String(year)]) || 0;
         const bucketV = bucketEmissionValue(raw, legendValues);
+        // Tomography's filtered map is just picking a volcano to open, not
+        // comparing emission magnitude, so keep every circle the same
+        // size/color (dark red, matching the site's other dark-red accents).
         return L.circleMarker(latlng, {
           ...baseStyle,
-          radius: emissionRadius({ [String(year)]: bucketV }, year),
-          fillColor: emissionColor(bucketV, legendValues)
+          radius: isTomographyMap ? 8 : emissionRadius({ [String(year)]: bucketV }, year),
+          fillColor: isTomographyMap ? "#8b0000" : emissionColor(bucketV, legendValues)
         });
       },
       onEachFeature: (feature, layer) => {
@@ -690,13 +728,21 @@ fetch("resources/volcanoes.geojson")
         // non-permanent tooltip while actually hovering its layer, and
         // (unlike permanent:true) it does NOT auto-show just from being on
         // the map. openVolcano() switches the *selected* marker's tooltip
-        // to permanent so its label survives after the hover ends.
+        // to permanent so its label survives after the hover ends. On the
+        // Tomography map there are only 5 volcanoes to choose from, so show
+        // all their names right away instead of requiring hover/selection.
         if (name) {
+          const variant = isTomographyMap
+            ? (tomographyLabelByName[feature.properties?.name]
+              || tomographyLabelVariants[tomographyLabelIndex++ % tomographyLabelVariants.length])
+            : { direction: "top", offset: [0, -8] };
           layer.bindTooltip(name, {
-            direction: "top",
-            offset: [0, -8],
+            permanent: isTomographyMap,
+            direction: variant.direction,
+            offset: variant.offset,
             className: "volcano-label"
           });
+          if (isTomographyMap) layer.openTooltip();
         }
 
         layer.on("click", () => openVolcano(feature, layer));
@@ -716,8 +762,12 @@ fetch("resources/volcanoes.geojson")
       }
     }).addTo(map);
 
-    // Add static legend showing the fixed set of size/color combinations
-    createStaticLegend(legendValues);
+    // Add static legend showing the fixed set of size/color combinations —
+    // not relevant on the Tomography button's filtered map, since its
+    // circles are all the same size (see pointToLayer above).
+    if (!isTomographyMap) {
+      createStaticLegend(legendValues);
+    }
 
     // Define the VolcanoControl here (in the same scope)
     const VolcanoControl = L.Control.extend({

@@ -70,6 +70,14 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+  // Not relevant on the Tomography button's filtered map (5 volcanoes,
+  // no year/emission data to explain) — hide the button and popup there.
+  if (new URLSearchParams(window.location.search).has("volcanoes")) {
+    document.querySelector('[aria-controls="info-overlay"]')?.remove();
+    document.getElementById("info-overlay")?.remove();
+    return;
+  }
+
   const overlay = document.getElementById("info-overlay");
   const panel = overlay?.querySelector(".info-panel");
   const openBtn = document.querySelector('[aria-controls="info-overlay"]');
