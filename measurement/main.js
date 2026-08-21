@@ -3,6 +3,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
+// ── Background sky color (toggleable via the "Background" checkbox, see
+// _initUI) — separate from the terrain mesh, which always stays visible.
+// The "on" state is semi-transparent (needs renderer alpha:true, see
+// _initRenderer) so the page's own cream background softens it. ──
+const BG_COLOR_ON = 0x071a29;   // darker sky blue
+const BG_COLOR_ON_ALPHA = 0.45;
+const BG_COLOR_OFF = 0xffffff;  // matches the Volcanic gases page
+
 // ── Scan parameters ───────────────────────────────────────────────────────────
 const N = 25;
 const CD_MAX = 300;          // ppm·m, fixed chart axis scale shared by both scan modes
@@ -24,12 +32,16 @@ const STEP_MS = 420;         // ms between each revealed slice
 // plane crossing a broader swath of the plume than the cone's core.
 const CONICAL_HALF_DEG = 60;
 const FLAT_ANGLE_FROM_VERTICAL_DEG = 90 - CONICAL_HALF_DEG; // 30°
-const CONICAL_PROFILE = { t: 0.45, sig: 0.06, peak: 300 };
+// coreFalloff: how quickly _sliceCD fades from peak as a ray's closest
+// approach moves away from the plume's centerline (see _sliceProximity) —
+// the geometry-driven counterpart to the old abstract "sig" width.
+const CONICAL_PROFILE = { t: 0.45, sig: 0.06, coreFalloff: 0.45, peak: 300 };
 const SCAN_PROFILES = {
     conical: CONICAL_PROFILE,
     flat: {
         t: CONICAL_PROFILE.t,
         sig: CONICAL_PROFILE.sig * 2.2,
+        coreFalloff: CONICAL_PROFILE.coreFalloff * 2.2,
         peak: CONICAL_PROFILE.peak * Math.cos(FLAT_ANGLE_FROM_VERTICAL_DEG * Math.PI / 180),
     },
 };
@@ -128,21 +140,26 @@ function sliceScanAngle(i) {
 }
 
 // ── Heatmap color mapping ──────────────────────────────────────────────────────
-// White → yellow → orange → red → dark red heatmap. Picked directly rather than
-// interpolated, same as HEAT_PALETTE in map/src/main.js, so bands stay distinct
-// instead of blurring into in-between shades (e.g. a pale cream between white
-// and yellow). Unlike that map palette, the scene here clears to near-black
-// (0x0a0c10, see renderer.setClearColor below), so the last two stops are kept
-// brighter than HEAT_PALETTE's — a near-black top stop would make the highest
-// column density the least visible slice, and too-similar reds would make the
-// last two bands indistinguishable against each other.
+// White → yellow → orange → red → dark red heatmap. Unlike HEAT_PALETTE in
+// map/src/main.js (discrete bands, since it classifies distinct stations), this
+// interpolates smoothly between stops: the scan's plume profile is a continuous
+// Gaussian, and with a narrow spread only 1-2 slices actually fall in each
+// discrete band's range, so flooring to a hard band was skipping straight from
+// white to red/dark-red without ever showing yellow/orange. The scene clears
+// to a light blue by default (BG_COLOR_ON, toggleable — see _initUI's
+// "Background" checkbox), so "outside the plume" slices (plain white) still
+// stand out against it; toggled off, it falls back to white (BG_COLOR_OFF,
+// matching the Volcanic gases page), where those slices blend in instead.
 const CD_COLOR_STOPS = ["#ffffff", "#FEF001", "#fdba01", "#ff5e00", "#e0341f", "#8b0000"]
     .map(hex => new THREE.Color(hex));
 
 function cdColor(cd) {
     const t = Math.min(1, Math.max(0, cd / CD_MAX));
-    const idx = Math.min(CD_COLOR_STOPS.length - 1, Math.floor(t * CD_COLOR_STOPS.length));
-    return CD_COLOR_STOPS[idx];
+    const segCount = CD_COLOR_STOPS.length - 1;
+    const scaled = t * segCount;
+    const idx = Math.min(segCount - 1, Math.floor(scaled));
+    const localT = scaled - idx;
+    return new THREE.Color().lerpColors(CD_COLOR_STOPS[idx], CD_COLOR_STOPS[idx + 1], localT);
 }
 
 function cdColorCss(cd) {
@@ -239,19 +256,88 @@ class MeasurementView {
         });
     }
 
-    // Column density for slice i under the current scan mode's plume profile.
+    // Column density for slice i: driven by how close that slice's actual 3D
+    // ray gets to the plume's centerline (see _recomputeSliceProximities), so
+    // the warm colors are guaranteed to line up with where the sweep
+    // geometrically enters/exits the plume, fading smoothly at the edges
+    // rather than being switched on/off against an unrelated value. With
+    // only N discrete ray directions, the single closest one essentially
+    // never lands exactly on the centerline (prox=0) — cd is normalized
+    // relative to whichever slice got closest, so that slice always reaches
+    // the profile's true peak instead of falling visibly short of it. Falls
+    // back to an abstract profile shape only before the terrain/plume/
+    // station have loaded (e.g. the very first chart build) —
+    // _updateChartBars() re-syncs once ready.
     _sliceCD(i) {
         const p = SCAN_PROFILES[this.scanMode];
-        const t = (i + 0.5) / N;
-        return p.peak * Math.exp(-((t - p.t) ** 2) / (2 * p.sig ** 2));
+        if (!this._sliceProx) this._recomputeSliceProximities();
+        const prox = this._sliceProx[i];
+        if (!isFinite(prox)) {
+            const t = (i + 0.5) / N;
+            return p.peak * Math.exp(-((t - p.t) ** 2) / (2 * p.sig ** 2));
+        }
+        const rel = prox - this._sliceBestProx; // 0 for whichever slice got closest
+        return p.peak * Math.exp(-(rel * rel) / (2 * p.coreFalloff * p.coreFalloff));
+    }
+
+    // Computes and caches _sliceProximity(i) for every slice under the
+    // current mode/geometry, plus the smallest (closest) value found — call
+    // whenever the mode or station/fan geometry changes, before _sliceCD
+    // is used again.
+    _recomputeSliceProximities() {
+        this._sliceProx = [];
+        let best = Infinity;
+        for (let i = 0; i < N; i++) {
+            const prox = this._sliceProximity(i);
+            this._sliceProx.push(prox);
+            if (isFinite(prox) && prox < best) best = prox;
+        }
+        this._sliceBestProx = best;
+    }
+
+    // Closest approach (normalized) of slice i's ray to the plume's
+    // centerline, sampled along the ray from station to rim. Reuses the same
+    // rise/drift/spread formula _buildPlume scatters its sprites with (minus
+    // the jitter) as the plume's deterministic "tube" shape.
+    _sliceProximity(i) {
+        if (!this.summit || !this._plumeHeight || !this._fanGroup || !this._fanParams || !this._fanOrigin) return Infinity;
+        const { r, coneLen, R } = this._fanParams;
+        const phiMid = ((i + 0.5) / N) * Math.PI;
+        const localPoint = new THREE.Vector3(...this._fanPoint(phiMid, r, coneLen, R));
+        const worldPoint = this._fanGroup.localToWorld(localPoint.clone());
+        const origin = this._fanGroup.localToWorld(this._fanOrigin.clone());
+
+        const perp = new THREE.Vector3(-WIND_DIR.z, 0, WIND_DIR.x); // horizontal, across the wind
+        const plumeHeight = this._plumeHeight;
+        const SAMPLES = 120;
+        const sample = new THREE.Vector3();
+        const center = new THREE.Vector3();
+        let best = Infinity;
+        for (let s = 0; s <= SAMPLES; s++) {
+            sample.copy(origin).lerp(worldPoint, s / SAMPLES);
+            const drift = Math.max(0, sample.clone().sub(this.summit).dot(WIND_DIR));
+            const t = Math.min(1, drift / (plumeHeight * 2.0));
+
+            center.copy(this.summit).addScaledVector(WIND_DIR, drift);
+            center.y += plumeHeight * (0.05 + 0.35 * Math.sqrt(t));
+            const spread = plumeHeight * (0.05 + 0.20 * t);
+
+            const offset = sample.clone().sub(center);
+            const dPerp = offset.dot(perp);
+            const dUp = offset.y;
+            // Sprite jitter is an ellipse: full spread across-wind, 0.35x vertically.
+            const norm = Math.sqrt((dPerp / spread) ** 2 + (dUp / (spread * 0.35)) ** 2);
+            if (norm < best) best = norm;
+        }
+        return best;
     }
 
 
     // ── Renderer setup ──────────────────────────────────────────────────────
     _initRenderer() {
         this.canvas = document.getElementById('threeCanvas');
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, canvas: this.canvas });
-        this.renderer.setClearColor(0x0a0c10);
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: this.canvas });
+        this.renderer.setClearColor(BG_COLOR_ON, BG_COLOR_ON_ALPHA);
         this._resize();
         window.addEventListener('resize', () => this._resize());
     }
@@ -289,6 +375,7 @@ class MeasurementView {
         loader.load('../map/resources/terrainMeshes/mayon_13km.glb', gltf => {
             const model = gltf.scene;
             this.scene.add(model);
+            this._terrainModel = model;
 
             const bbox = new THREE.Box3().setFromObject(model);
             const center = bbox.getCenter(new THREE.Vector3());
@@ -321,6 +408,10 @@ class MeasurementView {
 
             this._buildPlume(this.summit, extent * 0.38);
             this._buildStation(model, bbox, center, size, extent);
+            // The chart's initial bars were built via _sliceCD's abstract
+            // fallback (geometry wasn't ready yet) — now that it is, re-sync
+            // them to the real geometry-based column densities.
+            this._updateChartBars();
             this.ready = true;
             this.playBtn.disabled = false;
         }, undefined, err => console.error('Failed to load terrain:', err));
@@ -354,18 +445,80 @@ class MeasurementView {
         const r = coneLen * Math.tan(CONE_HALF_RAD);  // base radius at tip of cone
         const R = Math.sqrt(r * r + coneLen * coneLen); // distance from tip to rim, either mode
 
-        // Small instrument body
+        // Small instrument: upright mast + horizontal telescope tube on top,
+        // echoing the antenna-like "Remote sensing" icon, instead of a plain
+        // box. The scan fan's tip sits at the telescope's height (see
+        // _fanOrigin below), not the ground.
         const bs = extent * 0.018;
-        group.add(new THREE.Mesh(
-            new THREE.BoxGeometry(bs * 1.5, bs, bs * 3),
-            new THREE.MeshStandardMaterial({ color: 0xdddddd })
-        ));
+        const instMat = new THREE.MeshStandardMaterial({ color: 0x4d4d4d }); // mast/antenna: dark gray
+        // Unlit (MeshBasicMaterial), not MeshStandardMaterial like the other
+        // parts: at this dark a color, per-face lighting differences would
+        // make some faces (or stations facing away from the light) render
+        // as nearly pure black instead of a consistent blue.
+        const boxMat = new THREE.MeshBasicMaterial({ color: 0x3d7ea6 }); // box: lighter blue, for visibility
+        const telescopeMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a }); // telescope/antenna: black
+        const mastH = bs * 3;
+        const mastR = bs * 0.12;
+
+        const mast = new THREE.Mesh(new THREE.CylinderGeometry(mastR, mastR, mastH, 8), instMat);
+        mast.position.y = mastH / 2;
+        group.add(mast);
+
+        const telescopeLen = bs * 1.4;
+        const telescope = new THREE.Mesh(
+            new THREE.CylinderGeometry(bs * 0.18, bs * 0.18, telescopeLen, 12),
+            telescopeMat
+        );
+        telescope.rotation.x = Math.PI / 2; // axis along local Z (horizontal, facing the volcano)
+        // Pivoted near the volcano-facing end, so most of the tube's bulk
+        // extends back away from the volcano rather than out toward it.
+        telescope.position.set(0, mastH, -telescopeLen * 0.3);
+        group.add(telescope);
+
+        // Small electronics box mounted on (flush against) the lower third
+        // of the mast, facing the volcano.
+        const boxDepth = bs * 0.35;
+        const mastBox = new THREE.Mesh(
+            new THREE.BoxGeometry(bs * 0.6, bs * 0.5, boxDepth),
+            boxMat
+        );
+        mastBox.position.set(0, mastH / 3, mastR + boxDepth / 2);
+        group.add(mastBox);
+
+        // Thin whip antenna on the mast, between the box and the telescope —
+        // horizontal (sticking out sideways) so it reads clearly against
+        // the mast instead of blending into it.
+        const antennaLen = bs * 0.9;
+        const antenna = new THREE.Mesh(
+            new THREE.CylinderGeometry(bs * 0.03, bs * 0.03, antennaLen, 6),
+            telescopeMat
+        );
+        antenna.rotation.z = Math.PI / 2; // axis along local X, horizontal, sideways
+        antenna.position.set(mastR + antennaLen / 2, mastH * 0.65, 0);
+        group.add(antenna);
+
+        // Small vertical radiating elements crossing through the horizontal
+        // rod (extending both above and below it), like a Yagi antenna's
+        // prongs.
+        const elementH = bs * 0.3;
+        [0.1, 0.25, 0.4, 0.55, 0.7, 0.85].forEach(f => {
+            const el = new THREE.Mesh(
+                new THREE.CylinderGeometry(bs * 0.015, bs * 0.015, elementH, 6),
+                telescopeMat
+            );
+            el.position.set(mastR + antennaLen * f, mastH * 0.65, 0);
+            group.add(el);
+        });
 
         this._fanGroup = group;
         this._fanParams = { r, coneLen, R };
+        // The fan's tip sits near the far end of the telescope's larger rear
+        // bulk (not its center, and not the shorter forward tip), and at
+        // the telescope's height, not the ground.
+        this._fanOrigin = new THREE.Vector3(0, mastH, -telescopeLen * 0.7);
         // group isn't in the scene graph yet, so its matrixWorld (needed by
-        // _sliceIntersectsPlume's localToWorld calls inside _buildFan) hasn't
-        // been computed automatically — force it before the first build.
+        // _sliceProximity's localToWorld calls inside _buildFan) hasn't been
+        // computed automatically — force it before the first build.
         group.updateMatrixWorld(true);
         this._buildFan();
 
@@ -381,11 +534,14 @@ class MeasurementView {
     // _buildStation), so this plane sits perpendicular to the plume's drift path,
     // the real setup for a flat-scanning instrument: the plume crosses the fixed
     // plane rather than the plane sweeping around to track it.
+    // Result is relative to the fan's tip (_fanOrigin, at the telescope's
+    // height), not the group's local (0,0,0) — offset already included.
     _fanPoint(phi, r, coneLen, R) {
+        const o = this._fanOrigin;
         if (this.scanMode === 'flat') {
-            return [R * Math.cos(phi), R * Math.sin(phi), 0];
+            return [o.x + R * Math.cos(phi), o.y + R * Math.sin(phi), o.z];
         }
-        return [r * Math.cos(phi), r * Math.sin(phi), coneLen];
+        return [o.x + r * Math.cos(phi), o.y + r * Math.sin(phi), o.z + coneLen];
     }
 
     // (Re)builds the slice meshes + wireframe for the current scan mode, reusing
@@ -394,6 +550,10 @@ class MeasurementView {
     _buildFan() {
         const { r, coneLen, R } = this._fanParams;
         const group = this._fanGroup;
+
+        // Ray directions changed (new mode or first build) — proximities
+        // (and therefore _sliceCD's normalization) must be recomputed.
+        this._recomputeSliceProximities();
 
         this.sliceMeshes.forEach(m => {
             group.remove(m);
@@ -406,7 +566,9 @@ class MeasurementView {
             this._wireSegments.geometry.dispose();
         }
 
-        // Slices: tip at origin, arc per _fanPoint. Upper half only, visible from all angles.
+        // Slices: tip at _fanOrigin (telescope height), arc per _fanPoint.
+        // Upper half only, visible from all angles.
+        const tip = this._fanOrigin.toArray();
         for (let i = 0; i < N; i++) {
             const phi1 = (i / N) * Math.PI;
             const phi2 = ((i + 1) / N) * Math.PI;
@@ -416,13 +578,13 @@ class MeasurementView {
 
             const geom = new THREE.BufferGeometry();
             geom.setAttribute('position', new THREE.Float32BufferAttribute([
-                0, 0, 0,
+                ...tip,
                 ...p1,
                 ...p2,
             ], 3));
 
             const mat = new THREE.MeshBasicMaterial({
-                color: this._sliceIntersectsPlume(i) ? cdColor(cd) : 0xffffff,
+                color: cdColor(cd),
                 side: THREE.DoubleSide,
                 transparent: true,
                 opacity: 0.6,
@@ -438,7 +600,7 @@ class MeasurementView {
         const wv = [];
         for (let i = 0; i <= N; i++) {
             const phi = (i / N) * Math.PI;
-            wv.push(0, 0, 0, ...this._fanPoint(phi, r, coneLen, R));
+            wv.push(...tip, ...this._fanPoint(phi, r, coneLen, R));
         }
         for (let i = 0; i < N; i++) {
             const phi1 = (i / N) * Math.PI;
@@ -738,6 +900,25 @@ class MeasurementView {
         const ui = document.createElement('div');
         ui.className = 'scan-controls';
 
+        const terrainLabel = document.createElement('label');
+        terrainLabel.className = 'terrain-toggle';
+        const terrainCheckbox = document.createElement('input');
+        terrainCheckbox.type = 'checkbox';
+        terrainCheckbox.checked = true;
+        terrainCheckbox.addEventListener('change', () => {
+            if (terrainCheckbox.checked) {
+                this.renderer.setClearColor(BG_COLOR_ON, BG_COLOR_ON_ALPHA);
+            } else {
+                this.renderer.setClearColor(BG_COLOR_OFF, 1);
+            }
+        });
+        const terrainSlider = document.createElement('span');
+        terrainSlider.className = 'terrain-toggle__slider';
+        terrainLabel.appendChild(terrainCheckbox);
+        terrainLabel.appendChild(terrainSlider);
+        terrainLabel.appendChild(document.createTextNode('Background'));
+        ui.appendChild(terrainLabel);
+
         this.playBtn = document.createElement('button');
         this.playBtn.textContent = '▶  Start scan';
         this.playBtn.disabled = true;
@@ -791,6 +972,11 @@ class MeasurementView {
             return btn;
         });
         panel.appendChild(options);
+
+        const hint = document.createElement('div');
+        hint.className = 'scan-mode-panel__hint';
+        hint.textContent = 'Use your mouse to rotate and zoom in and out the model';
+        panel.appendChild(hint);
 
         document.querySelector('.scan-viewport').appendChild(panel);
         this.scanModePanel = panel;
@@ -911,52 +1097,6 @@ class MeasurementView {
         this._plumePoints = group;
         this._plumeHeight = plumeHeight;
         this.scene.add(group);
-
-        // Invisible proxy (a chain of overlapping spheres along the same
-        // centerline, no jitter) so scan rays can be raycast against the
-        // plume's actual shape with Three.js's own ray/sphere math, rather
-        // than an approximate one built by hand.
-        const proxyMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
-        const proxyGroup = new THREE.Group();
-        const PROXY_STEPS = 40;
-        for (let k = 0; k <= PROXY_STEPS; k++) {
-            const t = k / PROXY_STEPS;
-            const rise   = plumeHeight * (0.05 + 0.35 * Math.sqrt(t));
-            const drift  = plumeHeight * 2.0 * t;
-            const spread = plumeHeight * (0.05 + 0.20 * t);
-            const c = summit.clone().addScaledVector(WIND_DIR, drift);
-            c.y += rise;
-            const sphere = new THREE.Mesh(new THREE.SphereGeometry(spread, 8, 6), proxyMat);
-            sphere.position.copy(c);
-            proxyGroup.add(sphere);
-        }
-        this._plumeProxy = proxyGroup;
-        this.scene.add(proxyGroup);
-        // _buildStation (called right after this, synchronously) raycasts
-        // against this proxy before the first render pass would otherwise
-        // refresh its matrices — force it now.
-        proxyGroup.updateMatrixWorld(true);
-    }
-
-    // Whether the ray toward slice i's rim point (station → arc midpoint)
-    // actually hits the plume's invisible proxy shape, via a real raycast
-    // rather than hand-rolled geometry math.
-    _sliceIntersectsPlume(i) {
-        if (!this._plumeProxy || !this._fanGroup || !this._fanParams) return false;
-        const { r, coneLen, R } = this._fanParams;
-        const phiMid = ((i + 0.5) / N) * Math.PI;
-        const localPoint = new THREE.Vector3(...this._fanPoint(phiMid, r, coneLen, R));
-        const worldPoint = this._fanGroup.localToWorld(localPoint.clone());
-        const origin = this._fanGroup.getWorldPosition(new THREE.Vector3());
-
-        const dir = worldPoint.clone().sub(origin);
-        const dist = dir.length();
-        dir.normalize();
-
-        if (!this._plumeRaycaster) this._plumeRaycaster = new THREE.Raycaster();
-        this._plumeRaycaster.far = dist;
-        this._plumeRaycaster.set(origin, dir);
-        return this._plumeRaycaster.intersectObject(this._plumeProxy, true).length > 0;
     }
 }
 

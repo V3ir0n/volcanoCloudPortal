@@ -330,16 +330,67 @@ class VolcanoView {
       });
   }
 
-  // Builds a 3D station marker: a cuboid body + half-cone wireframe for the scanning plane.
-  // Matches the tomography visualiser style. The cone tip is at the group origin and opens
-  // toward +Z; the caller rotates the group so +Z faces the volcano.
+  // Builds a 3D station marker: an instrument body (mast + telescope + box +
+  // antenna, matching the Remote sensing 3D view's station design) + half-cone
+  // wireframe for the scanning plane. The cone tip is at the group origin and
+  // opens toward +Z; the caller rotates the group so +Z faces the volcano.
   createStationMarker(coneAngle) {
     const group = new THREE.Group();
     group.scale.setScalar(this.markerScale ?? 1);
 
-    // Cuboid body (proportions 1.5 : 1 : 3, deepest axis toward volcano)
-    const mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    group.add(new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.023, 0.07), mat));
+    // Instrument body: upright mast + horizontal telescope tube on top +
+    // electronics box + whip antenna. Same proportions as the Remote sensing
+    // 3D view's station, scaled to this marker's own (much smaller) unit size.
+    const mat = new THREE.MeshStandardMaterial({ color: 0x4d4d4d }); // mast/antenna: dark gray
+    // Unlit (MeshBasicMaterial), not MeshStandardMaterial like the other
+    // parts: at this dark a color, per-face lighting differences would make
+    // some faces (or stations facing away from the light) render as nearly
+    // pure black instead of a consistent blue.
+    const boxMat = new THREE.MeshBasicMaterial({ color: 0x3d7ea6 }); // box: lighter blue, for visibility
+    const telescopeMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a }); // telescope: black
+    const bs = 0.025;
+    const mastH = bs * 3;
+    const mastR = bs * 0.12;
+
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(mastR, mastR, mastH, 8), mat);
+    mast.position.y = mastH / 2;
+    group.add(mast);
+
+    const telescopeLen = bs * 1.4;
+    const telescope = new THREE.Mesh(
+      new THREE.CylinderGeometry(bs * 0.18, bs * 0.18, telescopeLen, 12),
+      telescopeMat
+    );
+    telescope.rotation.x = Math.PI / 2; // axis along local Z (horizontal, facing the volcano)
+    telescope.position.set(0, mastH, -telescopeLen * 0.3);
+    group.add(telescope);
+
+    const boxDepth = bs * 0.35;
+    const mastBox = new THREE.Mesh(
+      new THREE.BoxGeometry(bs * 0.6, bs * 0.5, boxDepth),
+      boxMat
+    );
+    mastBox.position.set(0, mastH / 3, mastR + boxDepth / 2);
+    group.add(mastBox);
+
+    const antennaLen = bs * 0.9;
+    const antenna = new THREE.Mesh(
+      new THREE.CylinderGeometry(bs * 0.03, bs * 0.03, antennaLen, 6),
+      telescopeMat
+    );
+    antenna.rotation.z = Math.PI / 2; // axis along local X, horizontal, sideways
+    antenna.position.set(mastR + antennaLen / 2, mastH * 0.65, 0);
+    group.add(antenna);
+
+    const elementH = bs * 0.3;
+    [0.1, 0.25, 0.4, 0.55, 0.7, 0.85].forEach(f => {
+      const el = new THREE.Mesh(
+        new THREE.CylinderGeometry(bs * 0.015, bs * 0.015, elementH, 6),
+        telescopeMat
+      );
+      el.position.set(mastR + antennaLen * f, mastH * 0.65, 0);
+      group.add(el);
+    });
 
     const wireMat = new THREE.LineBasicMaterial({ color: this.coneColor, opacity: 0.5, transparent: true }); //color on cone
     this.coneWireMats.push(wireMat);

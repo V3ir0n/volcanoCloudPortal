@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const backgroundToggle = document.getElementById('backgroundToggle');
+    if (backgroundToggle) {
+        backgroundToggle.addEventListener('change', () => {
+            skyMesh.visible = backgroundToggle.checked;
+        });
+    }
+
     const infoboxDiv = document.getElementById('infobox');
     let parameterInfoOpen = false;
     let openButtonId = null;
@@ -113,8 +120,19 @@ class View {
 
         // Add controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.camera.position.set(15, 14, 25);
-        this.camera.lookAt(0, 0, 0);
+        // Framed on the midpoint of the annotation points (Magma Chamber,
+        // Conduit, Crater, Plume — see constants.js) rather than the origin,
+        // since the chamber sits ~25 units below ground and the plume ~11
+        // units above it: centering on (0,0,0) left the chamber out of view.
+        const initialTarget = new THREE.Vector3(7.5, -7, 1.1);
+        // Elevated enough to look down onto the ground plane (rather than
+        // edge-on, which hid the volcano's cone shape) and zoomed out a bit
+        // further than the framing that just fits the annotation points.
+        // Panned sideways (camera + target shifted together) so the model
+        // sits more to the right of frame.
+        this.camera.position.set(9.8, -0.5, 43.6);
+        this.camera.lookAt(initialTarget);
+        this.controls.target.copy(initialTarget);
         this.controls.update();
 
         this.controls.minPolarAngle = Math.PI/3; // 60 degrees (from top)

@@ -12,7 +12,9 @@
     --pico-primary-focus: rgba(255, 107, 53, 0.375) !important;
     --pico-primary-underline: rgba(255, 107, 53, 0.5) !important;
     --pico-primary-inverse: #fbf8f0 !important;
-    --pico-switch-checked-background-color: var(--pico-primary-background) !important;
+    /* Gold/yellow accent used for buttons etc. on the other pages (theme.css
+       --color-gold), rather than this page's redder --pico-primary-background. */
+    --pico-switch-checked-background-color: #e0a500 !important;
     /* Audio switch's "off" track defaults to a blue-gray (#333c4e); warm
        it up to a neutral paper-line tone so it doesn't clash even before
        it's toggled on. */
@@ -97,10 +99,32 @@ input[type="range"]:hover::-moz-range-thumb {
     border-width: 2px;
 }
 
+.model-hint {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 100;
+    max-width: 220px;
+    padding: 10px 14px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    color: #b8560a;
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: 1.35;
+}
+
 .parameters details:first-of-type summary,
 .parameters details:first-of-type summary:hover,
 .parameters details:first-of-type summary:focus,
-.parameters details:first-of-type summary:active {
+.parameters details:first-of-type summary:active,
+.parameters details:last-of-type summary,
+.parameters details:last-of-type summary:hover,
+.parameters details:last-of-type summary:focus,
+.parameters details:last-of-type summary:active {
     color: #b8560a !important;
 }
 
@@ -188,6 +212,14 @@ input[type="range"]:hover::-moz-range-thumb {
     color: var(--color-ink);
 }
 
+.parameters hr {
+    margin: 0.5rem 0;
+}
+
+.parameters details {
+    margin-bottom: 0.5rem;
+}
+
 /* Floats directly over the 3D scene (lava/ash/sky colors vary
    unpredictably), so -- like the map page's .station-tooltip -- this
    deliberately stays a dark high-contrast chip rather than following the
@@ -215,6 +247,14 @@ input[type="range"]:hover::-moz-range-thumb {
 .parameters label.parameter-row {
     display: grid;
     gap: 0.35rem;
+}
+
+.parameter-row {
+    margin-bottom: 0.5rem;
+}
+
+.parameter-row input[type="range"] {
+    margin-bottom: 0;
 }
 
 .parameter-header {
