@@ -103,7 +103,10 @@ export function renderPlaceView(container, place, latLng) {
   // Volcano info
   const infoEl = document.createElement("div");
   infoEl.className = "volcano-info";
-  infoEl.innerHTML = `<p><strong>Altitude:</strong> ${place.altitude || "Unknown altitude"}</p>`;
+  const [lat, lng] = latLng || [];
+  infoEl.innerHTML = `<p><strong>Latitude:</strong> ${typeof lat === "number" ? lat.toFixed(4) + "°" : "Unknown latitude"}</p>
+    <p><strong>Longitude:</strong> ${typeof lng === "number" ? lng.toFixed(4) + "°" : "Unknown longitude"}</p>
+    <p><strong>Altitude:</strong> ${place.altitude || "Unknown altitude"}</p>`;
 
   const obsP = document.createElement("p");
   obsP.innerHTML = "<strong>Observatory:</strong> ";
@@ -151,7 +154,7 @@ class VolcanoView {
     // Setup canvas and renderer
     this.canvas = canvasElement;
     this.canvas.width = this.canvas.parentElement.clientWidth;
-    this.canvas.height = 320; //space above the canvas for volcano info, can be adjusted if needed
+    this.canvas.height = 240; //space above the canvas for volcano info, can be adjusted if needed
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -425,6 +428,13 @@ class VolcanoView {
 
     if (scanShape) {
       scanShape.name = 'scanCone';
+      // Tip sits at the telescope's height (and near the rear of its larger
+      // section, not its center), matching the Remote sensing 3D view,
+      // instead of the ground. The shape's own geometry already has its tip
+      // at its local origin, so positioning the object is enough — scaling
+      // it later (coneLocalScale, see loadStationSprites) still scales
+      // correctly around that same tip.
+      scanShape.position.set(0, mastH, -telescopeLen * 0.7);
       group.add(scanShape);
     }
 

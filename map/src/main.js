@@ -1,6 +1,8 @@
 import { renderPlaceView, createConeColorPicker } from "./placeview.js";
 
 let selectedPlace = null;
+let selectedLayer = null; // the currently highlighted marker, see openVolcano()
+let selectedFeature = null; // its feature, so openVolcano can revert its tooltip's name
 
 // ---- infobutton pop-up text ----
 let _activeTooltip = null;
@@ -171,13 +173,68 @@ function openVolcano(feature, layer) {
 
   rememberViewIfNeeded();
 
-  // zoom in to selected volcano
+  // Zoom in to selected volcano, with the map's *center* shifted right (in
+  // pixel space, at the target zoom) by half the info panel's width (see
+  // .panel in styles.css: min(720px, 92vw), right:0) — so the volcano
+  // itself renders shifted left on screen, landing in the visible area
+  // instead of behind the panel that's about to cover the right side.
+  // A single setView call (rather than setView then panBy) avoids the two
+  // animations conflicting.
   if (layer?.getLatLng) {
-    map.setView(layer.getLatLng(), 4, { animate: true });
+    const targetZoom = 6;
+    const panelWidth = Math.min(720, window.innerWidth * 0.92);
+    const volcanoPoint = map.project(layer.getLatLng(), targetZoom);
+    const shiftedCenter = map.unproject(
+      volcanoPoint.add([panelWidth / 2, 0]),
+      targetZoom
+    );
+    map.setView(shiftedCenter, targetZoom, { animate: true });
+  }
+
+  // Highlight the selected marker and switch its tooltip to permanent (so
+  // it stays open without needing continued hover) — reverting the
+  // previous selection's marker back to a normal hover-only tooltip first
+  // (matches baseStyle's defaults from the geoJSON pointToLayer setup:
+  // weight 1, color "#000"). selectedLayer is set synchronously here,
+  // before the pan/zoom animation above finishes, so the mouseover/
+  // mouseout handlers' "if (layer === selectedLayer) return" guard
+  // correctly ignores any mouseout the animation triggers by moving the
+  // marker out from under the cursor. The moveend safety re-open below
+  // covers it too, in case anything closes the tooltip mid-animation.
+  if (selectedLayer && selectedLayer !== layer && selectedLayer.setStyle) {
+    selectedLayer.setStyle({ weight: 1, color: "#000" });
+    selectedLayer.closeTooltip?.();
+    selectedLayer.unbindTooltip?.();
+    const prevName = getVolcanoName(selectedFeature);
+    if (prevName && selectedLayer.bindTooltip) {
+      selectedLayer.bindTooltip(prevName, {
+        direction: "top",
+        offset: [0, -8],
+        className: "volcano-label"
+      });
+    }
+  }
+  if (layer?.setStyle) {
+    layer.setStyle({ weight: 3, color: "#e0a500" });
+    layer.unbindTooltip?.();
+    const name = getVolcanoName(feature);
+    if (name && layer.bindTooltip) {
+      layer.bindTooltip(name, {
+        permanent: true,
+        direction: "top",
+        offset: [0, -8],
+        className: "volcano-label"
+      }).openTooltip();
+    }
+    selectedLayer = layer;
+    selectedFeature = feature;
+    map.once("moveend", () => {
+      if (selectedLayer === layer) layer.openTooltip?.();
+    });
   }
 
   const [lng, lat] = feature.geometry.coordinates; //fetches lng lat from volcanoes.json
-  renderPlaceOverlay(place, [lat, lng]);          
+  renderPlaceOverlay(place, [lat, lng]);
 }
 
 function closeOverlay() {
@@ -629,7 +686,33 @@ fetch("resources/volcanoes.geojson")
         const name = getVolcanoName(feature);
         if (name) volcanoIndex.set(name, { layer, feature });
 
+        // Tooltip is bound non-permanent by default — Leaflet only shows a
+        // non-permanent tooltip while actually hovering its layer, and
+        // (unlike permanent:true) it does NOT auto-show just from being on
+        // the map. openVolcano() switches the *selected* marker's tooltip
+        // to permanent so its label survives after the hover ends.
+        if (name) {
+          layer.bindTooltip(name, {
+            direction: "top",
+            offset: [0, -8],
+            className: "volcano-label"
+          });
+        }
+
         layer.on("click", () => openVolcano(feature, layer));
+
+        // Hover preview: same highlight as a click-selection, but reverts
+        // on mouseout — unless this marker is the actual selection, in
+        // which case its highlight should stay put (its tooltip is already
+        // permanent by then, so Leaflet keeps showing it without our help).
+        layer.on("mouseover", () => {
+          if (layer === selectedLayer) return;
+          layer.setStyle({ weight: 3, color: "#e0a500" });
+        });
+        layer.on("mouseout", () => {
+          if (layer === selectedLayer) return;
+          layer.setStyle({ weight: 1, color: "#000" });
+        });
       }
     }).addTo(map);
 

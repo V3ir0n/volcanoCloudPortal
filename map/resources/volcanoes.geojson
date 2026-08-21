@@ -2114,7 +2114,7 @@
         "source": "satellite",
         "xls_name": "Popocatepetl",
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=341090",
-        "observatory_url": "https://www.gob.mx/cenapred|https://www.geofisica.unam.mx/"
+        "observatory_url": "https://www.gob.mx/cenapred|https://www.unam.mx/"
       }
     },
     {
@@ -2153,14 +2153,14 @@
         "lat_deg": 19.5117,
         "lon_deg": -103.6167,
         "alt_masl": 3850,
-        "observatory": "Centro Nacional de Prevención de Desastres/Universidad de Colima-Centro Universitario de Estudios Vulcanológicos",
+        "observatory": "Centro Nacional de Prevención de Desastres/Universidad de Colima",
         "obs_acronym": "CENAPRED/CUEIV",
         "country": "Mexico",
         "meshRadiusKm": 12,
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=341040",
-        "observatory_url": "https://www.gob.mx/cenapred|https://portal.ucol.mx/cueiv/"
+        "observatory_url": "https://www.gob.mx/cenapred|https://www.ucol.mx/"
       }
     },
     {
