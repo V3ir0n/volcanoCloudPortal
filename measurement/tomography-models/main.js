@@ -195,8 +195,8 @@ function init() {
     };
 
 
-    // ?example=<name> auto-loads the matching example button's dataset,
-    // used by the map's volcano popup "View loaded data" link.
+    // ?example=<name> (or ?volcano=<name>, used by viewer.html's links from
+    // the map) auto-loads the matching example button's dataset.
     const exampleButtonIds = {
         cleveland: "clevelandExample",
         nevado_del_ruiz: "nevadodelruizExample",
@@ -211,9 +211,15 @@ function init() {
         turrialba: "Turrialba",
         sabancaya: "Sabancaya",
     };
-    const exampleParam = new URLSearchParams(window.location.search).get("example");
+    const searchParams = new URLSearchParams(window.location.search);
+    const exampleParam = searchParams.get("example") || searchParams.get("volcano");
     if (exampleParam && exampleButtonIds[exampleParam]) {
         document.getElementById("volcanoTitle").textContent = exampleDisplayNames[exampleParam] || "";
+        // Hide the example-picker/upload panel immediately, rather than
+        // waiting for onDataLoaded() to hide it once the fetch+parse of the
+        // clicked example's files finishes — otherwise it's visible (with
+        // all 5 example buttons) for however long that load takes.
+        document.getElementById("fileUploadContainer").style.display = "none";
         document.getElementById(exampleButtonIds[exampleParam])?.click();
     }
 

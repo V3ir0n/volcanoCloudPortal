@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Tomography</title>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css">
+
+		<style>
+			#statusContainer {
+				position: absolute;
+				display: none;
+				bottom: 0;
+				padding: 5px;
+				margin: 5px;
+			}
+			button {
+				margin: 0px; padding: 0px;
+			}
+			/* .pico-prefixed to outrank Pico's own
+			   ".pico input:not([type=checkbox],[type=radio],[type=range],[type=file])"
+			   rule, which sets -moz-appearance: none (the wrong value to hide
+			   Firefox's native spinner -- only "textfield" does that) at a
+			   specificity our plain input[type="number"] rule couldn't beat. */
+			.pico input[type="number"]::-webkit-inner-spin-button,
+			.pico input[type="number"]::-webkit-outer-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+			.pico input[type="number"] {
+				-moz-appearance: textfield;
+			}
+			#topLeftBar {
+				position: fixed;
+				top: 10px;
+				left: 10px;
+				/* High z-index so nothing added later (e.g. lil-gui's control
+				   panel) can end up on top of it and swallow clicks. */
+				z-index: 100000;
+				display: flex;
+				align-items: center;
+				gap: 16px;
+			}
+			#backButton {
+				padding: 6px 14px;
+			}
+			#volcanoTitle {
+				/* Matches the main site's gold accent (theme.css --color-gold). */
+				color: #e0a500;
+				font-weight: 700;
+				font-size: 1.75rem;
+				pointer-events: none;
+			}
+			/* This page is a lean, dedicated viewer for the 5 pre-set example
+			   volcanoes reachable from the map's Tomography-filtered view --
+			   unlike index.html, it never offers manual upload or the
+			   example-picker/inversion-parameter panel, so these stay hidden
+			   unconditionally (not toggled by JS after load, which left a
+			   one-frame flash of them on screen before they were hidden). The
+			   elements themselves are still present because main.js (shared
+			   with index.html) wires them up unconditionally.  */
+			#fileUploadContainer,
+			#uploadOwnDataBtn,
+			#uploadOwnDataHint {
+				display: none !important;
+			}
+		</style>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="shortcut icon" href="favicon.svg" type="image/svg">
+
+	</head>
+	<body style="margin: 0">
+		<div id="topLeftBar">
+			<button id="backButton" class="secondary" onclick="history.back()">← Back</button>
+			<div id="volcanoTitle"></div>
+		</div>
+		<button id="uploadOwnDataBtn" class="secondary" onclick="location.href='index.html'">Upload own data</button>
+		<div id="uploadOwnDataHint">Select two EvaluationLog files from the same volcano and date.</div>
+		<div id="fileUploadContainer" class="pico container-fluid" style="position: absolute;">
+			<article
+			data-tooltip="Browse and select two files to load"
+			data-placement="bottom">
+				<fieldset class="grid">
+					<h1>Tomography</h1>
+				</fieldset>
+				<h2>Load examples</h2>
+
+				<fieldset class="grid">
+					<button id="clevelandExample" class="secondary">Cleveland</button>
+					<button id="nevadodelruizExample" class="secondary">Nevado del Ruiz</button>
+					<button id="merapiExample" class="secondary">Merapi</button>
+					<button id="turrialbaExample" class="secondary">Turrialba</button>
+					<button id="sabancayaExample" class="secondary">Sabancaya</button>
+				</fieldset>
+
+				<h2>Choose the parameters for the tomographic inversion.</h2>
+				<fieldset class="grid">
+					<label>
+						Min. Plume completeness
+						<input id="completenessLimit" type="number" value=0.9 min="0.5" max="1" step="0.05" placeholder="0.9"/>
+						<input id="completenessLimitSlider" type="range" min="0.5" max="1" step="0.05" value="0.9"/>
+					</label>
+					<label>
+						Max Plume Centre (deg)
+						<input id="baricenterLimit" type="number" value=60 min="50" max="70" step="1" placeholder="60"/>
+						<input id="baricenterLimitSlider" type="range" min="50" max="70" step="1" value="60"/>
+					</label>
+					<label>
+						Max. Time Difference (min)
+						<input id="timeDifferenceMin" type="number" value=15 min="5" max="30" step="1" placeholder="15"/>
+						<input id="timeDifferenceMinSlider" type="range" min="5" max="30" step="1" value="15"/>
+					</label>
+				</fieldset>
+				<small>
+					Note that the settings above are used if you only supply evaluation log files, but will not be used if you also supply CSV concentration data.
+				</small>
+
+				<label for="fileInput">Upload data here:
+					<input type="file" id="fileInput" accept=".txt, .csv" multiple/>
+				</label>
+				The visualisation needs two Evaluation log text files.
+
+			</article>
+			<article>When the visualisation has loaded, use keyboard arrows to step between timeframes.</article>
+			<progress/ id="progress" style="display: none;">
+		</div>
+
+		<article class="pico" id="statusContainer">
+			<div role="group" style="display: flex; background: #ffffff91; color: #000000c2;">
+				<button id="prevFrame">&lt;</button>
+				<div style="margin: 1em;" id="statusText"></div>
+				<button id="nextFrame">&gt;</button>
+			  </div>
+		</article>
+
+		<div id="container"></div>
+
+		<!-- Import maps polyfill -->
+		<!-- Remove this when import maps will be widely supported -->
+		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "./libs/three.module.js"
+				}
+			}
+		</script>
+
+		<script src="libs/mathjs.js"></script>
+		<script type="module" src="main.js"></script>
+
+	</body>
+</html>

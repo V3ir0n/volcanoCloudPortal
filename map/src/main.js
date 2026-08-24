@@ -167,8 +167,10 @@ function openVolcano(feature, layer) {
     // tomography-models/ is a self-contained copy of the Tomography submodule's
     // viewer (trimmed to these 5 volcanoes' data) — used instead of linking into
     // measurement/Tomography/ directly, since that submodule isn't guaranteed to
-    // be checked out/deployed wherever this site is served from.
-    if (name) window.location.href = `../measurement/tomography-models/index.html?example=${name}`;
+    // be checked out/deployed wherever this site is served from. viewer.html
+    // (rather than index.html) is a lean, dedicated page for just these 5
+    // examples — no upload button, no example-picker/parameter chrome.
+    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}`;
     return;
   }
 
@@ -782,7 +784,7 @@ fetch("resources/volcanoes.geojson")
           .sort((a, b) => a.localeCompare(b));
 
         select.innerHTML = `
-          <option value="">Select volcano…</option>
+          <option value="">Select a volcano</option>
           ${names.map(n => `<option value="${n}">${n}</option>`).join("")}
         `;
 
