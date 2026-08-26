@@ -77,13 +77,13 @@ header p  { color: var(--color-ink-soft); margin: 0; font-size: var(--text-sm); 
 /* Clustered layout: two cards up top, "Why gases?" enlarged
    and centered below them, "How we measure" centered under that. */
 .nav-card-model { grid-area: model; }
-.nav-card-map { grid-area: measure; margin-top: -1.5rem; }
+.nav-card-map { grid-area: measure; margin-top: -2.5rem; }
 .nav-card-why {
   grid-area: why;
   position: relative;
   z-index: 0;
   width: auto;
-  margin-top: -10rem;
+  margin-top: -12.5rem;
 }
 .nav-card-why::before {
   content: "";

@@ -58,7 +58,7 @@ export function createConeColorPicker(onChange) {
   dot.setAttribute("cx", "16");
   dot.setAttribute("cy", "22");
   dot.setAttribute("r", "3");
-  dot.setAttribute("fill", "#FF6B35");
+  dot.setAttribute("fill", "#e0a500");
   icon.appendChild(dot);
   wrap.appendChild(icon);
 

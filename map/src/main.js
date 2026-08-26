@@ -1,4 +1,6 @@
-import { renderPlaceView, createConeColorPicker } from "./placeview.js";
+// ?v= busts a stale cached copy of placeview.js -- bump it whenever that
+// file changes, same reasoning as index.html's ?v= on this file's own tag.
+import { renderPlaceView, createConeColorPicker } from "./placeview.js?v=1";
 
 let selectedPlace = null;
 let selectedLayer = null; // the currently highlighted marker, see openVolcano()
@@ -525,7 +527,7 @@ function renderPlaceOverlay(place, latlng) {
   const polyline = document.createElementNS(svgNS, "polyline");
   polyline.setAttribute("points", points);
   polyline.setAttribute("fill", "none");
-  polyline.setAttribute("stroke", "#FF6B35");
+  polyline.setAttribute("stroke", "#e0a500");
   polyline.setAttribute("stroke-width", "2");
 
   svg.appendChild(polyline);

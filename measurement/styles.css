@@ -195,7 +195,7 @@ body {
 }
 
 .scan-mode-panel__label {
-  color: #8b0000;
+  color: var(--color-gold);
   font-weight: 600;
   font-size: var(--text-lg);
   font-family: var(--font-body);

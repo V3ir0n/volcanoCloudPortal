@@ -16,8 +16,6 @@
   --color-ink-soft:       #555555;/* secondary text */
   --color-ink-faint:      #888888;/* tertiary text / meta */
   --color-line:          #cfc9b8; /* borders, dividers, dotted rules */
-  --color-orange:        #FF6B35; /* primary accent -- CTAs, active/hover, emphasis */
-  --color-orange-rgb:    255, 107, 53;
   --color-gold:           #e0a500; /* the site's gold accent -- header text, button text/border,
                                        highlights, focus, data/legend */
   --color-gold-rgb:       224, 165, 0;
