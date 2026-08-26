@@ -4,7 +4,7 @@ import {annotations} from './constants.js';
 // Inverted from the site-wide .info-btn look (gold ring on a transparent
 // background) to a solid gold disc with a white ring and "ℹ" glyph, same
 // font as the HTML buttons, so the markers stay legible against the 3D scene.
-const infoGlyphFont = "Patrick Hand";
+const infoGlyphFont = "Montserrat";
 
 function drawInfoGlyph(ctx, size) {
     ctx.clearRect(0, 0, size, size);

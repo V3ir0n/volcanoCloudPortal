@@ -30,9 +30,13 @@
   --glass-blur:   10px;
 
   /* ---- Fonts ---- */
-  --font-brand:      'Caveat', cursive;              /* headings, brand moments */
-  --font-body:        'Patrick Hand', sans-serif;     /* body copy, UI labels, buttons */
-  --font-scientific:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Unified on Montserrat sitewide (previously Caveat/Patrick Hand/
+     JetBrains Mono per role) -- the three variables are kept so every rule
+     that already references var(--font-brand) / var(--font-body) /
+     var(--font-scientific) doesn't need to change, just what they point to. */
+  --font-brand:       'Montserrat', sans-serif;       /* headings, brand moments */
+  --font-body:        'Montserrat', sans-serif;       /* body copy, UI labels, buttons */
+  --font-scientific:  'Montserrat', sans-serif;        /* data/legend numbers */
 
   /* ---- Type scale (rem) ---- */
   --text-xs:   0.75rem;  /* fine print, min/max labels, dt/dd meta */

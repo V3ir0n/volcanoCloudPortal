@@ -4,8 +4,16 @@
 		<title>Tomography</title>
 
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 		<style>
+			/* Matches the rest of the site (theme.css's --font-body etc.),
+			   which this self-contained page doesn't link -- overrides Pico's
+			   own default font stack. */
+			body {
+				font-family: 'Montserrat', sans-serif;
+			}
 			#statusContainer {
 				position: absolute;
 				display: none;
