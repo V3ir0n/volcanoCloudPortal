@@ -175,7 +175,7 @@ function openVolcano(feature, layer) {
     // &v= busts any stale cached copy of viewer.html itself from before a
     // page-content change (revisiting the same volcano would otherwise be
     // the exact same URL as a prior, now-outdated visit).
-    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}&v=2`;
+    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}&v=7`;
     return;
   }
 
@@ -828,25 +828,15 @@ fetch("resources/volcanoes.geojson")
       uploadBtn.className = "volcano-upload-btn";
       // ?v= busts any stale cached copy of this page from before the
       // examples-picker section was hidden (see index.html).
-      uploadBtn.href = "../measurement/tomography-models/index.html?v=6";
+      uploadBtn.href = "../measurement/tomography-models/index.html?v=11";
       uploadBtn.innerHTML = `
         <span class="volcano-upload-btn-title">Upload own data</span>
         <span class="volcano-upload-btn-subtitle">Upload two NOVAC EvaluationLog files from the same volcano and date</span>
       `;
+      // Fixed to the bottom-left corner (see .volcano-upload-btn in
+      // styles.css) rather than tracked to sit under the volcano-select
+      // control -- simpler and doesn't need a resize listener.
       document.body.appendChild(uploadBtn);
-
-      const positionUploadBtn = () => {
-        const rect = volcanoControl.getContainer().getBoundingClientRect();
-        uploadBtn.style.top = `${rect.bottom + 15}px`;
-        // Centered on the control box's (and so the dropdown's, since it's
-        // centered within it) horizontal midpoint, rather than right-aligned
-        // -- the button's own width can differ from the dropdown's.
-        uploadBtn.style.left = `${rect.left + rect.width / 2}px`;
-        uploadBtn.style.right = "auto";
-        uploadBtn.style.transform = "translateX(-50%)";
-      };
-      positionUploadBtn();
-      window.addEventListener("resize", positionUploadBtn);
     }
   })
   .catch((err) => {

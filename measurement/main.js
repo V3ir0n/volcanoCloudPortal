@@ -246,8 +246,8 @@ class MeasurementView {
         this._initScene();
         this._initChart();
         this._initTransmittanceChart();
-        this._initUI();
         this._initScanModeUI();
+        this._initUI();
         this._loadTerrain();
         this._loadSpectrum();
 
@@ -895,11 +895,8 @@ class MeasurementView {
         this.transPath.setAttribute('stroke', cdColorCss(cd));
     }
 
-    // ── Controls ─────────────────────────────────────────────────────────────
+    // ── Controls (merged into .scan-mode-panel -- see _initScanModeUI) ──────
     _initUI() {
-        const ui = document.createElement('div');
-        ui.className = 'scan-controls';
-
         const terrainLabel = document.createElement('label');
         terrainLabel.className = 'terrain-toggle';
         const terrainCheckbox = document.createElement('input');
@@ -917,24 +914,21 @@ class MeasurementView {
         terrainLabel.appendChild(terrainCheckbox);
         terrainLabel.appendChild(terrainSlider);
         terrainLabel.appendChild(document.createTextNode('Background'));
-        ui.appendChild(terrainLabel);
+        this.scanModePanel.insertBefore(terrainLabel, this.scanModeHint);
 
         this.playBtn = document.createElement('button');
         this.playBtn.textContent = '▶  Start scan';
         this.playBtn.disabled = true;
         this.playBtn.className = 'btn btn--pill btn--outline scan-play-btn';
         this.playBtn.addEventListener('click', () => this._startScan());
+        this.scanModePanel.insertBefore(this.playBtn, this.scanModeHint);
 
-        ui.appendChild(this.playBtn);
-
-        ui.appendChild(createConeColorPicker(hex => {
-            if (this.coneWireMat) this.coneWireMat.color.set(hex);
-        }));
-
-        // Anchored inside .scan-viewport (not fixed to the viewport) so it
-        // scrolls away with the scanning view instead of staying pinned
-        // over the footer/credits below.
-        document.querySelector('.scan-viewport').appendChild(ui);
+        this.scanModePanel.insertBefore(
+            createConeColorPicker(hex => {
+                if (this.coneWireMat) this.coneWireMat.color.set(hex);
+            }),
+            this.scanModeHint
+        );
 
         const hint = document.createElement('div');
         hint.className = 'scan-hint';
@@ -945,7 +939,7 @@ class MeasurementView {
         document.querySelector('.scan-viewport').appendChild(hint);
     }
 
-    // ── Scanning geometry toggle (left side) ────────────────────────────────
+    // ── Scanning geometry + all scan controls, one panel (right side) ──────
     _initScanModeUI() {
         const panel = document.createElement('div');
         panel.className = 'scan-mode-panel';
@@ -973,10 +967,14 @@ class MeasurementView {
         });
         panel.appendChild(options);
 
+        // Appended last, but _initUI() (which runs right after this) inserts
+        // its controls (Background/Start scan/Beam color) before this node
+        // via this.scanModeHint, so this stays the final item in the panel.
         const hint = document.createElement('div');
         hint.className = 'scan-mode-panel__hint';
-        hint.textContent = 'Use your mouse to rotate and zoom in and out the model';
+        hint.textContent = 'You can control the view direction and zoom level';
         panel.appendChild(hint);
+        this.scanModeHint = hint;
 
         document.querySelector('.scan-viewport').appendChild(panel);
         this.scanModePanel = panel;

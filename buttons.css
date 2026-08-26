@@ -99,10 +99,12 @@
   background: transparent;
   color: var(--topbar-fg, var(--color-ink));
   text-decoration: none;
-  border: 1px solid var(--btn-border, var(--color-ink));
+  /* Same size on every page (some pages used to override this locally,
+     e.g. model/styles.css) -- kept here as the single shared definition. */
+  border: 2px solid var(--btn-border, var(--color-ink));
   border-radius: var(--radius-pill);
   font-family: var(--font-body);
-  font-size: var(--text-sm);
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.3px;
   line-height: 1;

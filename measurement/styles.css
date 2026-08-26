@@ -5,6 +5,10 @@ body {
   font-family: var(--font-body);
 }
 
+.topbar .btn--pill {
+  font-size: 1.1rem;
+}
+
 /* the canvas fills the whole viewport, so the bar overlays it rather
    than reserving space in normal flow */
 .topbar {
@@ -17,10 +21,6 @@ body {
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   box-shadow: none;
-}
-
-.topbar img {
-  max-height: 50px;
 }
 
 .cone-color-picker {
@@ -105,16 +105,6 @@ body {
   font-size: 1.1rem;
 }
 
-.scan-controls {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 10;
-}
-
 .terrain-toggle {
   display: inline-flex;
   align-items: center;
@@ -181,10 +171,11 @@ body {
 .scan-mode-panel {
   position: absolute;
   top: 90px;
-  left: 20px;
+  right: 20px;
   z-index: 10;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
   padding: 14px;
   background: var(--glass-bg);
@@ -239,14 +230,20 @@ body {
 
 .scan-hint {
   position: absolute;
-  bottom: 20px;
+  top: 90px;
   left: 20px;
   z-index: 10;
   color: var(--color-gold);
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
   font-family: var(--font-body);
   max-width: 220px;
-  line-height: 1.6;
+  line-height: 1.5;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 /* Larger than the shared footer default (theme.css) for this page. */

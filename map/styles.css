@@ -38,6 +38,15 @@ body {
   border-right-color: var(--color-gold) !important;
 }
 
+/* Leaflet's own ".leaflet-container" rule sets its own font-family
+   ("Helvetica Neue", Arial, sans-serif), which otherwise wins for any text
+   inside a Leaflet control (e.g. .volcano-control-hint) that doesn't set
+   its own font-family -- same kind of collision as the tooltip arrow color
+   fix above, so override it here once for everything under #map. */
+#map {
+  font-family: var(--font-body);
+}
+
 .map-wrap {
   height: 100vh;
   width: 100%;
@@ -233,6 +242,8 @@ body {
    by the map's own bounds the way it did as a Leaflet control. */
 .volcano-upload-btn {
   position: fixed;
+  bottom: 120px;
+  left: 20px;
   z-index: 1000;
   display: flex;
   flex-direction: column;

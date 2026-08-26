@@ -100,7 +100,9 @@
 }
 
 .topbar img {
-  max-height: calc(var(--topbar-h) - 20px);
+  /* Fixed (was calc(var(--topbar-h) - 20px)) so every page's logo matches --
+     several pages were already overriding this locally to 50px. */
+  max-height: 50px;
   display: block;
   flex-shrink: 0;
 }

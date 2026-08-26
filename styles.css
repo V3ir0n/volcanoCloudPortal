@@ -18,7 +18,7 @@ header {
   padding: 0 1.25rem;
   color: var(--color-gold);
 }
-header img { max-height: 52px; display: block; }
+header img { max-height: 50px; display: block; }
 header h1 { color: var(--color-gold); margin: 0; font-size: 1.3rem; line-height: 1.15; font-family: var(--font-brand); }
 header p  { color: var(--color-ink-soft); margin: 0; font-size: var(--text-sm); line-height: 1.15; }
 

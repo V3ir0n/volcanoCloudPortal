@@ -8,11 +8,55 @@
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 		<style>
+			/* Matches the site's paper/ink/gold palette (theme.css), instead of
+			   Pico's own default blue accent/light-gray background -- same
+			   values already used for this on the Volcanic gases page
+			   (model/styles.css). !important is needed because Pico defines
+			   these same variables on :root:not([data-theme]), which outranks
+			   a plain :root override. */
+			:root {
+				--pico-primary: #e0a500 !important;
+				--pico-primary-background: #b98600 !important;
+				--pico-primary-border: #b98600 !important;
+				--pico-primary-hover: #f0bc33 !important;
+				--pico-primary-hover-background: #a67900 !important;
+				--pico-primary-hover-border: #a67900 !important;
+				--pico-primary-focus: rgba(224, 165, 0, 0.375) !important;
+				--pico-primary-underline: rgba(224, 165, 0, 0.5) !important;
+				--pico-primary-inverse: #fbf8f0 !important;
+				/* Pico's <article> (wrapping the upload form) uses this for its
+				   own card background, defaulting to white and covering most
+				   of the visible page -- overriding it is what actually makes
+				   the page read as our paper color rather than the body
+				   background underneath it. */
+				--pico-background-color: #fbf8f0 !important;
+				--pico-card-background-color: #fbf8f0 !important;
+				--pico-card-sectioning-background-color: #fbf8f0 !important;
+			}
 			/* Matches the rest of the site (theme.css's --font-body etc.),
 			   which this self-contained page doesn't link -- overrides Pico's
 			   own default font stack. */
 			body {
 				font-family: 'Montserrat', sans-serif;
+				background: #fbf8f0;
+				color: #2b2b2b;
+			}
+			/* lil-gui (the parameters panel on the right, added by main.js's
+			   `new GUI()`) ships its own default dark theme and font stack
+			   via custom properties on its root -- overriding them here is
+			   lil-gui's own supported way to reskin it, rather than fighting
+			   its CSS. Matches the site's paper/ink/gold palette. */
+			.lil-gui {
+				--font-family: 'Montserrat', sans-serif;
+				--background-color: #ffffff;
+				--title-background-color: #fbf8f0;
+				--title-text-color: #e0a500;
+				--widget-color: #cfc9b8;
+				--hover-color: rgba(224, 165, 0, 0.18);
+				--focus-color: #e0a500;
+				--text-color: #2b2b2b;
+				--number-color: #e0a500;
+				--string-color: #e0a500;
 			}
 			#statusContainer {
 				position: absolute;
@@ -65,8 +109,9 @@
 				padding: 6px 14px;
 				background: transparent;
 				color: #e0a500;
-				border: 1px solid #e0a500;
+				border: 2px solid #e0a500;
 				border-radius: 999px;
+				font-size: 1.1rem;
 				font-weight: 600;
 				cursor: pointer;
 				transition: background 0.2s ease, transform 0.2s ease;
@@ -224,7 +269,7 @@
 		<script src="libs/mathjs.js"></script>
 		<!-- ?v= bumped by hand on every edit to main.js so the browser always
 		     fetches the new file instead of reusing a cached copy. -->
-		<script type="module" src="main.js?v=5"></script>
+		<script type="module" src="main.js?v=6"></script>
 
 	</body>
 </html>

@@ -782,11 +782,7 @@ async function onDataLoaded(data, processedData) {
     plumeFolder.add(params, 'assumedVelocity').name('Plume speed (m/s)').onChange(()=>api.updateFrame());
 
     const exportFolder = gui.addFolder("Export");
-    exportFolder.add(params, "imageScaleFactor").name("Image scale factor").min(1);
     exportFolder.add(params, "exportImage").name("Export image");
-
-    params.exportData = ()=>{window.api.exportProcessedData(processedData)}
-    exportFolder.add(params, "exportData").name("Export data");
 
     // Push the "Upload own data" button below the GUI panel (its height
     // varies with the controls above), instead of a guessed fixed offset.
