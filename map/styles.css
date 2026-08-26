@@ -220,16 +220,65 @@ body {
 
 .volcano-control-hint {
   margin: -8px 20px 20px;
-  max-width: 220px;
+  max-width: 280px;
   color: var(--color-gold);
   font-size: var(--text-sm);
   line-height: 1.5;
 }
 
+/* A plain fixed-position element (appended to <body>, not the Leaflet
+   control tree -- see the isTomographyMap block in main.js), positioned via
+   JS to sit just below the volcano-select control. Being outside #map
+   (.leaflet-container has overflow:hidden) means it can never get clipped
+   by the map's own bounds the way it did as a Leaflet control. */
+.volcano-upload-btn {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  box-sizing: border-box;
+  min-width: 280px;
+  max-width: 320px;
+  padding: 6px 18px 14px;
+  font-family: var(--font-body);
+  text-align: center;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  border: 3px solid var(--color-line);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+
+.volcano-upload-btn:hover {
+  border-color: var(--color-ink-soft);
+  background: var(--color-paper);
+}
+
+.volcano-upload-btn-title {
+  font-size: var(--text-xl);
+  font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #8b0000;
+}
+
+.volcano-upload-btn-subtitle {
+  color: var(--color-gold);
+  font-size: var(--text-base);
+  line-height: 1.4;
+}
+
 .volcano-select {
   font-family: var(--font-body);
   font-size: var(--text-base);
-  padding: 10px 14px;
+  padding: 6px 14px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-line);
   background: var(--color-paper-raised);
@@ -240,9 +289,9 @@ body {
   -webkit-appearance: none;
   -moz-appearance: none;
   position: relative;
-  width: 220px;
+  width: 280px;
   font-weight: 500;
-  margin: 20px;
+  margin: 10px 20px;
   box-shadow: inset 0 1px 3px rgba(43, 43, 43, 0.15);
   transition: all 0.15s ease;
 }
@@ -351,7 +400,7 @@ body {
 .topbar-title {
   font-weight: 600;
   letter-spacing: 0.3px;
-  font-size: 1.5rem;
+  font-size: 1.9rem;
 }
 
 .topbar {

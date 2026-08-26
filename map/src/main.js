@@ -170,7 +170,10 @@ function openVolcano(feature, layer) {
     // be checked out/deployed wherever this site is served from. viewer.html
     // (rather than index.html) is a lean, dedicated page for just these 5
     // examples — no upload button, no example-picker/parameter chrome.
-    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}`;
+    // &v= busts any stale cached copy of viewer.html itself from before a
+    // page-content change (revisiting the same volcano would otherwise be
+    // the exact same URL as a prior, now-outdated visit).
+    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}&v=2`;
     return;
   }
 
@@ -801,7 +804,7 @@ fetch("resources/volcanoes.geojson")
 
         if (isTomographyMap) {
           const hint = L.DomUtil.create("p", "volcano-control-hint", container);
-          hint.textContent = "Select a volcano on the map to see a plume tomography from real measurements. Use keyboard arrows to show the plume evolution over time.";
+          hint.textContent = "Select a volcano on the map or in this list to see an example of plume tomography from real measurements";
         }
 
         return container;
@@ -809,7 +812,40 @@ fetch("resources/volcanoes.geojson")
     });
 
     // Add the volcano select control now that it's defined
-    map.addControl(new VolcanoControl({ position: "topright" }));
+    const volcanoControl = new VolcanoControl({ position: "topright" });
+    map.addControl(volcanoControl);
+
+    if (isTomographyMap) {
+      // A plain fixed-position element on the page instead of another
+      // Leaflet control stacked below it -- #map (.leaflet-container) has
+      // overflow:hidden, which was silently clipping this button's bottom
+      // edge whenever the dropdown+hint above it left it running past the
+      // visible map area. Being outside that container entirely (a sibling
+      // of #map, not inside it) sidesteps that regardless of window size.
+      const uploadBtn = document.createElement("a");
+      uploadBtn.className = "volcano-upload-btn";
+      // ?v= busts any stale cached copy of this page from before the
+      // examples-picker section was hidden (see index.html).
+      uploadBtn.href = "../measurement/tomography-models/index.html?v=6";
+      uploadBtn.innerHTML = `
+        <span class="volcano-upload-btn-title">Upload own data</span>
+        <span class="volcano-upload-btn-subtitle">Upload two NOVAC EvaluationLog files from the same volcano and date</span>
+      `;
+      document.body.appendChild(uploadBtn);
+
+      const positionUploadBtn = () => {
+        const rect = volcanoControl.getContainer().getBoundingClientRect();
+        uploadBtn.style.top = `${rect.bottom + 15}px`;
+        // Centered on the control box's (and so the dropdown's, since it's
+        // centered within it) horizontal midpoint, rather than right-aligned
+        // -- the button's own width can differ from the dropdown's.
+        uploadBtn.style.left = `${rect.left + rect.width / 2}px`;
+        uploadBtn.style.right = "auto";
+        uploadBtn.style.transform = "translateX(-50%)";
+      };
+      positionUploadBtn();
+      window.addEventListener("resize", positionUploadBtn);
+    }
   })
   .catch((err) => {
     console.error("Failed to load GeoJSON", err);

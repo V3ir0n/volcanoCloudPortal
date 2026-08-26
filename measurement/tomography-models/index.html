@@ -13,6 +13,16 @@
 				padding: 5px;
 				margin: 5px;
 			}
+			#keyboardHint {
+				margin-bottom: 6px;
+				color: #fff;
+				background: rgba(43, 43, 43, 0.65);
+				border-radius: 6px;
+				padding: 4px 10px;
+				font-size: 0.8rem;
+				line-height: 1.4;
+				width: fit-content;
+			}
 			button {
 				margin: 0px; padding: 0px;
 			}
@@ -40,8 +50,22 @@
 				align-items: center;
 				gap: 16px;
 			}
+			/* Matches the main site's topbar back button (theme.css/buttons.css
+			   .back-btn), which this self-contained page doesn't link -- gold
+			   pill, transparent until hover. */
 			#backButton {
 				padding: 6px 14px;
+				background: transparent;
+				color: #e0a500;
+				border: 1px solid #e0a500;
+				border-radius: 999px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: background 0.2s ease, transform 0.2s ease;
+			}
+			#backButton:hover {
+				background: rgba(224, 165, 0, 0.18);
+				transform: translateY(-1px);
 			}
 			#uploadOwnDataBtn {
 				position: fixed;
@@ -73,6 +97,30 @@
 				font-size: 1.75rem;
 				pointer-events: none;
 			}
+			/* Set dynamically by main.js when ?example=/?volcano= is present
+			   (see exampleVolcanoInfo there). */
+			#volcanoInfo {
+				color: #fff;
+				background: rgba(43, 43, 43, 0.65);
+				border-radius: 6px;
+				padding: 6px 12px;
+				font-size: 0.8rem;
+				line-height: 1.5;
+				pointer-events: none;
+			}
+			/* No longer reachable from anywhere in the site (see the comment
+			   above the markup below) -- this page opens straight to the
+			   upload form instead. */
+			.examples-picker,
+			.upload-page-extra {
+				display: none !important;
+			}
+			/* With the title/parameters hidden above it (see
+			   .upload-page-extra), the upload field sat right under
+			   #topLeftBar's fixed Back button -- push it down clear of that. */
+			#fileUploadContainer {
+				margin-top: 90px;
+			}
 		</style>
 
 		<meta charset="utf-8">
@@ -85,27 +133,33 @@
 			<button id="backButton" class="secondary" onclick="history.back()">← Back</button>
 			<div id="volcanoTitle"></div>
 		</div>
-		<button id="uploadOwnDataBtn" class="secondary" onclick="location.href='index.html'">Upload own data</button>
-		<div id="uploadOwnDataHint">Select two EvaluationLog files from the same volcano and date.</div>
+		<button id="uploadOwnDataBtn" class="secondary upload-page-extra" onclick="location.href='index.html'">Upload own data</button>
+		<div id="uploadOwnDataHint" class="upload-page-extra">Select two EvaluationLog files from the same volcano and date.</div>
 		<div id="fileUploadContainer" class="pico container-fluid" style="position: absolute;">
 			<article
 			data-tooltip="Browse and select two files to load"
 			data-placement="bottom">
-				<fieldset class="grid">
+				<!-- This page is now only reached via the map's "Upload own data"
+				     link (the 5 example volcanoes have their own dedicated
+				     viewer.html), which wants nothing but the upload field and
+				     its instruction line visible -- everything below marked
+				     .upload-page-extra is kept in the DOM (main.js wires up
+				     each element's id unconditionally) but hidden via CSS. -->
+				<fieldset class="grid upload-page-extra">
 					<h1>Tomography</h1>
 				</fieldset>
-				<h2>Load examples</h2>
+				<h2 class="examples-picker">Load examples</h2>
 
-				<fieldset class="grid">
+				<fieldset class="grid examples-picker">
 					<button id="clevelandExample" class="secondary">Cleveland</button>
 					<button id="nevadodelruizExample" class="secondary">Nevado del Ruiz</button>
 					<button id="merapiExample" class="secondary">Merapi</button>
 					<button id="turrialbaExample" class="secondary">Turrialba</button>
-					<button id="sabancayaExample" class="secondary">Sabancaya</button>				
+					<button id="sabancayaExample" class="secondary">Sabancaya</button>
 				</fieldset>
 
-				<h2>Choose the parameters for the tomographic inversion.</h2>
-				<fieldset class="grid">
+				<h2 class="upload-page-extra">Choose the parameters for the tomographic inversion.</h2>
+				<fieldset class="grid upload-page-extra">
 					<label>
 						Min. Plume completeness
 						<input id="completenessLimit" type="number" value=0.9 min="0.5" max="1" step="0.05" placeholder="0.9"/>
@@ -122,7 +176,7 @@
 						<input id="timeDifferenceMinSlider" type="range" min="5" max="30" step="1" value="15"/>
 					</label>
 				</fieldset>
-				<small>
+				<small class="upload-page-extra">
 					Note that the settings above are used if you only supply evaluation log files, but will not be used if you also supply CSV concentration data.
 				</small>
 
@@ -132,11 +186,12 @@
 				The visualisation needs two Evaluation log text files.
 
 			</article>
-			<article>When the visualisation has loaded, use keyboard arrows to step between timeframes.</article>
+			<article class="upload-page-extra">When the visualisation has loaded, use keyboard arrows to step between timeframes.</article>
 			<progress/ id="progress" style="display: none;">
 		</div>
 
 		<article class="pico" id="statusContainer">
+			<div id="keyboardHint">Use keyboard arrows to show the plume evolution over time</div>
 			<div role="group" style="display: flex; background: #ffffff91; color: #000000c2;">
 				<button id="prevFrame">&lt;</button>
 				<div style="margin: 1em;" id="statusText"></div>
@@ -159,7 +214,9 @@
 		</script>
 
 		<script src="libs/mathjs.js"></script>
-		<script type="module" src="main.js"></script>
+		<!-- ?v= bumped by hand on every edit to main.js so the browser always
+		     fetches the new file instead of reusing a cached copy. -->
+		<script type="module" src="main.js?v=5"></script>
 
 	</body>
 </html>

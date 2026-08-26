@@ -51,6 +51,10 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    // Darker than the scanning-station blue and slightly translucent
+    // (renderer was created with alpha:true), so the page's white background
+    // shows through a little rather than a flat opaque fill.
+    renderer.setClearColor(0x14293b, 0.85);
     const container = document.getElementById("container");
     container.appendChild(renderer.domElement);
 
@@ -211,10 +215,35 @@ function init() {
         turrialba: "Turrialba",
         sabancaya: "Sabancaya",
     };
+    // Lat/lon match map/resources/volcanoes.geojson (the site's shared
+    // volcano database) so this stays consistent with what's shown
+    // elsewhere; altitude/institution aren't in that file, so they're kept
+    // here instead of adding a runtime dependency on it from this
+    // self-contained folder.
+    const exampleVolcanoInfo = {
+        cleveland: { lat: 52.825, lon: -169.944, altitude: 1730, institution: "United States Geological Survey" },
+        nevado_del_ruiz: { lat: 4.892, lon: -75.3188, altitude: 5279, institution: "Servicio Geológico Colombiano" },
+        merapi: { lat: -7.5261, lon: 110.4107, altitude: 2910, institution: "Center for Volcanology and Geological Hazard Mitigation" },
+        turrialba: { lat: 10.0167, lon: -83.7655, altitude: 3340, institution: "Observatorio Vulcanológico y Sismológico de Costa Rica" },
+        sabancaya: { lat: -15.788, lon: -71.8559, altitude: 5967, institution: "Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú" },
+    };
     const searchParams = new URLSearchParams(window.location.search);
     const exampleParam = searchParams.get("example") || searchParams.get("volcano");
     if (exampleParam && exampleButtonIds[exampleParam]) {
         document.getElementById("volcanoTitle").textContent = exampleDisplayNames[exampleParam] || "";
+
+        const info = exampleVolcanoInfo[exampleParam];
+        if (info) {
+            const infoEl = document.createElement("div");
+            infoEl.id = "volcanoInfo";
+            infoEl.innerHTML = `
+                <div>Lat: ${info.lat.toFixed(4)}°, Lon: ${info.lon.toFixed(4)}°</div>
+                <div>Altitude: ${info.altitude} m</div>
+                <div>Institution: ${info.institution}</div>
+            `;
+            document.getElementById("topLeftBar").appendChild(infoEl);
+        }
+
         // Hide the example-picker/upload panel immediately, rather than
         // waiting for onDataLoaded() to hide it once the fetch+parse of the
         // clicked example's files finishes — otherwise it's visible (with
