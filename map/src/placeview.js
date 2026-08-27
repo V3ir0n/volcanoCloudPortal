@@ -168,7 +168,11 @@ class VolcanoView {
 
     // Setup scene, camera, camera controls, and lights
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, this.canvas.width / this.canvas.height, 0.01, 100);
+    // 75deg (was) is wide enough that vertical objects away from the center
+    // of the frame -- like a station mast off to one side -- visibly bend
+    // outward (perspective "keystoning"), reading as tilted even though no
+    // rotation is ever applied to them. A narrower FOV reduces that.
+    this.camera = new THREE.PerspectiveCamera(50, this.canvas.width / this.canvas.height, 0.01, 100);
 
 
     this.controls = new OrbitControls(this.camera, this.canvas);
@@ -229,11 +233,26 @@ class VolcanoView {
     const size = boundingBox.getSize(new THREE.Vector3());
     const dist = Math.max(size.x, size.z) * 0.8;
     this.markerScale = dist / 1.1; // scale markers relative to terrain footprint
-    const angle = Math.PI / 6;
+    // Camera distance is compensated for the narrower FOV (see the
+    // PerspectiveCamera setup above) so the volcano still frames about the
+    // same as before -- at the same distance, a narrower FOV alone would
+    // show noticeably less of the terrain. Only affects the camera; dist
+    // itself (markerScale, station/cone sizing) is untouched.
+    const PREVIOUS_FOV_DEG = 75;
+    const fovCompensation = Math.tan(PREVIOUS_FOV_DEG * Math.PI / 360) / Math.tan(this.camera.fov * Math.PI / 360);
+    // Pulled in closer (0.75x) and looking down from a steeper angle (45°,
+    // was 30°) with an azimuth offset (wasn't rotated at all before -- the
+    // camera always started due "south" of the volcano) so the initial view
+    // shows more of the slopes -- and so more of the scattered stations and
+    // their scan cones -- instead of a low, mostly-skyline view from one
+    // fixed side.
+    const cameraDist = dist * fovCompensation * 0.75;
+    const elevationAngle = Math.PI / 4;
+    const azimuthAngle = Math.PI / 4;
     this.camera.position.set(
-      terrainCenter.x,
-      terrainCenter.y + dist * Math.sin(angle),
-      terrainCenter.z + dist * Math.cos(angle)
+      terrainCenter.x + cameraDist * Math.cos(elevationAngle) * Math.sin(azimuthAngle),
+      terrainCenter.y + cameraDist * Math.sin(elevationAngle),
+      terrainCenter.z + cameraDist * Math.cos(elevationAngle) * Math.cos(azimuthAngle)
     );
     this.controls.target.copy(terrainCenter);
     this.controls.update();
@@ -310,12 +329,20 @@ class VolcanoView {
         // localScale = lengthKm * unitsPerKm / markerScale → markerScale cancels → constant.
         const CONE_LENGTH_KM = 2;
         const coneLocalScale = CONE_LENGTH_KM * 1.1 / (1.6 * this.radiusKm);
+        // Small ground-clearance nudge (avoids z-fighting with the terrain
+        // mesh), same unitsPerKm derivation as coneLocalScale above so it
+        // stays a fixed, tiny real-world distance (~8 cm) instead of the
+        // previous flat 0.025 scene units -- that was tuned for the old,
+        // much larger (terrain-scale-dependent) station body, and became a
+        // visible lift once the body was fixed to a small real-world size.
+        const GROUND_CLEARANCE_KM = 0.00008;
+        const heightOffset = GROUND_CLEARANCE_KM * this.markerScale * 1.1 / (1.6 * this.radiusKm);
 
         [...latestByLatLon.values()].forEach(s => {
             if (s.coneAngle === 0) return; // don't place a station marker at all
 
             const marker = this.createStationMarker(s.coneAngle ?? 90); // if coneangle is missing use 90
-            const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset: 0.025 });
+            const placed = this.placeObjectOnTerrainLatLon(terrainRoot, marker, s.lat, s.lng, { heightOffset });
             if (!placed) marker.position.copy(this.latLonToScene(s.lat, s.lng, s.altitude));
 
             // Rotate the marker around the vertical (Y) axis so it faces the volcano.
@@ -355,9 +382,41 @@ class VolcanoView {
     const mastH = bs * 3;
     const mastR = bs * 0.12;
 
+    // The body (this group) previously inherited the outer group's
+    // markerScale directly, which is sized for the scan cone's terrain-
+    // footprint-relative geometry -- on volcanoes with a large terrain mesh
+    // radius that made the instrument body enormous (and, since its base
+    // no longer lined up with where the ground-placement offset expected it,
+    // appear to float). bodyLocalScale re-anchors it to a fixed real-world
+    // height instead, the same way coneLocalScale re-anchors the cone to a
+    // fixed real-world length (see loadStationSprites) -- independent of
+    // terrain radius.
+    // Deliberately much taller than a real station (~4 m) -- at true scale
+    // it would be invisible against a whole volcano from this camera
+    // distance, the same reason map pins are drawn oversized. Still a small
+    // fraction of a typical terrain radius (a few km), so it reads as a
+    // marker rather than a real structure.
+    const STATION_HEIGHT_KM = 0.14; // ~140 m effective marker height
+    const bodyLocalScale = (STATION_HEIGHT_KM * 1.1) / (1.6 * this.radiusKm * mastH);
+    const bodyGroup = new THREE.Group();
+    bodyGroup.scale.setScalar(bodyLocalScale);
+    group.add(bodyGroup);
+
+    // A vertical mast against a sloped, perspective-viewed terrain surface
+    // reads as ambiguously tilted to the eye even though it's mathematically
+    // upright (no rotation is ever applied to it) -- a flat horizontal base
+    // plate right where it meets the ground gives a much stronger visual
+    // reference for "vertical" than a bare cylinder tip touching a point.
+    const basePlate = new THREE.Mesh(
+      new THREE.CylinderGeometry(mastR * 3, mastR * 3, mastH * 0.06, 12),
+      mat
+    );
+    basePlate.position.y = mastH * 0.03;
+    bodyGroup.add(basePlate);
+
     const mast = new THREE.Mesh(new THREE.CylinderGeometry(mastR, mastR, mastH, 8), mat);
     mast.position.y = mastH / 2;
-    group.add(mast);
+    bodyGroup.add(mast);
 
     const telescopeLen = bs * 1.4;
     const telescope = new THREE.Mesh(
@@ -366,7 +425,7 @@ class VolcanoView {
     );
     telescope.rotation.x = Math.PI / 2; // axis along local Z (horizontal, facing the volcano)
     telescope.position.set(0, mastH, -telescopeLen * 0.3);
-    group.add(telescope);
+    bodyGroup.add(telescope);
 
     const boxDepth = bs * 0.35;
     const mastBox = new THREE.Mesh(
@@ -374,7 +433,7 @@ class VolcanoView {
       boxMat
     );
     mastBox.position.set(0, mastH / 3, mastR + boxDepth / 2);
-    group.add(mastBox);
+    bodyGroup.add(mastBox);
 
     const antennaLen = bs * 0.9;
     const antenna = new THREE.Mesh(
@@ -383,7 +442,7 @@ class VolcanoView {
     );
     antenna.rotation.z = Math.PI / 2; // axis along local X, horizontal, sideways
     antenna.position.set(mastR + antennaLen / 2, mastH * 0.65, 0);
-    group.add(antenna);
+    bodyGroup.add(antenna);
 
     const elementH = bs * 0.3;
     [0.1, 0.25, 0.4, 0.55, 0.7, 0.85].forEach(f => {
@@ -392,7 +451,7 @@ class VolcanoView {
         telescopeMat
       );
       el.position.set(mastR + antennaLen * f, mastH * 0.65, 0);
-      group.add(el);
+      bodyGroup.add(el);
     });
 
     const wireMat = new THREE.LineBasicMaterial({ color: this.coneColor, opacity: 0.5, transparent: true }); //color on cone
@@ -433,8 +492,12 @@ class VolcanoView {
       // instead of the ground. The shape's own geometry already has its tip
       // at its local origin, so positioning the object is enough — scaling
       // it later (coneLocalScale, see loadStationSprites) still scales
-      // correctly around that same tip.
-      scanShape.position.set(0, mastH, -telescopeLen * 0.7);
+      // correctly around that same tip. scanShape is a sibling of bodyGroup
+      // (not inside it, so coneLocalScale's own real-world-length derivation
+      // isn't compounded by bodyLocalScale too) -- its position is in the
+      // outer group's space, so mastH/telescopeLen need bodyLocalScale
+      // applied here to line up with the body's actual (shrunk) position.
+      scanShape.position.set(0, mastH * bodyLocalScale, -telescopeLen * 0.7 * bodyLocalScale);
       group.add(scanShape);
     }
 

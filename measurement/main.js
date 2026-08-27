@@ -162,6 +162,18 @@ function cdColor(cd) {
     return new THREE.Color().lerpColors(CD_COLOR_STOPS[idx], CD_COLOR_STOPS[idx + 1], localT);
 }
 
+// Low-concentration (white) slices fade in more than high-concentration
+// (warm) ones, so an empty part of the sweep reads as faint/see-through
+// while the actual plume signal stays clearly visible. Used for the 3D
+// scan-plane slices (see the MeshBasicMaterial below); the flat chart bars
+// and transmittance line use cdColorCss directly, unaffected.
+const CD_MIN_OPACITY = 0.15;
+const CD_MAX_OPACITY = 0.6;
+function cdOpacity(cd) {
+    const t = Math.min(1, Math.max(0, cd / CD_MAX));
+    return CD_MIN_OPACITY + (CD_MAX_OPACITY - CD_MIN_OPACITY) * t;
+}
+
 function cdColorCss(cd) {
     // getHexString() converts three.js's internal linear-light r/g/b back to sRGB.
     // Building "rgb(r*255,...)" straight from those linear values (as this used to)
@@ -587,7 +599,7 @@ class MeasurementView {
                 color: cdColor(cd),
                 side: THREE.DoubleSide,
                 transparent: true,
-                opacity: 0.6,
+                opacity: cdOpacity(cd),
                 visible: false,
             });
 
@@ -929,14 +941,6 @@ class MeasurementView {
             }),
             this.scanModeHint
         );
-
-        const hint = document.createElement('div');
-        hint.className = 'scan-hint';
-        hint.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume';
-        // Anchored inside .scan-viewport (not fixed to the viewport) so it
-        // scrolls away with the scanning view instead of staying pinned
-        // over the footer/credits below.
-        document.querySelector('.scan-viewport').appendChild(hint);
     }
 
     // ── Scanning geometry + all scan controls, one panel (right side) ──────
@@ -967,14 +971,23 @@ class MeasurementView {
         });
         panel.appendChild(options);
 
-        // Appended last, but _initUI() (which runs right after this) inserts
-        // its controls (Background/Start scan/Beam color) before this node
-        // via this.scanModeHint, so this stays the final item in the panel.
+        // Appended next, but _initUI() (which runs right after this) inserts
+        // its controls (Background/Start scan/Beam color) before this node,
+        // via this.scanModeHint, so those still land above it.
         const hint = document.createElement('div');
         hint.className = 'scan-mode-panel__hint';
         hint.textContent = 'You can control the view direction and zoom level';
         panel.appendChild(hint);
         this.scanModeHint = hint;
+
+        // Previously its own standalone .scan-hint box in the lower-left --
+        // appended last (after _initUI() has already run its insertBefore
+        // calls against scanModeHint above), so this is the actual last
+        // item in the panel regardless.
+        const description = document.createElement('div');
+        description.className = 'scan-mode-panel__description';
+        description.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume';
+        panel.appendChild(description);
 
         document.querySelector('.scan-viewport').appendChild(panel);
         this.scanModePanel = panel;

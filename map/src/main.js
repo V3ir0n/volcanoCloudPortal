@@ -1,6 +1,6 @@
 // ?v= busts a stale cached copy of placeview.js -- bump it whenever that
 // file changes, same reasoning as index.html's ?v= on this file's own tag.
-import { renderPlaceView, createConeColorPicker } from "./placeview.js?v=1";
+import { renderPlaceView, createConeColorPicker } from "./placeview.js?v=8";
 
 let selectedPlace = null;
 let selectedLayer = null; // the currently highlighted marker, see openVolcano()
@@ -599,10 +599,16 @@ function initMap() {
     minZoom: 2,
   }).fitBounds(worldBounds);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png", {
-    attribution: "&copy; CARTO &copy; OSM",
-    subdomains: "abcd",
+  // CARTO's basemap CDN (used here previously) now requires an API key on
+  // every tile -- switched to Esri's free, no-key "Light Gray" basemap,
+  // which is the closest free equivalent to CARTO's light/no-labels style.
+  // Esri only renders tiles up to zoom 16 natively; maxNativeZoom keeps
+  // Leaflet upscaling those past that instead of requesting (and failing to
+  // get) tiles beyond what the service actually has.
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "&copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
     maxZoom: 19,
+    maxNativeZoom: 16,
     minZoom: 1,
     noWrap: true,
     bounds: worldBounds,
