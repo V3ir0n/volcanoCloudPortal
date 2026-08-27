@@ -56,7 +56,10 @@ body {
 #map {
   height: 100%;
   width: 100%;
-  background: #d3d9db;
+  /* Matches the Esri "Light Gray" tile background (checked directly) so
+     any area without loaded tiles -- e.g. near the edges of the bounded
+     map -- doesn't show a visibly different, cooler-toned gray seam. */
+  background: #eeeeee;
 }
 
 /* --- Overlay / panel --- */
@@ -277,11 +280,11 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   white-space: nowrap;
-  color: #8b0000;
+  color: var(--color-gold);
 }
 
 .volcano-upload-btn-subtitle {
-  color: var(--color-gold);
+  color: var(--color-ink-soft);
   font-size: var(--text-base);
   line-height: 1.4;
 }
@@ -442,6 +445,18 @@ body {
 
 /* topbar: push title center-ish and info to far right */
 .topbar-title { flex: 1; text-align: center; }
+
+/* On the Tomography-filtered map, the "About this map" button (which the
+   regular title's flex:1 centering leans on for left/right balance) is
+   removed entirely, so text-align:center alone centers within a lopsided
+   remaining space instead of the whole bar. Anchored to .topbar's own
+   position:fixed instead, so it's centered regardless of what's around it. */
+.topbar-title--true-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  flex: none;
+}
 
 /* info overlay modal */
 .info-overlay {

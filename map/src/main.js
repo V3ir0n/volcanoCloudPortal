@@ -597,6 +597,14 @@ function initMap() {
     maxBounds: worldBounds,
     maxBoundsViscosity: 1.0,
     minZoom: 2,
+    // By default fitBounds() rounds its computed zoom *down* to the nearest
+    // whole level (so it never crops the bounds), which is exactly what
+    // left an empty gutter -- a flat, textureless strip of #map's own
+    // background -- on whichever side the window's aspect ratio doesn't
+    // match the world's 360:170 ratio. zoomSnap:0 lets it land on the
+    // exact fractional zoom that fits the world with no gutter and no
+    // cropping, instead of rounding to a whole level either way.
+    zoomSnap: 0,
   }).fitBounds(worldBounds);
 
   // CARTO's basemap CDN (used here previously) now requires an API key on
@@ -626,6 +634,11 @@ fetch("resources/volcanoes.geojson")
       const allowed = new Set(volcanoFilter.split(",").map(s => s.trim()).filter(Boolean));
       data = { ...data, features: (data.features || []).filter(f => allowed.has(f.properties?.name)) };
       isTomographyMap = true;
+      const titleEl = document.querySelector(".topbar-title");
+      if (titleEl) {
+        titleEl.textContent = "Tomography examples";
+        titleEl.classList.add("topbar-title--true-center");
+      }
     }
 
     const { min, max } = computeYearRange(data);

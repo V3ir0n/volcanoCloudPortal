@@ -72,6 +72,16 @@ body {
   pointer-events: auto;
 }
 
+/* Kept separate from .chart-panel__info-btn (used only by the SO2 chart
+   panels on the right, both now top-8px/right-8px) so this one -- not a
+   "graph" -- can stay in its own bottom-right spot independently. */
+.scan-mode-panel__info-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  pointer-events: auto;
+}
+
 .back-btn,
 .doc-btn,
 .btn {
@@ -170,7 +180,7 @@ body {
 
 .scan-mode-panel {
   position: absolute;
-  top: 220px;
+  top: 340px;
   left: 20px;
   z-index: 10;
   display: flex;
@@ -190,14 +200,6 @@ body {
   font-weight: 600;
   font-size: var(--text-md);
   font-family: var(--font-body);
-}
-
-.scan-mode-panel__description {
-  max-width: 190px;
-  color: var(--color-gold);
-  font-size: var(--text-xs);
-  font-family: var(--font-body);
-  line-height: 1.4;
 }
 
 .scan-mode-panel__options {

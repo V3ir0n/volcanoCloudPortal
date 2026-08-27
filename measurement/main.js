@@ -637,15 +637,18 @@ class MeasurementView {
     _initChart() {
         const NS = 'http://www.w3.org/2000/svg';
         const W = 268, H = 162;
-        const M = { t: 8, r: 8, b: 32, l: 38 };
+        const M = { t: 8, r: 46, b: 32, l: 46 };
         const iW = W - M.l - M.r;
         const iH = H - M.t - M.b;
+        // Slant column density to number density conversion (ppm·m to
+        // molecules/cm²), for the second Y axis below.
+        const MOLECULES_PER_PPMM = 2.5e15;
 
         const panel = document.createElement('div');
         panel.className = 'chart-panel chart-panel--cd';
 
         const title = document.createElement('div');
-        title.textContent = 'SO₂ column density / ppm·m';
+        title.textContent = 'SO₂ column density';
         title.className = 'chart-panel__title';
         panel.appendChild(title);
 
@@ -721,6 +724,17 @@ class MeasurementView {
         xLbl.textContent = 'scan angle / deg';
         g.appendChild(xLbl);
 
+        // Y axis label (rotated to read bottom-to-top, same technique as
+        // the emissions chart's Y label in map/src/main.js)
+        const yLbl = document.createElementNS(NS, 'text');
+        yLbl.setAttribute('x', -(iH / 2)); yLbl.setAttribute('y', -32);
+        yLbl.setAttribute('text-anchor', 'middle');
+        yLbl.setAttribute('font-size', 9);
+        yLbl.setAttribute('fill', '#2b2b2b');
+        yLbl.setAttribute('transform', 'rotate(-90)');
+        yLbl.textContent = 'ppm·m';
+        g.appendChild(yLbl);
+
         // Y ticks
         [0, 100, 200, 300].forEach(v => {
             const y = iH - (v / CD_MAX) * iH;
@@ -733,6 +747,31 @@ class MeasurementView {
             lbl.textContent = v;
             g.appendChild(lbl);
         });
+
+        // Second Y axis (right side): the same ppm·m values converted to
+        // molecules/cm², same gridlines/positions as the left axis, just a
+        // different unit -- also applies to both Conical and Flat, since
+        // both use this same chart-building code.
+        g.appendChild(mkLine(iW, iH, iW, 0));
+        [0, 100, 200, 300].forEach(v => {
+            const y = iH - (v / CD_MAX) * iH;
+            g.appendChild(mkLine(iW, y, iW + 4, y));
+            const lbl = document.createElementNS(NS, 'text');
+            lbl.setAttribute('x', iW + 7); lbl.setAttribute('y', y + 3);
+            lbl.setAttribute('text-anchor', 'start');
+            lbl.setAttribute('font-size', 9);
+            lbl.setAttribute('fill', '#2b2b2b');
+            lbl.textContent = (v * MOLECULES_PER_PPMM / 1e17).toFixed(1);
+            g.appendChild(lbl);
+        });
+        const yLbl2 = document.createElementNS(NS, 'text');
+        yLbl2.setAttribute('x', iH / 2); yLbl2.setAttribute('y', -(iW + 34));
+        yLbl2.setAttribute('text-anchor', 'middle');
+        yLbl2.setAttribute('font-size', 9);
+        yLbl2.setAttribute('fill', '#2b2b2b');
+        yLbl2.setAttribute('transform', 'rotate(90)');
+        yLbl2.textContent = 'molecules/cm² (×10¹⁷)';
+        g.appendChild(yLbl2);
 
         // Pre-create bars (invisible), one per slice
         this._chartIH = iH;
@@ -775,7 +814,7 @@ class MeasurementView {
     _initTransmittanceChart() {
         const NS = 'http://www.w3.org/2000/svg';
         const W = 268, H = 162;
-        const M = { t: 8, r: 8, b: 32, l: 30 };
+        const M = { t: 8, r: 8, b: 32, l: 46 };
         const iW = W - M.l - M.r;
         const iH = H - M.t - M.b;
         const wMin = 300, wMax = 330;
@@ -784,7 +823,7 @@ class MeasurementView {
         panel.className = 'chart-panel chart-panel--trans';
 
         const title = document.createElement('div');
-        title.textContent = 'SO₂ transmittance / wavelength';
+        title.textContent = 'SO₂ transmittance';
         title.className = 'chart-panel__title';
         panel.appendChild(title);
 
@@ -873,6 +912,17 @@ class MeasurementView {
         xLbl.textContent = 'wavelength / nm';
         g.appendChild(xLbl);
 
+        // Y axis label (same rotate(-90) technique and spacing from the
+        // tick numbers as the column-density chart's "ppm·m" label)
+        const yLbl = document.createElementNS(NS, 'text');
+        yLbl.setAttribute('x', -(iH / 2)); yLbl.setAttribute('y', -32);
+        yLbl.setAttribute('text-anchor', 'middle');
+        yLbl.setAttribute('font-size', 9);
+        yLbl.setAttribute('fill', '#2b2b2b');
+        yLbl.setAttribute('transform', 'rotate(-90)');
+        yLbl.textContent = 'transmittance';
+        g.appendChild(yLbl);
+
         const path = document.createElementNS(NS, 'path');
         path.setAttribute('fill', 'none');
         path.setAttribute('stroke', '#4fc3f7');
@@ -953,6 +1003,37 @@ class MeasurementView {
         label.textContent = 'Scanning geometry';
         panel.appendChild(label);
 
+        // Same info-button/dialog pattern as the chart panels' "i" buttons
+        // (see _initChart above), but its own bottom-right position (see
+        // .scan-mode-panel__info-btn) since this panel isn't a "graph" --
+        // the two chart panels' info buttons stay top-right. Previously
+        // this text sat directly in the panel as .scan-mode-panel__description.
+        const infoBtn = document.createElement('button');
+        infoBtn.type = 'button';
+        infoBtn.className = 'btn btn--icon btn--icon-sm btn--outline info-btn scan-mode-panel__info-btn';
+        infoBtn.setAttribute('aria-label', 'Scanning geometry info');
+        infoBtn.textContent = 'ℹ';
+        panel.appendChild(infoBtn);
+
+        const infoDialog = document.createElement('dialog');
+        infoDialog.className = 'chart-info-dialog';
+        const infoCloseBtn = document.createElement('button');
+        infoCloseBtn.type = 'button';
+        infoCloseBtn.className = 'btn btn--icon btn--outline chart-info-dialog__close';
+        infoCloseBtn.setAttribute('aria-label', 'Close');
+        infoCloseBtn.textContent = '✕';
+        const infoText = document.createElement('p');
+        infoText.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume';
+        infoDialog.appendChild(infoCloseBtn);
+        infoDialog.appendChild(infoText);
+        document.body.appendChild(infoDialog);
+
+        infoBtn.addEventListener('click', () => infoDialog.showModal());
+        infoCloseBtn.addEventListener('click', () => infoDialog.close());
+        infoDialog.addEventListener('click', (e) => {
+            if (e.target === infoDialog) infoDialog.close();
+        });
+
         const options = document.createElement('div');
         options.className = 'scan-mode-panel__options';
 
@@ -979,15 +1060,6 @@ class MeasurementView {
         hint.textContent = 'You can control the view direction and zoom level';
         panel.appendChild(hint);
         this.scanModeHint = hint;
-
-        // Previously its own standalone .scan-hint box in the lower-left --
-        // appended last (after _initUI() has already run its insertBefore
-        // calls against scanModeHint above), so this is the actual last
-        // item in the panel regardless.
-        const description = document.createElement('div');
-        description.className = 'scan-mode-panel__description';
-        description.textContent = 'A ground-based scanner sweeps from horizon to horizon, measuring SO₂ column density at each angle to profile the volcanic plume';
-        panel.appendChild(description);
 
         document.querySelector('.scan-viewport').appendChild(panel);
         this.scanModePanel = panel;
