@@ -56,6 +56,37 @@
 				--number-color: #e0a500;
 				--string-color: #e0a500;
 			}
+			/* The root panel's "Controls" heading (and each folder's own
+			   heading, e.g. "Plume"/"Export" -- lil-gui uses the same class
+			   for both) -- larger than lil-gui's own default. */
+			.lil-gui .title {
+				font-size: 16px;
+			}
+			/* lil-gui's own default (position:fixed; top:0) pins it right
+			   against the top edge -- pushed down clear of #topLeftBar. */
+			.lil-gui.autoPlace {
+				top: 25px;
+			}
+			/* lil-gui's color controller pairs the swatch with an editable
+			   hex-text input by default -- just the "Beam color" name and
+			   swatch, no code, is enough here. */
+			.lil-gui .controller.color input[type="text"] {
+				display: none;
+			}
+			/* lil-gui's swatch (.display) defaults to width:100% with its
+			   background set to the picked color, which read as a plain
+			   full-width color bar. Shrunk to a small icon-sized box, and
+			   its background forced neutral (overriding lil-gui's own
+			   inline background-color) since main.js now draws the same
+			   scan-cone fan icon used elsewhere on the site into it --
+			   the icon itself conveys the picked color, not the box. */
+			.lil-gui .controller.color .display {
+				width: 30px !important;
+				flex: none !important;
+				border-radius: 4px;
+				border: 1px solid var(--widget-color);
+				background: var(--background-color) !important;
+			}
 			#statusContainer {
 				position: absolute;
 				display: none;
@@ -127,7 +158,17 @@
 			}
 			/* Set dynamically by main.js when ?example=/?volcano= is present
 			   (see exampleVolcanoInfo there). */
+			/* Kept out of #topLeftBar's flex row -- appended directly to
+			   <body> by main.js -- and given its own fixed position/width
+			   so a long institution name can't stretch the row across the
+			   screen and end up under the (high z-index) lil-gui panel on
+			   the right. */
 			#volcanoInfo {
+				position: fixed;
+				top: 75px;
+				left: 10px;
+				max-width: 280px;
+				z-index: 100000;
 				color: #fff;
 				background: rgba(43, 43, 43, 0.65);
 				border-radius: 6px;
@@ -238,7 +279,7 @@
 		<script src="libs/mathjs.js"></script>
 		<!-- ?v= bumped by hand on every edit to main.js so the browser always
 		     fetches the new file instead of reusing a cached copy. -->
-		<script type="module" src="main.js?v=6"></script>
+		<script type="module" src="main.js?v=16"></script>
 
 	</body>
 </html>

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {MapControls} from "./libs/threeAddons/MapControls.js";
+import {OrbitControls} from "./libs/threeAddons/OrbitControls.js";
 import {Lut} from "./libs/threeAddons/Lut.js";
 import ThreeGeo from "./libs/three-geo-esm.js";
 //import {tomoInverse} from "./src/tomoInverse.js";
@@ -9,13 +9,20 @@ import {drawParticles} from "./libs/draw.js";
 import {TomographicPlaneGeometry} from "./src/tomographicPlaneGeometry.js";
 import {GLTFLoader} from "./libs/threeAddons/GLTFLoader.js";
 import {GLTFExporter} from "./libs/threeAddons/GLTFExporter.js";
-import {RGBELoader} from './libs/threeAddons/RGBELoader.js';
 import {makePlumeMesh} from "./src/makePlumeMesh_2.js";
 import {GUI} from "./libs/threeAddons/lil-gui.module.min.js"
 import {Api} from "./src/api.js";
 import {saveArrayBuffer} from "./src/utils.js";
 import {exportDomeVideo} from "./src/domeExport.js";
 
+
+// Same key as the map/measurement pages' "Beam color" swatch, so a color
+// picked there also applies here (and vice versa).
+const CONE_COLOR_KEY = "scanConeColor";
+const DEFAULT_CONE_COLOR = "#808080";
+function getStoredConeColor() {
+    return localStorage.getItem(CONE_COLOR_KEY) || DEFAULT_CONE_COLOR;
+}
 
 // GUI parameters
 let params	= {
@@ -24,16 +31,26 @@ let params	= {
     pointsVisible: true,
     planeVisible: true,
     // The 18.7MB HDR sky background wasn't copied into this self-contained
-    // fork (see main.js's setBackgroundVisibility below) to keep this
-    // folder's size down, so default this off to avoid a failed fetch.
-    backgroundVisible: false,
+    // fork -- setBackgroundVisibility now toggles a plain color background
+    // instead (see below), on by default.
+    backgroundVisible: true,
+    beamColor: getStoredConeColor(),
     imageScaleFactor: 1,
     exportImage: ()=>{window.api.exportImage()}
 };
 
-let camera, scene, renderer, controls, backgroundTexture;
+let camera, scene, renderer, controls;
+// Lighter than the original navy tint (was 0x14293b), and now only actually
+// shown while the "Show background sky" toggle is on -- see
+// setBackgroundVisibility below.
+const BACKGROUND_COLOR = 0x4a7ba3;
+const BACKGROUND_ALPHA = 0.55;
 let plumeMesh = new THREE.Object3D();
 let frames = [];
+// Each instrument's scanning-cone wireframe material (one per station,
+// added in onDataLoaded) -- collected here so the "Beam color" GUI control
+// (see init()) can recolor all of them at once, however many exist.
+let beamWireMats = [];
 init();
 render();
 
@@ -51,10 +68,6 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    // Darker than the scanning-station blue and slightly translucent
-    // (renderer was created with alpha:true), so the page's white background
-    // shows through a little rather than a flat opaque fill.
-    renderer.setClearColor(0x14293b, 0.85);
     const container = document.getElementById("container");
     container.appendChild(renderer.domElement);
 
@@ -67,15 +80,17 @@ function init() {
     pointLight.position.set(1, 1, 1);
     scene.add(pointLight);
 
-    // Setup background
-    setBackgroundVisibility(false);
+    // Setup background -- sets the renderer's clear color (see
+    // setBackgroundVisibility below); previously the color was set here
+    // directly and unconditionally, so the "Show background sky" toggle
+    // never actually had any visible effect.
+    setBackgroundVisibility(params.backgroundVisible);
 
-    // Add x-y-z axis indicator
-    const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
-
-    // And camera controls
-    controls = new MapControls(camera, renderer.domElement);
+    // And camera controls -- OrbitControls (not MapControls) so left-drag
+    // rotates the view, matching the Remote sensing page's 3D viewer
+    // (measurement/main.js) instead of MapControls' pan-on-left-drag,
+    // rotate-on-right-drag "map navigation" scheme.
+    controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI/2;
     controls.zoomToCursor = true;
     controls.addEventListener("change", render);
@@ -241,7 +256,7 @@ function init() {
                 <div>Altitude: ${info.altitude} m</div>
                 <div>Institution: ${info.institution}</div>
             `;
-            document.getElementById("topLeftBar").appendChild(infoEl);
+            document.body.appendChild(infoEl);
         }
 
         // Hide the example-picker/upload panel immediately, rather than
@@ -307,22 +322,11 @@ async function loadDataFromUrl(filePaths) {
         onDataLoaded(data, alreadyProcessedData);
 }
 
-function setBackgroundVisibility(visible, url="resources/citrus_orchard_road_puresky_4k.hdr") {
-    if (!visible) {
-        scene.background = undefined;
-        scene.environment = undefined;
+function setBackgroundVisibility(visible) {
+    if (visible) {
+        renderer.setClearColor(BACKGROUND_COLOR, BACKGROUND_ALPHA);
     } else {
-        if (backgroundTexture === undefined) {
-            new RGBELoader().load(url, texture => {
-                texture.mapping = THREE.EquirectangularReflectionMapping;
-                backgroundTexture = texture;
-                scene.background = backgroundTexture;
-                scene.environment = backgroundTexture;
-            });
-        } else {
-            scene.background = backgroundTexture;
-            scene.environment = backgroundTexture;
-        }
+        renderer.setClearColor(0x000000, 0);
     }
     render();
 }
@@ -606,11 +610,13 @@ async function onDataLoaded(data, processedData) {
         coneGeometry.translate(0, -height/2, 0);
         coneGeometry.rotateX(-Math.PI/2);
         const coneEdges = new THREE.EdgesGeometry(coneGeometry);
-        const line = new THREE.LineSegments(coneEdges, new THREE.LineBasicMaterial({
-            color: 0xffffff,
+        const beamMat = new THREE.LineBasicMaterial({
+            color: params.beamColor,
             opacity: 0.3,
             transparent: true
-        }));
+        });
+        beamWireMats.push(beamMat);
+        const line = new THREE.LineSegments(coneEdges, beamMat);
         line.scale.multiplyScalar(instrumentPos.distanceTo(summitPos));
         line.position.copy(instrumentPos);
         // Tip sits at the telescope's height, matching the Remote sensing
@@ -754,7 +760,7 @@ async function onDataLoaded(data, processedData) {
                 api.updateFrame(steps-1);
             });
         } else {
-            setStatus(processedData[api.currentFrame].time.toLocaleString());
+            setStatus(processedData[api.currentFrame].time.toLocaleString() + " UTC");
             scene.remove(plumeMesh);
             if (params.plumeVisible) {
                 plumeMesh = makePlumeMesh(
@@ -777,6 +783,56 @@ async function onDataLoaded(data, processedData) {
     gui.add(params, 'pointsVisible').name('Show concentration points').onChange(()=>api.updateFrame());
     gui.add(params, 'planeVisible').name('Show concentration field').onChange(()=>api.updateFrame());
     gui.add(params, 'backgroundVisible').name('Show background sky').onChange(e=>setBackgroundVisibility(e));
+    const beamColorController = gui.addColor(params, 'beamColor').name('Beam color').onChange(hex => {
+        localStorage.setItem(CONE_COLOR_KEY, hex);
+        beamWireMats.forEach(m => m.color.set(hex));
+        applyBeamIconColor(hex);
+        render();
+    });
+    // lil-gui's own swatch is just a flat color rectangle -- swap in the
+    // same scan-cone fan icon used for this control on the Remote sensing
+    // and map pages (measurement/main.js's createConeColorPicker /
+    // map/src/placeview.js), so "Beam color" looks the same everywhere.
+    const beamDisplayEl = beamColorController.domElement.querySelector('.display');
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    const beamIcon = document.createElementNS(SVG_NS, 'svg');
+    beamIcon.setAttribute('viewBox', '0 0 32 24');
+    beamIcon.setAttribute('width', '22');
+    beamIcon.setAttribute('height', '16');
+    // Absolutely positioned and centered over the (fixed-height) .display
+    // box, rather than appended as a normal block sibling after the native
+    // color <input> -- as a block element it dropped to a new line below
+    // the input and overflowed the box's fixed height, spilling down into
+    // whatever content followed in the DOM (the Plume folder heading).
+    beamIcon.style.cssText = 'position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); pointer-events:none;';
+    const beamFan = document.createElementNS(SVG_NS, 'path');
+    beamFan.setAttribute('d', 'M2,22 A14,14 0 0 1 30,22 Z');
+    beamFan.setAttribute('fill-opacity', '0.55');
+    beamIcon.appendChild(beamFan);
+    const beamLines = [135, 90, 45].map(deg => {
+        const rad = deg * Math.PI / 180;
+        const line = document.createElementNS(SVG_NS, 'line');
+        line.setAttribute('x1', '16');
+        line.setAttribute('y1', '22');
+        line.setAttribute('x2', (16 + 14 * Math.cos(rad)).toFixed(2));
+        line.setAttribute('y2', (22 - 14 * Math.sin(rad)).toFixed(2));
+        line.setAttribute('stroke-width', '1');
+        beamIcon.appendChild(line);
+        return line;
+    });
+    const beamDot = document.createElementNS(SVG_NS, 'circle');
+    beamDot.setAttribute('cx', '16');
+    beamDot.setAttribute('cy', '22');
+    beamDot.setAttribute('r', '3');
+    beamDot.setAttribute('fill', '#e0a500');
+    beamIcon.appendChild(beamDot);
+    beamDisplayEl.appendChild(beamIcon);
+    function applyBeamIconColor(hex) {
+        beamFan.setAttribute('fill', hex);
+        beamFan.setAttribute('stroke', hex);
+        beamLines.forEach(l => l.setAttribute('stroke', hex));
+    }
+    applyBeamIconColor(params.beamColor);
     const plumeFolder = gui.addFolder('Plume');
     plumeFolder.add(params, 'plumeVisible').name('Show plume').onChange(()=>api.updateFrame());
     plumeFolder.add(params, 'assumedVelocity').name('Plume speed (m/s)').onChange(()=>api.updateFrame());
