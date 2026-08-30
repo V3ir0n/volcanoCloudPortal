@@ -32,8 +32,11 @@ let params	= {
     planeVisible: true,
     // The 18.7MB HDR sky background wasn't copied into this self-contained
     // fork -- setBackgroundVisibility now toggles a plain color background
-    // instead (see below), on by default.
-    backgroundVisible: true,
+    // instead (see below). Overridden to true in init() when a pre-set
+    // example is loading (?example=/?volcano=); left false here so the
+    // bare "Upload own data" landing page keeps its paper background
+    // instead of a full-page blue wash with no scene to show yet.
+    backgroundVisible: false,
     beamColor: getStoredConeColor(),
     imageScaleFactor: 1,
     exportImage: ()=>{window.api.exportImage()}
@@ -80,10 +83,24 @@ function init() {
     pointLight.position.set(1, 1, 1);
     scene.add(pointLight);
 
+    // ?example=<name> (or ?volcano=<name>, used by viewer.html's links from
+    // the map) auto-loads the matching example button's dataset -- read
+    // here (rather than where it's used further down) so the background
+    // sky default below can also see it.
+    const searchParams = new URLSearchParams(window.location.search);
+    const exampleParam = searchParams.get("example") || searchParams.get("volcano");
+
     // Setup background -- sets the renderer's clear color (see
     // setBackgroundVisibility below); previously the color was set here
     // directly and unconditionally, so the "Show background sky" toggle
-    // never actually had any visible effect.
+    // never actually had any visible effect. Only defaulted on when a
+    // pre-set example is loading -- on the bare "Upload own data" landing
+    // page there's no volcano/plume scene yet (and no GUI toggle either,
+    // since that's only created once data loads), so it just washed the
+    // whole page blue with no way to turn it off.
+    if (exampleParam) {
+        params.backgroundVisible = true;
+    }
     setBackgroundVisibility(params.backgroundVisible);
 
     // And camera controls -- OrbitControls (not MapControls) so left-drag
@@ -242,8 +259,6 @@ function init() {
         turrialba: { lat: 10.0167, lon: -83.7655, altitude: 3340, institution: "Observatorio Vulcanológico y Sismológico de Costa Rica" },
         sabancaya: { lat: -15.788, lon: -71.8559, altitude: 5967, institution: "Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú" },
     };
-    const searchParams = new URLSearchParams(window.location.search);
-    const exampleParam = searchParams.get("example") || searchParams.get("volcano");
     if (exampleParam && exampleButtonIds[exampleParam]) {
         document.getElementById("volcanoTitle").textContent = exampleDisplayNames[exampleParam] || "";
 

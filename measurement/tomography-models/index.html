@@ -32,6 +32,12 @@
 				--pico-background-color: #fbf8f0 !important;
 				--pico-card-background-color: #fbf8f0 !important;
 				--pico-card-sectioning-background-color: #fbf8f0 !important;
+				/* The data-tooltip popup ("Browse and select two files to
+				   load") otherwise uses Pico's near-black --pico-contrast-*
+				   colors -- matches the page's other dark info boxes
+				   (#keyboardHint, #volcanoInfo). */
+				--pico-tooltip-background-color: #2b2b2b !important;
+				--pico-tooltip-color: #fbf8f0 !important;
 			}
 			/* Matches the rest of the site (theme.css's --font-body etc.),
 			   which this self-contained page doesn't link -- overrides Pico's
@@ -121,6 +127,27 @@
 			}
 			.pico input[type="number"] {
 				-moz-appearance: textfield;
+			}
+			/* The file input's "Browse"/"Choose File" button is otherwise
+			   browser-default gray, standing out against the gold/paper
+			   theme everywhere else on the page. !important because Pico's
+			   own stylesheet ships two competing rules for this same
+			   pseudo-element (one gold "primary", one gray "secondary")
+			   at equal specificity -- the gray one is later in Pico's
+			   source, so it normally wins over even our own plain rule. */
+			input[type="file"]::file-selector-button {
+				font-family: 'Montserrat', sans-serif !important;
+				font-weight: 600 !important;
+				color: #fbf8f0 !important;
+				background: #e0a500 !important;
+				border: 0 !important;
+				border-radius: 999px !important;
+				padding: 6px 14px !important;
+				cursor: pointer;
+				transition: background 0.2s ease;
+			}
+			input[type="file"]::file-selector-button:hover {
+				background: #f0bc33 !important;
 			}
 			#topLeftBar {
 				position: fixed;
@@ -310,7 +337,7 @@
 		<script src="libs/mathjs.js"></script>
 		<!-- ?v= bumped by hand on every edit to main.js so the browser always
 		     fetches the new file instead of reusing a cached copy. -->
-		<script type="module" src="main.js?v=16"></script>
+		<script type="module" src="main.js?v=17"></script>
 
 	</body>
 </html>
