@@ -95,6 +95,31 @@
 				border: 1px solid var(--widget-color);
 				background: var(--background-color) !important;
 			}
+			/* The "Tomographic inversion" folder's sliders (main.js) --
+			   lil-gui's default slider knob is just a thin vertical line
+			   (a border on the fill bar's right edge, not a real element);
+			   replaced with a round dot instead. Scoped to .inversion-folder
+			   so the other folders' sliders (e.g. Plume speed) keep the
+			   default line. */
+			.inversion-folder .controller.number {
+				--slider-knob-width: 14px;
+			}
+			.inversion-folder .controller.number .fill {
+				border-right: none;
+				position: relative;
+			}
+			.inversion-folder .controller.number .fill::after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				right: -6px;
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				background: var(--number-color);
+				transform: translateY(-50%);
+				pointer-events: none;
+			}
 			#statusContainer {
 				position: absolute;
 				display: none;
@@ -229,16 +254,19 @@
 				line-height: 1.5;
 				pointer-events: none;
 			}
-			/* No longer reachable from anywhere in the site (see the comment
-			   above the markup below) -- this page opens straight to the
-			   upload form instead. */
-			.examples-picker,
-			.upload-page-extra {
+			/* #uploadOwnDataBtn/#uploadOwnDataHint are viewer.html's own
+			   "Upload own data" button/hint, wired up unconditionally by
+			   the shared main.js -- redundant on this page (it IS the
+			   upload page), so kept hidden here. The 5 example buttons
+			   were briefly shown too, but stayed on screen after choosing
+			   files instead of disappearing along with the rest of the
+			   upload form -- hidden again here. */
+			.upload-page-extra,
+			.examples-picker {
 				display: none !important;
 			}
-			/* With the title/parameters hidden above it (see
-			   .upload-page-extra), the upload field sat right under
-			   #topLeftBar's fixed Back button -- push it down clear of that. */
+			/* The upload field sat right under #topLeftBar's fixed Back
+			   button -- push it down clear of that. */
 			#fileUploadContainer {
 				margin-top: 90px;
 			}
@@ -260,13 +288,7 @@
 			<article
 			data-tooltip="Browse and select two files to load"
 			data-placement="bottom">
-				<!-- This page is now only reached via the map's "Upload own data"
-				     link (the 5 example volcanoes have their own dedicated
-				     viewer.html), which wants nothing but the upload field and
-				     its instruction line visible -- everything below marked
-				     .upload-page-extra is kept in the DOM (main.js wires up
-				     each element's id unconditionally) but hidden via CSS. -->
-				<fieldset class="grid upload-page-extra">
+				<fieldset class="grid examples-picker">
 					<h1>Tomography</h1>
 				</fieldset>
 				<h2 class="examples-picker">Load examples</h2>
@@ -279,6 +301,10 @@
 					<button id="sabancayaExample" class="secondary">Sabancaya</button>
 				</fieldset>
 
+				<!-- Same three fields the "Tomographic inversion" GUI folder
+				     (main.js) reads/writes via getElementById -- kept in the
+				     DOM but hidden, since that folder now covers adjusting
+				     them (both before and after upload) instead. -->
 				<h2 class="upload-page-extra">Choose the parameters for the tomographic inversion.</h2>
 				<fieldset class="grid upload-page-extra">
 					<label>
@@ -307,7 +333,7 @@
 				The visualisation needs two Evaluation log text files.
 
 			</article>
-			<article class="upload-page-extra">When the visualisation has loaded, use keyboard arrows to step between timeframes.</article>
+			<article>When the visualisation has loaded, use keyboard arrows to step between timeframes.</article>
 			<progress/ id="progress" style="display: none;">
 		</div>
 
@@ -337,7 +363,7 @@
 		<script src="libs/mathjs.js"></script>
 		<!-- ?v= bumped by hand on every edit to main.js so the browser always
 		     fetches the new file instead of reusing a cached copy. -->
-		<script type="module" src="main.js?v=17"></script>
+		<script type="module" src="main.js?v=20"></script>
 
 	</body>
 </html>

@@ -87,6 +87,31 @@
 				border: 1px solid var(--widget-color);
 				background: var(--background-color) !important;
 			}
+			/* The "Tomographic inversion" folder's sliders (main.js) --
+			   lil-gui's default slider knob is just a thin vertical line
+			   (a border on the fill bar's right edge, not a real element);
+			   replaced with a round dot instead. Scoped to .inversion-folder
+			   so the other folders' sliders (e.g. Plume speed) keep the
+			   default line. */
+			.inversion-folder .controller.number {
+				--slider-knob-width: 14px;
+			}
+			.inversion-folder .controller.number .fill {
+				border-right: none;
+				position: relative;
+			}
+			.inversion-folder .controller.number .fill::after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				right: -6px;
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				background: var(--number-color);
+				transform: translateY(-50%);
+				pointer-events: none;
+			}
 			#statusContainer {
 				position: absolute;
 				display: none;
@@ -279,7 +304,7 @@
 		<script src="libs/mathjs.js"></script>
 		<!-- ?v= bumped by hand on every edit to main.js so the browser always
 		     fetches the new file instead of reusing a cached copy. -->
-		<script type="module" src="main.js?v=17"></script>
+		<script type="module" src="main.js?v=20"></script>
 
 	</body>
 </html>

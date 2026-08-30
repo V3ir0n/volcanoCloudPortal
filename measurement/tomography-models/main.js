@@ -32,12 +32,20 @@ let params	= {
     planeVisible: true,
     // The 18.7MB HDR sky background wasn't copied into this self-contained
     // fork -- setBackgroundVisibility now toggles a plain color background
-    // instead (see below). Overridden to true in init() when a pre-set
-    // example is loading (?example=/?volcano=); left false here so the
-    // bare "Upload own data" landing page keeps its paper background
-    // instead of a full-page blue wash with no scene to show yet.
+    // instead (see below). Overridden to true in onDataLoaded() once
+    // there's an actual scene to look at; left false here so the bare
+    // "Upload own data" landing page keeps its paper background instead
+    // of a full-page blue wash with no scene to show yet.
     backgroundVisible: false,
     beamColor: getStoredConeColor(),
+    // Tomographic-inversion thresholds -- mirror the same-named number
+    // inputs above the upload field (index.html); onDataLoaded() reads
+    // the DOM inputs' current values into these once the Controls panel
+    // is built, so adjusting a slider there starts from whatever was set
+    // before upload instead of silently resetting to these defaults.
+    completenessLimit: 0.9,
+    baricenterLimit: 60,
+    timeDifferenceMin: 15,
     imageScaleFactor: 1,
     exportImage: ()=>{window.api.exportImage()}
 };
@@ -93,14 +101,13 @@ function init() {
     // Setup background -- sets the renderer's clear color (see
     // setBackgroundVisibility below); previously the color was set here
     // directly and unconditionally, so the "Show background sky" toggle
-    // never actually had any visible effect. Only defaulted on when a
-    // pre-set example is loading -- on the bare "Upload own data" landing
-    // page there's no volcano/plume scene yet (and no GUI toggle either,
-    // since that's only created once data loads), so it just washed the
-    // whole page blue with no way to turn it off.
-    if (exampleParam) {
-        params.backgroundVisible = true;
-    }
+    // never actually had any visible effect. Left off here -- the bare
+    // "Upload own data" landing page has no volcano/plume scene yet (and
+    // no GUI toggle either, since that's only created once data loads),
+    // so turning it on this early just washed the whole page blue with no
+    // way to turn it off. onDataLoaded() turns it on once there's an
+    // actual scene to look at, for both the pre-set examples and manually
+    // uploaded data alike.
     setBackgroundVisibility(params.backgroundVisible);
 
     // And camera controls -- OrbitControls (not MapControls) so left-drag
@@ -489,6 +496,12 @@ async function onDataLoaded(data, processedData) {
         return;
     }
 
+    // There's an actual volcano scene to look at now -- matches the
+    // pre-set examples' default (see init()), but applies here too so
+    // manually uploaded data also gets the sky background on by default.
+    params.backgroundVisible = true;
+    setBackgroundVisibility(true);
+
     let tgeo = new ThreeGeo();
 
     const [nameVol, latVol, lonVol, altVol] = locateVolcano(data);
@@ -644,9 +657,23 @@ async function onDataLoaded(data, processedData) {
     }
 
 
-    // If we don't have any preloaded processed data, calculate it
-    // using tomoInverse
-    if (processedData.length === 0) {
+    // Find line between instruments
+    const line = instPos[0].clone().sub(instPos[1]);
+    // Find direction away from volcano.
+    // The volcano is at the origin,
+    // so length gets the distance to it
+    let dir = line.clone().cross(new THREE.Object3D().up);
+    if ((instPos[0].lengthSq() > instPos[0].clone().add(dir).lengthSq())) {
+        dir.negate();
+    }
+
+    // Re-runs the tomographic inversion from the raw EvaluationLog data
+    // using the Controls panel's current Min. plume completeness / Max
+    // plume centre / Max time difference values -- shared by the initial
+    // load below and recomputeFrames() (added once the GUI exists), so
+    // adjusting those sliders can redo this with new thresholds instead
+    // of only ever using whatever was set (or defaulted) before upload.
+    async function computeProcessedData() {
         const deg2utm = (lat, long) => {
             const [x,y] = proj([lat, long]); // TODO this seems wrong. The deg2utm function is much bigger than just dividing by unitsPerMeter!
             return [x/unitsPerMeter, y/unitsPerMeter];
@@ -661,7 +688,91 @@ async function onDataLoaded(data, processedData) {
                 -d.lonPutm * unitsPerMeter
             ));
         }
+        // Sort frames chronologically
+        processedData.sort((a,b)=>a.time - b.time);
+    }
 
+    // Draw concentration visualisations for each frame in processedData --
+    // shared by the initial load below and recomputeFrames().
+    function buildFrameVisuals() {
+        let t = 0;
+        for (const frame of processedData) {
+            const concentrations = frame.points.map(d=>d.Concentration);
+            const lut = new Lut("ylOrRd", 512);
+            lut.minV = Math.min(...concentrations);
+            lut.maxV = Math.max(...concentrations);
+
+            // If min and max is the same, lut returns undefined
+            if (lut.minV === lut.maxV) {
+                lut.minV--;
+                lut.maxV++;
+            }
+
+            // Particles: only show cells above 1 % of peak so ghost edge-cells are hidden
+            const threshold = lut.maxV * 0.01;
+            const mask = concentrations.map(c => c > threshold);
+            const visibleConc   = concentrations.filter((_, i) => mask[i]);
+            const visibleCoords = frame.coordinates.filter((_, i) => mask[i]);
+            const colors = visibleConc.map(c => lut.getColor(c));
+
+            if (t === 0) {
+                console.log(`Frame 0: ${concentrations.length} cells, conc [${Math.min(...concentrations).toExponential(2)}, ${Math.max(...concentrations).toExponential(2)}], threshold ${threshold.toExponential(2)}, visible cells: ${visibleCoords.length}`);
+                if (frame.coordinates[0]) console.log('Frame 0 first coord:', frame.coordinates[0]);
+            }
+
+            const pointMesh = drawParticles(visibleCoords, colors, [{
+                name: "concentration",
+                itemSize: 1,
+                flattenedItems: visibleConc
+            }], 0.005);
+
+            window.addEventListener("mousemove", event => {
+                const mouse = new THREE.Vector2();
+                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObject(pointMesh, false);
+                if (intersects.length) {
+                    const index = intersects[0].index;
+                    const concentration = pointMesh.geometry.attributes.concentration.array[index];
+                    console.log(concentration);
+                }
+            });
+
+            // Tomographic plane
+            const texture = new THREE.CanvasTexture(
+                generateTexture(concentrations, frame.size1, frame.size2)
+            );
+            texture.wrapS = THREE.ClampToEdgeWrapping;
+            texture.wrapT = THREE.ClampToEdgeWrapping;
+            texture.colorSpace = THREE.SRGBColorSpace;
+
+            const material = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: texture,
+                transparent: true
+            });
+
+            // Plane needs ALL coordinates in grid order — do not use the filtered set
+            const planeGeometry = new TomographicPlaneGeometry(frame.coordinates, dir, frame.size1-1, frame.size2-1);
+            const planeMesh = new THREE.Mesh(planeGeometry, material);
+
+            const frameGroup = new THREE.Group();
+            frameGroup.add(pointMesh);
+            frameGroup.add(planeMesh);
+            frames.push(frameGroup);
+            scene.add(frameGroup);
+            t++;
+        }
+    }
+
+    // If we already have preloaded processed data (the 5 pre-set
+    // examples' CSVs), use it for the initial view -- otherwise (a manual
+    // upload with no CSV) compute it live via tomoInverse. Either way,
+    // recomputeFrames() (added once the GUI exists) can later redo this
+    // from the raw data with new threshold values, for any volcano.
+    if (processedData.length === 0) {
+        await computeProcessedData();
     } else {
         for (const frame of processedData) {
             frame.coordinates = frame.points.map(d=>toSceneCoords(
@@ -670,91 +781,26 @@ async function onDataLoaded(data, processedData) {
                 ), d.altP, proj
             ));
         }
+        processedData.sort((a,b)=>a.time - b.time);
+    }
+    buildFrameVisuals();
+
+    // Clears the current plume/frame visuals and redoes the tomographic
+    // inversion from the raw EvaluationLog data using the Controls
+    // panel's current parameter values -- called from the "Tomographic
+    // inversion" GUI folder below. Works for any volcano, not just ones
+    // uploaded without a CSV: touching a slider switches that session
+    // over to a fresh live computation even for the pre-set examples.
+    async function recomputeFrames() {
+        frames.forEach(f => scene.remove(f));
+        frames = [];
+        scene.remove(plumeMesh);
+        await computeProcessedData();
+        buildFrameVisuals();
+        api.currentFrame = 0;
+        api.updateFrame();
     }
 
-    // Sort frames chronologically
-    processedData.sort((a,b)=>a.time - b.time);
-
-    // Find line between instruments
-    const line = instPos[0].clone().sub(instPos[1]);
-    // Find direction away from volcano.
-    // The volcano is at the origin,
-    // so length gets the distance to it
-    let dir = line.clone().cross(new THREE.Object3D().up);
-    if ((instPos[0].lengthSq() > instPos[0].clone().add(dir).lengthSq())) {
-        dir.negate();
-    }
-
-    // Draw concentration visualisations for each frame
-    let t = 0;
-    for (const frame of processedData) {
-        const concentrations = frame.points.map(d=>d.Concentration);
-        const lut = new Lut("ylOrRd", 512);
-        lut.minV = Math.min(...concentrations);
-        lut.maxV = Math.max(...concentrations);
-
-        // If min and max is the same, lut returns undefined
-        if (lut.minV === lut.maxV) {
-            lut.minV--;
-            lut.maxV++;
-        }
-
-        // Particles: only show cells above 1 % of peak so ghost edge-cells are hidden
-        const threshold = lut.maxV * 0.01;
-        const mask = concentrations.map(c => c > threshold);
-        const visibleConc   = concentrations.filter((_, i) => mask[i]);
-        const visibleCoords = frame.coordinates.filter((_, i) => mask[i]);
-        const colors = visibleConc.map(c => lut.getColor(c));
-
-        if (t === 0) {
-            console.log(`Frame 0: ${concentrations.length} cells, conc [${Math.min(...concentrations).toExponential(2)}, ${Math.max(...concentrations).toExponential(2)}], threshold ${threshold.toExponential(2)}, visible cells: ${visibleCoords.length}`);
-            if (frame.coordinates[0]) console.log('Frame 0 first coord:', frame.coordinates[0]);
-        }
-
-        const pointMesh = drawParticles(visibleCoords, colors, [{
-            name: "concentration",
-            itemSize: 1,
-            flattenedItems: visibleConc
-        }], 0.005);
-
-        window.addEventListener("mousemove", event => {
-            const mouse = new THREE.Vector2();
-            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-            mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObject(pointMesh, false);
-            if (intersects.length) {
-                const index = intersects[0].index;
-                const concentration = pointMesh.geometry.attributes.concentration.array[index];
-                console.log(concentration);
-            }
-        });
-
-        // Tomographic plane
-        const texture = new THREE.CanvasTexture(
-            generateTexture(concentrations, frame.size1, frame.size2)
-        );
-        texture.wrapS = THREE.ClampToEdgeWrapping;
-        texture.wrapT = THREE.ClampToEdgeWrapping;
-        texture.colorSpace = THREE.SRGBColorSpace;
-
-        const material = new THREE.MeshBasicMaterial({
-            side: THREE.DoubleSide,
-            map: texture,
-            transparent: true
-        });
-
-        // Plane needs ALL coordinates in grid order — do not use the filtered set
-        const planeGeometry = new TomographicPlaneGeometry(frame.coordinates, dir, frame.size1-1, frame.size2-1);
-        const planeMesh = new THREE.Mesh(planeGeometry, material);
-
-        const frameGroup = new THREE.Group();
-        frameGroup.add(pointMesh);
-        frameGroup.add(planeMesh);
-        frames.push(frameGroup);
-        scene.add(frameGroup);
-        t++;
-    }
     api.currentFrame = 0;
 
     // Velocity in units per millisecond
@@ -851,6 +897,33 @@ async function onDataLoaded(data, processedData) {
     const plumeFolder = gui.addFolder('Plume');
     plumeFolder.add(params, 'plumeVisible').name('Show plume').onChange(()=>api.updateFrame());
     plumeFolder.add(params, 'assumedVelocity').name('Plume speed (m/s)').onChange(()=>api.updateFrame());
+
+    // Start from whatever the number inputs above the upload field
+    // (index.html) currently hold -- lets a value set before upload carry
+    // over here instead of silently resetting to params' own defaults.
+    params.completenessLimit = document.getElementById('completenessLimit')?.valueAsNumber ?? params.completenessLimit;
+    params.baricenterLimit = document.getElementById('baricenterLimit')?.valueAsNumber ?? params.baricenterLimit;
+    params.timeDifferenceMin = document.getElementById('timeDifferenceMin')?.valueAsNumber ?? params.timeDifferenceMin;
+    const inversionFolder = gui.addFolder('Tomographic inversion');
+    // Scopes the circular-slider-knob CSS below to just this folder's
+    // sliders, leaving the default thin-line knob on "Plume speed (m/s)".
+    inversionFolder.domElement.classList.add('inversion-folder');
+    // .onFinishChange (fires once, on release/blur) rather than .onChange
+    // (fires continuously while dragging) -- recomputeFrames() reruns the
+    // whole inversion and rebuilds the scene, so triggering it on every
+    // intermediate drag value would fire many overlapping recomputations.
+    inversionFolder.add(params, 'completenessLimit', 0.5, 1, 0.05).name('Min. plume completeness').onFinishChange(v => {
+        document.getElementById('completenessLimit').value = v;
+        recomputeFrames();
+    });
+    inversionFolder.add(params, 'baricenterLimit', 50, 70, 1).name('Max plume centre (deg)').onFinishChange(v => {
+        document.getElementById('baricenterLimit').value = v;
+        recomputeFrames();
+    });
+    inversionFolder.add(params, 'timeDifferenceMin', 5, 30, 1).name('Max time difference (min)').onFinishChange(v => {
+        document.getElementById('timeDifferenceMin').value = v;
+        recomputeFrames();
+    });
 
     const exportFolder = gui.addFolder("Export");
     exportFolder.add(params, "exportImage").name("Export image");
