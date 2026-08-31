@@ -465,6 +465,11 @@ async function parseScans(text) {
             if (d !== "") {
                 const linedata = {};
                 d.split("\t").forEach((v, i) => {
+                    // Some stations' files have more columns than this
+                    // fixed header list covers (e.g. Cotopaxi's) --
+                    // ignored rather than crashing, since nothing reads
+                    // a field beyond this known set anyway.
+                    if (header[i] === undefined) return;
                     linedata[header[i].trim()] = isNaN(v) ? v : Number(v);
                 });
                 spectralData.push(linedata);
