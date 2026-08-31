@@ -578,7 +578,7 @@ async function onDataLoaded(data, processedData) {
     // regenerated (through this page's own Mapbox-token download flow,
     // below) to match meshRadiusKm, so it's safe to use that instead of
     // the 6km default for them specifically.
-    const RADIUS_MATCHES_GEODATA = new Set([]);
+    const RADIUS_MATCHES_GEODATA = new Set(['sinabung']);
     const radius = RADIUS_MATCHES_GEODATA.has(nameVol) ? (geoInfo?.meshRadiusKm ?? 6.0) : 6.0;
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
     const filename = `${nameVol}.glb`;
