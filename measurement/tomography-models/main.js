@@ -598,6 +598,12 @@ async function onDataLoaded(data, processedData) {
         tgeo = new ThreeGeo({
             tokenMapbox: tokenMapbox,
         });
+        // Mapbox terrain tiles don't align to a perfect circle, so a
+        // download of exactly meshRadiusKm can still come up short of an
+        // outermost station in some directions (confirmed for Cotopaxi,
+        // still floating outside a 21km terrain) -- padded a bit further
+        // out to comfortably clear that.
+        const RADIUS_MARGIN_KM = 5;
         tgeo.getTerrainRgb(
             summitLatLng.toArray(),  // [lat, lng]
             // The freshly-downloaded terrain's own coverage doesn't need
@@ -606,7 +612,7 @@ async function onDataLoaded(data, processedData) {
             // RADIUS_MATCHES_GEODATA above) -- the point of downloading
             // here is to produce a correctly-sized file to save, not to
             // frame this one-off session's live view perfectly.
-            geoInfo?.meshRadiusKm ?? radius,
+            (geoInfo?.meshRadiusKm ?? radius) + RADIUS_MARGIN_KM,
             13                 // zoom resolution
         ).then(terrain => {
             terrain.rotation.x = - Math.PI/2;
