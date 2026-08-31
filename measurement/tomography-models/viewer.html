@@ -55,6 +55,34 @@
 				--text-color: #2b2b2b;
 				--number-color: #e0a500;
 				--string-color: #e0a500;
+				/* lil-gui's own defaults (11px text, 20px rows) read as
+				   quite small/hard to read, particularly the number-color
+				   values -- sized up, along with the row height/padding to
+				   comfortably fit the larger text. */
+				--font-size: 14px;
+				--input-font-size: 14px;
+				--widget-height: 26px;
+				--padding: 6px;
+				--spacing: 6px;
+				/* lil-gui's own default panel width (245px) left the
+				   slider/number-input boxes cramped with no breathing room
+				   on the right. */
+				--width: 320px;
+			}
+			/* The gold accent (--number-color/--string-color) reads poorly
+			   against --widget-color's default light tan -- both are
+			   light, warm tones close together in lightness, so number
+			   values and the slider knob (both gold) were hard to make
+			   out against it. Darkened just for number controllers (the
+			   slider track and the input box background) rather than
+			   changing --widget-color everywhere, which would also affect
+			   checkboxes/dropdowns/buttons that read fine as they are. */
+			.lil-gui .controller.number {
+				/* Same gray as the rest of the site's secondary text
+				   (theme.css's --color-ink-soft), so it reads as part of
+				   the same paper/ink/gold palette instead of an unrelated
+				   dark tone. */
+				--widget-color: #555555;
 			}
 			/* The root panel's "Controls" heading (and each folder's own
 			   heading, e.g. "Plume"/"Export" -- lil-gui uses the same class
@@ -304,7 +332,7 @@
 		<script src="libs/mathjs.js"></script>
 		<!-- ?v= bumped by hand on every edit to main.js so the browser always
 		     fetches the new file instead of reusing a cached copy. -->
-		<script type="module" src="main.js?v=20"></script>
+		<script type="module" src="main.js?v=29"></script>
 
 	</body>
 </html>

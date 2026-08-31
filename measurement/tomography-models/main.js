@@ -24,6 +24,39 @@ function getStoredConeColor() {
     return localStorage.getItem(CONE_COLOR_KEY) || DEFAULT_CONE_COLOR;
 }
 
+// Display name/institution/lat/lon/altitude for the volcano name/info box
+// (see onDataLoaded) come from the site's shared volcano database
+// (map/resources/volcanoes.geojson -- also used by the map page) instead
+// of a separate hardcoded list here, so it stays in sync with what's
+// shown elsewhere on the site and covers every volcano the map knows
+// about (55, vs. only the 5 originally pre-set examples), not just ones
+// specifically added to this file.
+let volcanoGeoDataPromise = null;
+function loadVolcanoGeoData() {
+    if (!volcanoGeoDataPromise) {
+        volcanoGeoDataPromise = fetch('../../map/resources/volcanoes.geojson')
+            .then(res => res.json())
+            .then(geojson => {
+                const byName = {};
+                for (const feature of geojson.features) {
+                    byName[feature.properties.name] = feature.properties;
+                }
+                return byName;
+            })
+            .catch(err => {
+                console.warn('Could not load volcano info from map/resources/volcanoes.geojson', err);
+                return {};
+            });
+    }
+    return volcanoGeoDataPromise;
+}
+// Fallback for a volcano not in that database (src/volcanoList.js has a
+// few more than the map does) -- title-cased from the internal name
+// rather than the box not showing a name at all.
+function displayVolcanoName(name) {
+    return name.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
 // GUI parameters
 let params	= {
     assumedVelocity: 10, // Velocity in m/s
@@ -247,39 +280,10 @@ function init() {
         turrialba: "turrialbaExample",
         sabancaya: "sabancayaExample",
     };
-    const exampleDisplayNames = {
-        cleveland: "Cleveland",
-        nevado_del_ruiz: "Nevado del Ruiz",
-        merapi: "Merapi",
-        turrialba: "Turrialba",
-        sabancaya: "Sabancaya",
-    };
-    // Lat/lon match map/resources/volcanoes.geojson (the site's shared
-    // volcano database) so this stays consistent with what's shown
-    // elsewhere; altitude/institution aren't in that file, so they're kept
-    // here instead of adding a runtime dependency on it from this
-    // self-contained folder.
-    const exampleVolcanoInfo = {
-        cleveland: { lat: 52.825, lon: -169.944, altitude: 1730, institution: "United States Geological Survey" },
-        nevado_del_ruiz: { lat: 4.892, lon: -75.3188, altitude: 5279, institution: "Servicio Geológico Colombiano" },
-        merapi: { lat: -7.5261, lon: 110.4107, altitude: 2910, institution: "Center for Volcanology and Geological Hazard Mitigation" },
-        turrialba: { lat: 10.0167, lon: -83.7655, altitude: 3340, institution: "Observatorio Vulcanológico y Sismológico de Costa Rica" },
-        sabancaya: { lat: -15.788, lon: -71.8559, altitude: 5967, institution: "Instituto Geológico, Minero y Metalúrgico / Instituto Geofísico del Perú" },
-    };
     if (exampleParam && exampleButtonIds[exampleParam]) {
-        document.getElementById("volcanoTitle").textContent = exampleDisplayNames[exampleParam] || "";
-
-        const info = exampleVolcanoInfo[exampleParam];
-        if (info) {
-            const infoEl = document.createElement("div");
-            infoEl.id = "volcanoInfo";
-            infoEl.innerHTML = `
-                <div>Lat: ${info.lat.toFixed(4)}°, Lon: ${info.lon.toFixed(4)}°</div>
-                <div>Altitude: ${info.altitude} m</div>
-                <div>Institution: ${info.institution}</div>
-            `;
-            document.body.appendChild(infoEl);
-        }
+        // #volcanoTitle/#volcanoInfo are set from the actually-loaded data
+        // in onDataLoaded (covers every volcano, not just these 5) --
+        // nothing to do here for those.
 
         // Hide the example-picker/upload panel immediately, rather than
         // waiting for onDataLoaded() to hide it once the fetch+parse of the
@@ -508,12 +512,76 @@ async function onDataLoaded(data, processedData) {
     const summitLatLng = new THREE.Vector2(latVol, lonVol);
     window.api.volcanoName = nameVol;
 
-    const radius = 6.0;
+    // Name/lat/lon/altitude/institution box (upper left) -- works for any
+    // volcano in the map's own database, not just the 5 originally
+    // pre-set examples; falls back to locateVolcano()'s own lat/lon/alt
+    // (from src/volcanoList.js) and a title-cased name with no
+    // institution line for the few volcanoes not in that database.
+    const geoData = await loadVolcanoGeoData();
+    const geoInfo = geoData[nameVol];
+    document.getElementById("volcanoTitle").textContent = geoInfo?.display_name || displayVolcanoName(nameVol);
+    let volcanoInfoEl = document.getElementById("volcanoInfo");
+    if (!volcanoInfoEl) {
+        volcanoInfoEl = document.createElement("div");
+        volcanoInfoEl.id = "volcanoInfo";
+        document.body.appendChild(volcanoInfoEl);
+    }
+    const infoLat = geoInfo?.lat_deg ?? latVol;
+    const infoLon = geoInfo?.lon_deg ?? lonVol;
+    const infoAlt = geoInfo?.alt_masl ?? altVol;
+    volcanoInfoEl.innerHTML = `
+        <div>Lat: ${infoLat.toFixed(4)}°, Lon: ${infoLon.toFixed(4)}°</div>
+        <div>Altitude: ${infoAlt} m</div>
+        ${geoInfo?.observatory ? `<div>Institution: ${geoInfo.observatory}</div>` : ''}
+    `;
+
+    // Each instrument's group + scanning-cone line, plus the (x,z) and
+    // originally-computed y (from the EvaluationLog's own recorded
+    // altitude, which doesn't always agree with the terrain mesh's actual
+    // elevation there) -- populated in the instrument loop below, and
+    // used once the terrain model loads (see loader.load below) to snap
+    // each station onto the real ground surface instead of floating
+    // above (or sinking into) it.
+    const instrumentGroundSnaps = [];
+
+    // Snaps each instrument onto the given terrain model's actual surface
+    // height at its (x,z) -- the EvaluationLog's recorded altitude and
+    // the terrain mesh's real elevation there don't always agree, which
+    // otherwise left some stations visibly floating above the ground (or,
+    // less noticeably, sunk slightly into it). Called once the terrain
+    // loads, whichever of the two ways below that happens.
+    function snapInstrumentsToGround(model) {
+        const down = new THREE.Vector3(0, -1, 0);
+        for (const snap of instrumentGroundSnaps) {
+            raycaster.set(
+                new THREE.Vector3(snap.x, snap.originalY + 5000 * unitsPerMeter, snap.z),
+                down
+            );
+            const hits = raycaster.intersectObject(model, true);
+            if (hits.length) {
+                const delta = hits[0].point.y - snap.originalY;
+                snap.instrumentGroup.position.y += delta;
+                snap.line.position.y += delta;
+            }
+        }
+    }
+
+    // Matches the radius the map's own database (map/resources/
+    // volcanoes.geojson) uses for this volcano's terrain, when known --
+    // a flat 6km left some volcanoes' outermost stations (e.g. Sinabung,
+    // whose meshRadiusKm is 12) further from the summit than the
+    // downloaded/rendered terrain covers, appearing to float outside the
+    // terrain model entirely. Only takes effect for a volcano whose
+    // terrain has to be downloaded live via the Mapbox-token fallback
+    // below -- doesn't retroactively fix an already-cached .glb file
+    // that was generated with too small a radius.
+    const radius = geoInfo?.meshRadiusKm ?? 6.0;
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
     const filename = `${nameVol}.glb`;
     loader.load(filename, gltf => {
         const model = gltf.scene;
         scene.add(model);
+        snapInstrumentsToGround(model);
         render();
     }, undefined, ()=>{
         // On error (file not found)
@@ -528,6 +596,7 @@ async function onDataLoaded(data, processedData) {
         ).then(terrain => {
             terrain.rotation.x = - Math.PI/2;
             scene.add(terrain);
+            snapInstrumentsToGround(terrain);
             render();
 
             const gltfExporter = new GLTFExporter();
@@ -627,7 +696,24 @@ async function onDataLoaded(data, processedData) {
 
         instrumentGroup.scale.multiplyScalar(50 * unitsPerMeter);
         instrumentGroup.position.copy(instrumentPos);
-        instrumentGroup.lookAt(summitPos);
+        // Yaw (horizontal-facing) only, not a full lookAt(summitPos) --
+        // the summit sits well above each station, and lookAt() tips the
+        // object's whole local "up" axis toward/away from a target that
+        // isn't at the same height to keep it exactly centered in view,
+        // which visibly tilted the (otherwise perfectly vertical) mast by
+        // an amount that varied per station depending on how much higher
+        // the summit is relative to that particular one.
+        //
+        // Points local -Z at the summit, matching what lookAt(summitPos)
+        // did (see the comment above on volcano-facing vs. away-facing
+        // parts) -- note the operands are instrument-minus-summit, not
+        // summit-minus-instrument: local -Z after a rotation.y of θ
+        // points along world (-sinθ, -cosθ), so reaching a given target
+        // direction needs the *negated* delta, not the delta itself.
+        instrumentGroup.rotation.y = Math.atan2(
+            instrumentPos.x - summitPos.x,
+            instrumentPos.z - summitPos.z
+        );
         scene.add(instrumentGroup);
 
         // Add a cone to mark the instrument scanning volume
@@ -654,6 +740,11 @@ async function onDataLoaded(data, processedData) {
         line.position.y += mastH * 50 * unitsPerMeter;
         line.lookAt(new THREE.Vector3(0, line.position.y, 0));
         scene.add(line);
+
+        instrumentGroundSnaps.push({
+            instrumentGroup, line,
+            x: instrumentPos.x, z: instrumentPos.z, originalY: instrumentPos.y
+        });
     }
 
 
@@ -692,6 +783,28 @@ async function onDataLoaded(data, processedData) {
         processedData.sort((a,b)=>a.time - b.time);
     }
 
+    // Logs the concentration value under the cursor -- a single listener
+    // reading the current `frames` array each time it fires, rather than
+    // one added per frame inside buildFrameVisuals() below (which piled
+    // up more and more of these, never removed, on every recompute).
+    window.addEventListener("mousemove", event => {
+        const mouse = new THREE.Vector2();
+        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        for (const frameGroup of frames) {
+            const pointMesh = frameGroup.children[0];
+            if (!pointMesh.visible) continue;
+            const intersects = raycaster.intersectObject(pointMesh, false);
+            if (intersects.length) {
+                const index = intersects[0].index;
+                const concentration = pointMesh.geometry.attributes.concentration.array[index];
+                console.log(concentration);
+                break;
+            }
+        }
+    });
+
     // Draw concentration visualisations for each frame in processedData --
     // shared by the initial load below and recomputeFrames().
     function buildFrameVisuals() {
@@ -726,19 +839,6 @@ async function onDataLoaded(data, processedData) {
                 flattenedItems: visibleConc
             }], 0.005);
 
-            window.addEventListener("mousemove", event => {
-                const mouse = new THREE.Vector2();
-                mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-                mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObject(pointMesh, false);
-                if (intersects.length) {
-                    const index = intersects[0].index;
-                    const concentration = pointMesh.geometry.attributes.concentration.array[index];
-                    console.log(concentration);
-                }
-            });
-
             // Tomographic plane
             const texture = new THREE.CanvasTexture(
                 generateTexture(concentrations, frame.size1, frame.size2)
@@ -772,6 +872,11 @@ async function onDataLoaded(data, processedData) {
     // recomputeFrames() (added once the GUI exists) can later redo this
     // from the raw data with new threshold values, for any volcano.
     if (processedData.length === 0) {
+        // The MLEM reconstruction is genuinely CPU-heavy for volcanoes
+        // with a lot of scan data -- shown while it runs so the page
+        // doesn't just look stuck.
+        setStatus('Computing plume reconstruction…');
+        await nextPaint();
         await computeProcessedData();
     } else {
         for (const frame of processedData) {
@@ -792,12 +897,22 @@ async function onDataLoaded(data, processedData) {
     // uploaded without a CSV: touching a slider switches that session
     // over to a fresh live computation even for the pre-set examples.
     async function recomputeFrames() {
+        setStatus('Recomputing…');
+        await nextPaint();
         frames.forEach(f => scene.remove(f));
         frames = [];
         scene.remove(plumeMesh);
         await computeProcessedData();
         buildFrameVisuals();
         api.currentFrame = 0;
+        if (processedData.length === 0) {
+            // api.updateFrame() (which normally updates this text) bails
+            // out immediately when there's nothing to show, which would
+            // otherwise leave "Recomputing…" on screen indefinitely.
+            setStatus('No valid frames — try loosening the parameters above');
+            render();
+            return;
+        }
         api.updateFrame();
     }
 
@@ -990,6 +1105,15 @@ function setStatus(s) {
     const text = document.getElementById("statusText");
     container.style.display = "block";
     text.textContent = s;
+}
+
+// Resolves after the browser has actually painted -- tomoInverse() (the
+// MLEM reconstruction) is a long, fully synchronous computation with no
+// internal await, so a setStatus() call right before starting it would
+// otherwise sit queued in memory instead of appearing on screen until
+// after the freeze it's meant to explain.
+function nextPaint() {
+    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 }
 
 /**
