@@ -120,7 +120,10 @@ function init() {
     camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.01, 1e4);
 
     // Setup lights
-    const pointLight = new THREE.PointLight(0xff0000, 100);
+    // Was 0xff0000 (red) -- tinted every lit surface near it (station
+    // masts/telescopes, which use MeshStandardMaterial and so respond to
+    // lighting, unlike the box's MeshBasicMaterial) reddish/orange.
+    const pointLight = new THREE.PointLight(0xffffff, 100);
     pointLight.position.set(1, 1, 1);
     scene.add(pointLight);
 
