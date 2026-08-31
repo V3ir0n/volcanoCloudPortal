@@ -566,16 +566,18 @@ async function onDataLoaded(data, processedData) {
         }
     }
 
-    // Matches the radius the map's own database (map/resources/
-    // volcanoes.geojson) uses for this volcano's terrain, when known --
-    // a flat 6km left some volcanoes' outermost stations (e.g. Sinabung,
-    // whose meshRadiusKm is 12) further from the summit than the
-    // downloaded/rendered terrain covers, appearing to float outside the
-    // terrain model entirely. Only takes effect for a volcano whose
-    // terrain has to be downloaded live via the Mapbox-token fallback
-    // below -- doesn't retroactively fix an already-cached .glb file
-    // that was generated with too small a radius.
-    const radius = geoInfo?.meshRadiusKm ?? 6.0;
+    // Must match the radius the currently-cached .glb files were
+    // actually generated with (a flat 6km, from the original Tomography
+    // project) -- using the map's own per-volcano meshRadiusKm here
+    // instead (e.g. 13km for Nevado del Ruiz) desynced the projection's
+    // scale from what the loaded terrain actually covers, since that
+    // radius feeds into the scene's units-per-meter scale. The visible
+    // symptom was the initial camera view landing too close/zoomed in.
+    // Sinabung's stations reaching past this radius (see the reverted
+    // terrain-replacement commit) is still an open, unrelated issue --
+    // fixing it needs a same-vintage regenerated .glb, not a mismatched
+    // radius here.
+    const radius = 6.0;
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
     const filename = `${nameVol}.glb`;
     loader.load(filename, gltf => {
