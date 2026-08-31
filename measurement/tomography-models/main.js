@@ -573,11 +573,13 @@ async function onDataLoaded(data, processedData) {
     // scale from what the loaded terrain actually covers, since that
     // radius feeds into the scene's units-per-meter scale. The visible
     // symptom was the initial camera view landing too close/zoomed in.
-    // Sinabung's stations reaching past this radius (see the reverted
-    // terrain-replacement commit) is still an open, unrelated issue --
-    // fixing it needs a same-vintage regenerated .glb, not a mismatched
-    // radius here.
-    const radius = 6.0;
+    //
+    // Volcanoes in this set have had their cached .glb specifically
+    // regenerated (through this page's own Mapbox-token download flow,
+    // below) to match meshRadiusKm, so it's safe to use that instead of
+    // the 6km default for them specifically.
+    const RADIUS_MATCHES_GEODATA = new Set([]);
+    const radius = RADIUS_MATCHES_GEODATA.has(nameVol) ? (geoInfo?.meshRadiusKm ?? 6.0) : 6.0;
     const loader = new GLTFLoader().setPath("resources/terrainMeshes/");
     const filename = `${nameVol}.glb`;
     loader.load(filename, gltf => {
@@ -593,7 +595,13 @@ async function onDataLoaded(data, processedData) {
         });
         tgeo.getTerrainRgb(
             summitLatLng.toArray(),  // [lat, lng]
-            radius,            // radius of bounding circle (km)
+            // The freshly-downloaded terrain's own coverage doesn't need
+            // to match `radius` (the scene's current projection scale,
+            // pinned to 6km unless this volcano's already in
+            // RADIUS_MATCHES_GEODATA above) -- the point of downloading
+            // here is to produce a correctly-sized file to save, not to
+            // frame this one-off session's live view perfectly.
+            geoInfo?.meshRadiusKm ?? radius,
             13                 // zoom resolution
         ).then(terrain => {
             terrain.rotation.x = - Math.PI/2;
