@@ -752,11 +752,19 @@ async function onDataLoaded(data, processedData) {
 
     // Find line between instruments
     const line = instPos[0].clone().sub(instPos[1]);
-    // Find direction away from volcano.
-    // The volcano is at the origin,
-    // so length gets the distance to it
+    // Find direction away from volcano (the volcano is at the origin).
+    // dir is perpendicular to the instrument baseline, in one of two
+    // possible directions -- resolved via the sign of its dot product
+    // with the outward radial direction at the midpoint between the two
+    // instruments (positive = already pointing outward), rather than
+    // comparing distances-from-origin before/after adding the full dir
+    // vector: that comparison can flip the wrong way whenever dir's own
+    // magnitude is large enough to overshoot past the origin, which
+    // doesn't depend on dir's direction actually being wrong.
     let dir = line.clone().cross(new THREE.Object3D().up);
-    if ((instPos[0].lengthSq() > instPos[0].clone().add(dir).lengthSq())) {
+    const midpoint = instPos[0].clone().add(instPos[1]).multiplyScalar(0.5);
+    const outward = new THREE.Vector3(midpoint.x, 0, midpoint.z);
+    if (dir.dot(outward) < 0) {
         dir.negate();
     }
 

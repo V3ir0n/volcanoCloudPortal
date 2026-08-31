@@ -175,7 +175,7 @@ function openVolcano(feature, layer) {
     // &v= busts any stale cached copy of viewer.html itself from before a
     // page-content change (revisiting the same volcano would otherwise be
     // the exact same URL as a prior, now-outdated visit).
-    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}&v=42`;
+    if (name) window.location.href = `../measurement/tomography-models/viewer.html?volcano=${name}&v=43`;
     return;
   }
 
@@ -847,7 +847,7 @@ fetch("resources/volcanoes.geojson")
       uploadBtn.className = "volcano-upload-btn";
       // ?v= busts any stale cached copy of this page from before the
       // examples-picker section was hidden (see index.html).
-      uploadBtn.href = "../measurement/tomography-models/index.html?v=50";
+      uploadBtn.href = "../measurement/tomography-models/index.html?v=51";
       uploadBtn.innerHTML = `
         <span class="volcano-upload-btn-title">Upload own data</span>
         <span class="volcano-upload-btn-subtitle">Upload two NOVAC EvaluationLog files from the same volcano and date</span>
