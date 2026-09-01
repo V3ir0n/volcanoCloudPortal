@@ -282,17 +282,27 @@ class VolcanoView {
     const tokenMapbox = prompt(`on terrain for the volcano ${this.place.title} is not saved. Input a mapbox token to download. To avoid this in the future, save the downloaded file to ./resources/terrainMeshes/`);
     if (!tokenMapbox) return;
 
+    // Mapbox terrain tiles don't align to a perfect circle, so a download
+    // of exactly this.radiusKm (from meshRadiusKm) can still fall short
+    // of an outermost station in some directions -- confirmed for
+    // Cotopaxi (same issue found and fixed the same way in the
+    // Tomography section). Padded a bit further out to comfortably clear
+    // that; the exported filename still reflects the padded radius, so a
+    // future load picks it up correctly via the encodedName lookup.
+    const RADIUS_MARGIN_KM = 5;
+    const downloadRadiusKm = this.radiusKm + RADIUS_MARGIN_KM;
+
     const tgeo = new ThreeGeo({ tokenMapbox });
     tgeo.getTerrainRgb(
       this.latLng,
-      this.radiusKm,
+      downloadRadiusKm,
       13
     ).then(terrain => {
       terrain.rotation.x = -Math.PI / 2;
       this.scene.add(terrain);
       this.render();
 
-      const filename = `${this.place.name}_${this.radiusKm}km.glb`;
+      const filename = `${this.place.name}_${downloadRadiusKm}km.glb`;
       const gltfExporter = new GLTFExporter();
       gltfExporter.parse(
         terrain,

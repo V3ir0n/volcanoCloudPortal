@@ -1,6 +1,6 @@
 // ?v= busts a stale cached copy of placeview.js -- bump it whenever that
 // file changes, same reasoning as index.html's ?v= on this file's own tag.
-import { renderPlaceView, createConeColorPicker } from "./placeview.js?v=8";
+import { renderPlaceView, createConeColorPicker } from "./placeview.js?v=9";
 
 let selectedPlace = null;
 let selectedLayer = null; // the currently highlighted marker, see openVolcano()
