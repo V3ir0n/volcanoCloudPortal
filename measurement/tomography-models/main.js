@@ -756,12 +756,16 @@ async function onDataLoaded(data, processedData) {
         beamWireMats.push(beamMat);
         const line = new THREE.LineSegments(coneEdges, beamMat);
         line.scale.multiplyScalar(instrumentPos.distanceTo(summitPos));
-        line.position.copy(instrumentPos);
-        // Tip sits at the telescope's height, matching the Remote sensing
-        // 3D view, instead of the ground. mastH is in the instrument
-        // group's own (pre-scale) units, so convert it the same way that
-        // group's scale does (50 * unitsPerMeter) before adding it here.
-        line.position.y += mastH * 50 * unitsPerMeter;
+        // Tip sits at the telescope's far-from-the-volcano end (where its
+        // optical axis actually exits), not directly above the mast's
+        // base -- local (0, mastH, telescopeLen*0.8) is that end's
+        // position in the instrument group's own (pre-transform)
+        // coordinates (see the telescope's own .position.set above);
+        // localToWorld() applies the group's actual position/rotation/
+        // scale, already set above, to get its real position in the scene.
+        line.position.copy(
+            instrumentGroup.localToWorld(new THREE.Vector3(0, mastH, telescopeLen * 0.8))
+        );
         line.lookAt(new THREE.Vector3(0, line.position.y, 0));
         scene.add(line);
 
