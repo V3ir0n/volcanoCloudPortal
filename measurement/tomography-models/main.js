@@ -740,13 +740,32 @@ async function onDataLoaded(data, processedData) {
         );
         scene.add(instrumentGroup);
 
-        // Add a cone to mark the instrument scanning volume
+        // Add a cone (or, for a flat scanner, a flat fan) to mark the
+        // instrument scanning volume. NOVAC's two scan geometries --
+        // matching the Remote sensing page's own simulated conical/flat
+        // modes -- are a conical scanner's coneangle=60° (a true 3D cone)
+        // vs. a flat scanner's coneangle=90° (sweeping a single vertical
+        // plane, not a volume).
+        const isFlatScan = Math.abs(scanInfo.coneangle - 90) < Math.abs(scanInfo.coneangle - 60);
         const height = 1;
-        const radius = height * Math.tan(2 * scanInfo.coneangle / 180 * Math.PI);
+        // The coneangle-to-radius formula below is tuned for a true cone
+        // and degenerates toward 0 as coneangle approaches 90° (tan(π)
+        // ≈ 0) -- a flat scan's fan uses a fixed, sensible size instead.
+        const radius = isFlatScan ? height : height * Math.tan(2 * scanInfo.coneangle / 180 * Math.PI);
         const nScanValues = instrumentData[0].spectralData.length;
         const coneGeometry = new THREE.ConeGeometry(radius, height, nScanValues-1, 1, true, 1.5*Math.PI, -Math.PI);
         coneGeometry.translate(0, -height/2, 0);
         coneGeometry.rotateX(-Math.PI/2);
+        if (isFlatScan) {
+            // Collapses the cone's sideways (left/right) spread to zero,
+            // flattening it into the single vertical plane (up/down +
+            // forward-distance) a flat scanner actually sweeps through --
+            // safe because, after the translate/rotateX above, sideways
+            // spread is the only thing that varies along this axis (the
+            // cone's up/down spread and forward reach are on the other
+            // two, both left untouched).
+            coneGeometry.scale(0, 1, 1);
+        }
         const coneEdges = new THREE.EdgesGeometry(coneGeometry);
         const beamMat = new THREE.LineBasicMaterial({
             color: params.beamColor,
