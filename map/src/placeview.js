@@ -291,12 +291,20 @@ class VolcanoView {
     // future load picks it up correctly via the encodedName lookup.
     const RADIUS_MARGIN_KM = 5;
     const downloadRadiusKm = this.radiusKm + RADIUS_MARGIN_KM;
+    // File size scales with the *area* covered, so a large-radius volcano
+    // (e.g. Sangay's 41km) at the same detail level used elsewhere can
+    // land well past GitHub's 100MB per-file limit (confirmed: Sangay's
+    // came back at 190MB) -- one zoom level coarser for those keeps file
+    // sizes reasonable. Detail difference shouldn't be very noticeable at
+    // that scale, where a single terrain tile already spans a large area.
+    const LARGE_RADIUS_KM = 30;
+    const zoom = downloadRadiusKm > LARGE_RADIUS_KM ? 12 : 13;
 
     const tgeo = new ThreeGeo({ tokenMapbox });
     tgeo.getTerrainRgb(
       this.latLng,
       downloadRadiusKm,
-      13
+      zoom
     ).then(terrain => {
       terrain.rotation.x = -Math.PI / 2;
       this.scene.add(terrain);
