@@ -1006,7 +1006,7 @@
         "observatory": "Instituto Geofísico, Escuela Politécnica Nacional",
         "obs_acronym": "IGEPN",
         "country": "Ecuador",
-        "meshRadiusKm": 21,
+        "meshRadiusKm": 26,
         "source": "ground_based",
         "xls_name": null,
         "gvp_url": "https://volcano.si.edu/volcano.cfm?vn=352050",
