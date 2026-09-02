@@ -168,7 +168,7 @@ function cdColor(cd) {
 // scan-plane slices (see the MeshBasicMaterial below); the flat chart bars
 // and transmittance line use cdColorCss directly, unaffected.
 const CD_MIN_OPACITY = 0.15;
-const CD_MAX_OPACITY = 0.6;
+const CD_MAX_OPACITY = 0.88;
 function cdOpacity(cd) {
     const t = Math.min(1, Math.max(0, cd / CD_MAX));
     return CD_MIN_OPACITY + (CD_MAX_OPACITY - CD_MIN_OPACITY) * t;
@@ -622,7 +622,7 @@ class MeasurementView {
         // Brightens color+opacity together for the portion actually inside
         // the plume band (cd/cdColor/cdOpacity clamp at CD_MAX regardless,
         // so this can't overshoot the color scale's hottest stop).
-        const BRIGHTNESS_BOOST = 1.25;
+        const BRIGHTNESS_BOOST = 1.5;
         // How tightly the color concentrates around each ray's own
         // closest-approach point. A fixed value, not derived from
         // coreFalloff: coreFalloff already narrows which SLICE lights up
@@ -752,10 +752,22 @@ class MeasurementView {
                 `,
                 side: THREE.DoubleSide,
                 transparent: true,
+                depthWrite: false,
                 visible: false,
             });
 
             const mesh = new THREE.Mesh(geom, mat);
+            // The plume's smoke sprites (_buildPlume) are ~10,000
+            // separately-drawn, low-opacity white sprites sitting in this
+            // same 3D space -- since three.js sorts transparent objects by
+            // distance rather than by any fixed draw order, many of those
+            // sprites could land in front of (and visually wash out) a
+            // colored slice sitting right where the plume actually is,
+            // exactly where its color should read most strongly. A fixed
+            // renderOrder makes these slices always draw -- and blend --
+            // after the smoke, so their color survives on top of it
+            // instead of being buried underneath it.
+            mesh.renderOrder = 1;
             this.sliceMeshes.push(mesh);
             group.add(mesh);
         }

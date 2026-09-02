@@ -623,7 +623,12 @@ function initMap() {
   }).addTo(map);
 
   // Fetches volcanoes as a GeoJSON Point
-fetch("resources/volcanoes.geojson")
+  // ?v= bumped whenever volcanoes.geojson's content changes (e.g. a
+  // meshRadiusKm update after regenerating a volcano's terrain) -- without
+  // it, a browser that already cached an older fetch of this file keeps
+  // serving stale data (wrong radius -> terrain lookup misses -> falls
+  // through to the Mapbox token prompt) even after a hard page reload.
+fetch("resources/volcanoes.geojson?v=2")
   .then((r) => r.json())
   .then((data) => {
     // Optional ?volcanoes=name1,name2,... query param restricts the map to a
