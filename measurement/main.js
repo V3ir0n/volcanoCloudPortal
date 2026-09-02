@@ -578,6 +578,69 @@ class MeasurementView {
             this._wireSegments.geometry.dispose();
         }
 
+        // Each slice used to be one uniformly-colored triangle stretching
+        // from the station all the way out to the sky -- warm colors could
+        // show anywhere along it regardless of whether the plume was
+        // actually there. Each slice is now built from several smaller
+        // segments stacked along its own length (station to sky) instead
+        // of one flat triangle, each independently colored based on how
+        // close THAT SPECIFIC SEGMENT sits to wherever this particular
+        // ray's closest approach to the plume was found (_sliceProx[i],
+        // cached by _recomputeSliceProximities above -- the same value
+        // _sliceCD's cd already reflects).
+        //
+        // (Two earlier, simpler versions of this instead faded based on
+        // just the ray's two endpoints -- the station end and the sky
+        // end. Both left every slice looking equally far from the plume,
+        // because the point where a ray actually passes closest to the
+        // plume is typically somewhere in the MIDDLE of it, not at
+        // either end -- a real signal's cd could be high while both its
+        // endpoints individually still read as "far from the plume".)
+        group.updateMatrixWorld(true);
+        const perp = new THREE.Vector3(-WIND_DIR.z, 0, WIND_DIR.x);
+        const worldVec = new THREE.Vector3();
+        const centerVec = new THREE.Vector3();
+        // How close a given WORLD point sits to the plume's own modeled
+        // "tube" shape at that point's drift position -- the same
+        // center/spread formula _sliceProximity/_buildPlume already use.
+        // 0 = exactly on the plume's centerline, growing the further away.
+        const pointProximity = worldPoint => {
+            const drift = Math.max(0, worldVec.copy(worldPoint).sub(this.summit).dot(WIND_DIR));
+            const t = Math.min(1, drift / (this._plumeHeight * 2.0));
+            centerVec.copy(this.summit).addScaledVector(WIND_DIR, drift);
+            centerVec.y += this._plumeHeight * (0.05 + 0.35 * Math.sqrt(t));
+            const spread = this._plumeHeight * (0.05 + 0.20 * t);
+            const offset = worldPoint.clone().sub(centerVec);
+            const dPerp = offset.dot(perp);
+            const dUp = offset.y;
+            return Math.sqrt((dPerp / spread) ** 2 + (dUp / (spread * 0.35)) ** 2);
+        };
+        const smoothstep = (edge0, edge1, y) => {
+            const t = Math.min(1, Math.max(0, (y - edge0) / (edge1 - edge0)));
+            return t * t * (3 - 2 * t);
+        };
+        // Brightens color+opacity together for the portion actually inside
+        // the plume band (cd/cdColor/cdOpacity clamp at CD_MAX regardless,
+        // so this can't overshoot the color scale's hottest stop).
+        const BRIGHTNESS_BOOST = 1.25;
+        // How tightly the color concentrates around each ray's own
+        // closest-approach point. A fixed value, not derived from
+        // coreFalloff: coreFalloff already narrows which SLICE lights up
+        // across the sweep (deliberately tighter for conical than flat,
+        // see SCAN_PROFILES), and reusing it here too compounded that
+        // narrowing a second time along conical's rays specifically,
+        // crushing its warm band down to almost nothing. 1.0 instead
+        // matches pointProximity's own normalized scale, where 1.0 is the
+        // edge of the plume's modeled spread -- i.e. "still inside the
+        // plume's own visual width", independent of scan mode.
+        const WITHIN_RAY_MARGIN = 1.0;
+        const lerpPoint = (a, b, f) => [
+            a[0] + (b[0] - a[0]) * f,
+            a[1] + (b[1] - a[1]) * f,
+            a[2] + (b[2] - a[2]) * f,
+        ];
+        const RADIAL_SEGMENTS = 10;
+
         // Slices: tip at _fanOrigin (telescope height), arc per _fanPoint.
         // Upper half only, visible from all angles.
         const tip = this._fanOrigin.toArray();
@@ -588,18 +651,107 @@ class MeasurementView {
             const p1 = this._fanPoint(phi1, r, coneLen, R);
             const p2 = this._fanPoint(phi2, r, coneLen, R);
 
-            const geom = new THREE.BufferGeometry();
-            geom.setAttribute('position', new THREE.Float32BufferAttribute([
-                ...tip,
-                ...p1,
-                ...p2,
-            ], 3));
+            // Reference point for "closest approach" along THIS ray: found
+            // fresh from the same coarse samples used for coloring below,
+            // rather than from _sliceProx[i] (a separate, much finer
+            // 120-sample search along a slightly different line — the
+            // slice's exact angular midpoint, not either of its two drawn
+            // edges). That mismatch meant the point our coarse sampling
+            // actually draws as "closest" almost never lined up with
+            // where the fine search found its true minimum, so every
+            // drawn point looked farther from the plume than it truly
+            // was and colors never reached their intended peak. Deriving
+            // the reference from the same samples we're about to color
+            // guarantees whichever one we draw as closest reaches full
+            // brightness.
+            let localBestProx = Infinity;
+            const proxCache = new Map();
+            const proximityAt = localPt => {
+                const key = localPt.join(',');
+                if (proxCache.has(key)) return proxCache.get(key);
+                const prox = (this.summit && this._plumeHeight)
+                    ? pointProximity(group.localToWorld(new THREE.Vector3(...localPt)))
+                    : Infinity;
+                proxCache.set(key, prox);
+                if (prox < localBestProx) localBestProx = prox;
+                return prox;
+            };
+            for (let k = 0; k <= RADIAL_SEGMENTS; k++) {
+                const f = k / RADIAL_SEGMENTS;
+                proximityAt(lerpPoint(tip, p1, f));
+                proximityAt(lerpPoint(tip, p2, f));
+            }
 
-            const mat = new THREE.MeshBasicMaterial({
-                color: cdColor(cd),
+            // Fade for a single point along this slice's own ray: 1 right
+            // at (or closer than) where this ray's closest approach to
+            // the plume was found, fading to 0 within WITHIN_RAY_MARGIN
+            // past that. Falls back to fully visible (matches the
+            // original, unfaded behavior) before the plume/proximities
+            // have been computed yet.
+            const segmentFade = localPt => {
+                if (!isFinite(localBestProx)) return 1;
+                const rel = Math.max(0, proximityAt(localPt) - localBestProx);
+                return 1 - smoothstep(0, WITHIN_RAY_MARGIN, rel);
+            };
+
+            const positions = [];
+            const colorAttr = [];
+            const alphaAttr = [];
+            for (let k = 0; k < RADIAL_SEGMENTS; k++) {
+                const f1 = k / RADIAL_SEGMENTS;
+                const f2 = (k + 1) / RADIAL_SEGMENTS;
+                // Quad corners: inner/outer (toward station/toward sky)
+                // at each of this slice's two angular edges.
+                const corners = [
+                    lerpPoint(tip, p1, f1), lerpPoint(tip, p1, f2), lerpPoint(tip, p2, f2),
+                    lerpPoint(tip, p1, f1), lerpPoint(tip, p2, f2), lerpPoint(tip, p2, f1),
+                ];
+                for (const corner of corners) {
+                    positions.push(...corner);
+                    const effectiveCd = Math.min(CD_MAX, cd * segmentFade(corner) * BRIGHTNESS_BOOST);
+                    const col = cdColor(effectiveCd);
+                    colorAttr.push(col.r, col.g, col.b);
+                    alphaAttr.push(cdOpacity(effectiveCd));
+                }
+            }
+
+            const geom = new THREE.BufferGeometry();
+            geom.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geom.setAttribute('color', new THREE.Float32BufferAttribute(colorAttr, 3));
+            geom.setAttribute('alpha', new THREE.Float32BufferAttribute(alphaAttr, 1));
+
+            const mat = new THREE.ShaderMaterial({
+                vertexShader: `
+                    attribute vec3 color;
+                    attribute float alpha;
+                    varying vec3 vColor;
+                    varying float vAlpha;
+                    void main() {
+                        vColor = color;
+                        vAlpha = alpha;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vColor;
+                    varying float vAlpha;
+                    // Built-in materials (e.g. the MeshBasicMaterial this
+                    // replaced) convert their linear-space color to the
+                    // renderer's sRGB output automatically; a bare
+                    // ShaderMaterial doesn't, which without this would
+                    // render every slice too dark/washed out relative to
+                    // the rest of the (unchanged) scene.
+                    vec3 linearToSRGB(vec3 c) {
+                        vec3 lo = c * 12.92;
+                        vec3 hi = pow(c, vec3(1.0 / 2.4)) * 1.055 - 0.055;
+                        return mix(lo, hi, step(vec3(0.0031308), c));
+                    }
+                    void main() {
+                        gl_FragColor = vec4(linearToSRGB(vColor), vAlpha);
+                    }
+                `,
                 side: THREE.DoubleSide,
                 transparent: true,
-                opacity: cdOpacity(cd),
                 visible: false,
             });
 
